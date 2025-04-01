@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "dev": "vite",
+    "build": "vite build",
+  "start": "node server.js",
+    "vue": "^3.2.31",
+    "bootstrap": "^5.3.3",
+    "vue-router": "^4.5.0"
+  }
+}

@@ -1,5 +1,7 @@
 <script setup>
 import HelloWorld from './components/HelloWorld.vue'
+import TreeGrowthAnimation from './components/TreeGrowthAnimation.vue'
+
 </script>
 
 <template>
@@ -12,6 +14,9 @@ import HelloWorld from './components/HelloWorld.vue'
     </a>
   </div>
   <HelloWorld msg="Vite + Vue" />
+  <div class="animation-wrapper">
+    <TreeGrowthAnimation />
+  </div>
 </template>
 
 <style scoped>
@@ -21,9 +26,11 @@ import HelloWorld from './components/HelloWorld.vue'
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.vue:hover {
   filter: drop-shadow(0 0 2em #42b883aa);
 }
