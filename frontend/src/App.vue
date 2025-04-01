@@ -1,37 +1,46 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TreeGrowthAnimation from './components/TreeGrowthAnimation.vue'
-
+import { RouterView } from 'vue-router'
+import BHeader from './components/BHeader.vue'
+import './assets/style.css';
 </script>
 
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
-  <div class="animation-wrapper">
-    <TreeGrowthAnimation />
+  <div class="main-container">
+    <header>
+      <BHeader />
+    </header>
+
+    <main class="main-box">
+
+      <router-view></router-view>
+    </main>
+
   </div>
 </template>
 
 <style scoped>
+header {
+  line-height: 1.5;
+}
+
 .logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+  display: block;
+  margin: 0 auto 2rem;
 }
 
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+
+.container {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 80vw;
+  margin: 0 auto;
+  padding: 20px;
+  /* background-color: #e0bfbf; */
+  border-radius: 10px;
 }
 
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+/* Class selectors */
+.form {
+  text-align: center;
+  margin-top: 50px;
 }
 </style>
