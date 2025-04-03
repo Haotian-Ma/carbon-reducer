@@ -15,11 +15,16 @@
                             aria-current="page">Home</router-link>
                     </li>
                     <li class="nav-item">
+                        <router-link to="/eco-action" class="nav-link" active-class="active">Eco Action</router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link to="/virtual-tree" class="nav-link" active-class="active">Virtual
+                            Tree</router-link>
+                    </li>
+                    <li class="nav-item">
                         <router-link to="/about" class="nav-link" active-class="active">About</router-link>
                     </li>
-                    <!-- <li class="nav-item">
-                        <router-link to="/emission-calculator" class="nav-link" active-class="active">Carbon Calculator</router-link>
-                    </li> -->
+
                 </ul>
             </div>
         </header>
