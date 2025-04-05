@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import AboutView from '../views/AboutView.vue'
 import EcoActionView from '../views/EcoActionView.vue'
 import VirtualTreeView from '../views/VirtualTreeView.vue'
+import ClimateInsightView from '../views/ClimateInsightView.vue'
 
 const routes = [
   {
@@ -25,7 +26,12 @@ const routes = [
     path: '/virtual-tree',
     name: 'VirtualTree',
     component: VirtualTreeView
-  }
+  },
+  {
+    path:'/resources/climate-insight',
+    name: 'ClimateInsight',
+    component: ClimateInsightView
+  },
 
 ]
 

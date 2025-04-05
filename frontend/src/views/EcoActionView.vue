@@ -79,6 +79,11 @@
                     <div class="difficulty-level" :class="'level-' + suggestion.difficulty">
                         Difficulty: {{ getDifficultyText(suggestion.difficulty) }}
                     </div>
+                    <button class="complete-button" :class="{ 'completed': suggestion.completed }"
+                        @click="suggestion.completed = !suggestion.completed">
+                        <span v-if="suggestion.completed">✓ Done</span>
+                        <span v-else>Complete</span>
+                    </button>
                 </div>
             </div>
         </section>
@@ -536,6 +541,26 @@ section {
 
 .secondary-button:hover {
     background-color: #e0e0e0;
+}
+
+.complete-button {
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: white;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.complete-button:hover {
+    background-color: #f5f5f5;
+}
+
+.complete-button.completed {
+    background-color: #4caf50;
+    color: white;
+    border-color: #4caf50;
 }
 
 .error-message {
