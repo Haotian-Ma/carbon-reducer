@@ -21,10 +21,28 @@
                         <router-link to="/virtual-tree" class="nav-link" active-class="active">Virtual
                             Tree</router-link>
                     </li>
+                    <!-- Resources Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" @click.prevent="toggleResourcesDropdown">
+                            Resources
+                            <span class="dropdown-icon" :class="{ 'open': isResourcesOpen }">▼</span>
+                        </a>
+                        <ul class="dropdown-menu" v-show="isResourcesOpen">
+                            <li class="dropdown-item">
+                                <router-link to="/resources/climate-insight" class="dropdown-link">
+                                    Climate Insight
+                                </router-link>
+                            </li>
+                            <li class="dropdown-item">
+                                <router-link to="/resources/learning" class="dropdown-link">
+                                    Learning
+                                </router-link>
+                            </li>
+                        </ul>
+                    </li>
                     <li class="nav-item">
                         <router-link to="/about" class="nav-link" active-class="active">About</router-link>
                     </li>
-
                 </ul>
             </div>
         </header>
@@ -36,10 +54,23 @@ import { ref, onMounted, onUnmounted } from 'vue';
 
 const isSticky = ref(false);
 const headerHeight = ref(0);
+const isResourcesOpen = ref(false);
 
 const handleScroll = () => {
     const scrollPosition = window.scrollY;
     isSticky.value = scrollPosition > 10;
+};
+
+const toggleResourcesDropdown = () => {
+    isResourcesOpen.value = !isResourcesOpen.value;
+};
+
+// Close dropdown when clicking outside
+const handleClickOutside = (event) => {
+    const dropdown = document.querySelector('.dropdown');
+    if (dropdown && !dropdown.contains(event.target) && isResourcesOpen.value) {
+        isResourcesOpen.value = false;
+    }
 };
 
 onMounted(() => {
@@ -49,11 +80,13 @@ onMounted(() => {
     }
 
     window.addEventListener('scroll', handleScroll);
+    document.addEventListener('click', handleClickOutside);
     handleScroll();
 });
 
 onUnmounted(() => {
     window.removeEventListener('scroll', handleScroll);
+    document.removeEventListener('click', handleClickOutside);
 });
 </script>
 
@@ -99,8 +132,6 @@ onUnmounted(() => {
     height: 70px;
 }
 
-
-
 .header-container {
     display: flex;
     justify-content: space-between;
@@ -119,6 +150,95 @@ onUnmounted(() => {
     transform: scale(1.1);
 }
 
+/* Navigation Items */
+.nav {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 20px;
+}
+
+.nav-item {
+    position: relative;
+}
+
+.nav-link {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    display: block;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Dropdown Styling */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-toggle {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.dropdown-icon {
+    font-size: 10px;
+    transition: transform 0.2s ease;
+}
+
+.dropdown-icon.open {
+    transform: rotate(180deg);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: white;
+    min-width: 180px;
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 8px 0;
+    margin-top: 5px;
+    list-style: none;
+    z-index: 1001;
+}
+
+.dropdown-item {
+    margin: 0;
+    padding: 0;
+}
+
+.dropdown-link {
+    color: var(--text-color);
+    text-decoration: none;
+    padding: 8px 16px;
+    display: block;
+    transition: background-color 0.2s;
+}
+
+.dropdown-link:hover {
+    background-color: #f5f5f5;
+    color: var(--primary-gradient-end);
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
 
 @media (max-width: 768px) {
     .header-container {
@@ -141,6 +261,14 @@ onUnmounted(() => {
     .nav-item .nav-link {
         width: 100%;
         text-align: center;
+    }
+
+    .dropdown-menu {
+        position: static;
+        width: 100%;
+        box-shadow: none;
+        margin-top: 5px;
+        border: 1px solid #eee;
     }
 
     .header-placeholder {
