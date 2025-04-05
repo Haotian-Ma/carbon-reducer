@@ -7,7 +7,7 @@
                     <router-link to="/" class="logo-link">
                         <img src="../assets/images/logo.jpg" alt="Logo" class="logo-image" />
                     </router-link>
-                    <h1 class="title">EcoSphere - Carbon Reduction</h1>
+                    <h1 class="title">EcoSphere -Carbon Reduction</h1>
                 </div>
                 <ul class="nav">
                     <li class="nav-item">
