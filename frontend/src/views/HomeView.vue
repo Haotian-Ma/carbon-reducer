@@ -148,22 +148,67 @@ onBeforeUnmount(() => {
                 </div>
             </div>
         </section>
-        <!-- Check Carbon Footprint Section -->
-        <section class="check-carbon">
-            <h2>Calculate Your Carbon Footprint</h2>
-            <p>Stay informed about your personal impact on the environment and find ways to reduce it.</p>
-            <button class="btn-primary" @click="goToEmissionCalculator">Calculate Now</button>
 
-            <div class="carbon-scale-container">
-                <span class="carbon-label low">Low Impact</span>
-                <div class="carbon-meter-scale">
-                    <div class="scale-segment low"></div>
-                    <div class="scale-segment moderate"></div>
-                    <div class="scale-segment high"></div>
-                    <div class="scale-segment very-high"></div>
-                    <div class="scale-segment extreme"></div>
+        <!-- Features Section -->
+        <section class="features-section">
+            <div class="features-container">
+                <h2 class="features-title">Discover Our Offers</h2>
+                <p class="features-subtitle">See how you can contribute to environmental conservation and make a
+                    difference.</p>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-image">
+                            <img src="../assets/images/feature1.jpg" alt="Buy Trees">
+                        </div>
+                        <div class="feature-content">
+                            <h3>Eco Actions</h3>
+                            <p>Assess your personal carbon footprint and show some suggestions.</p>
+                            <router-link to="/emission-calculator" class="feature-button">
+                                Start Now
+                            </router-link>
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-image">
+                            <img src="../assets/images/feature2.jpg" alt="Give a Gift">
+                        </div>
+                        <div class="feature-content">
+                            <h3>Virtual Tree Planting</h3>
+                            <p>Contribute to global reforestation and offset your carbon emissions online.</p>
+                            <router-link to="/tree-planting" class="feature-button">
+                                Plant Trees
+                            </router-link>
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-image">
+                            <img src="../assets/images/feature3.jpg" alt="Forest Subscription">
+                        </div>
+                        <div class="feature-content">
+                            <h3>Climate Insights</h3>
+                            <p>Quickly understand environmental conditions and carbon emissions</p>
+                            <router-link to="/events" class="feature-button">
+                                View Insights
+                            </router-link>
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-image">
+                            <img src="../assets/images/feature4.jpg" alt="Biodiversity">
+                        </div>
+                        <div class="feature-content">
+                            <h3>Educational Resources</h3>
+                            <p>Learn about climate change, sustainability, and environmental conservation.</p>
+                            <router-link to="resources/learning" class="feature-button">
+                                Explore Resources
+                            </router-link>
+                        </div>
+                    </div>
                 </div>
-                <span class="carbon-label high">High Impact</span>
             </div>
         </section>
 
@@ -174,7 +219,7 @@ onBeforeUnmount(() => {
         </section>
 
         <!-- Events Section -->
-        <section class="events animate-on-scroll">
+        <!-- <section class="events animate-on-scroll">
             <h2>Upcoming Events</h2>
             <div class="event-list">
                 <div v-for="event in events" :key="event.id" class="event-card">
@@ -190,7 +235,7 @@ onBeforeUnmount(() => {
                     </div>
                 </div>
             </div>
-        </section>
+        </section> -->
 
         <!-- About Section -->
         <section class="about animate-on-scroll">
@@ -449,5 +494,127 @@ onBeforeUnmount(() => {
 .fade-enter-from,
 .fade-leave-to {
     opacity: 0;
+}
+
+.features-section {
+    padding: 4rem 0;
+    background-color: #f4f6f9;
+}
+
+.features-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.features-title {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+.features-subtitle {
+    text-align: center;
+    color: #7a8b9f;
+    max-width: 800px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.6;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+}
+
+.feature-card {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.12);
+}
+
+.feature-image {
+    height: 250px;
+    overflow: hidden;
+}
+
+.feature-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover .feature-image img {
+    transform: scale(1.1);
+}
+
+.feature-content {
+    padding: 1.5rem;
+    text-align: center;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.feature-content h3 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+}
+
+.feature-content p {
+    color: #7a8b9f;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+    flex-grow: 1;
+}
+
+.feature-button {
+    display: inline-block;
+    background-color: #2c3e50;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    margin-top: auto;
+}
+
+.feature-button:hover {
+    background-color: #3a5a78;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 1200px) {
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .features-title {
+        font-size: 2rem;
+    }
+
+    .features-subtitle {
+        font-size: 0.9rem;
+    }
 }
 </style>

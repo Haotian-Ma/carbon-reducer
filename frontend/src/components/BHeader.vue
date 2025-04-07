@@ -33,11 +33,11 @@
                                     Climate Insight
                                 </router-link>
                             </li>
-                            <!-- <li class="dropdown-item">
+                            <li class="dropdown-item">
                                 <router-link to="/resources/learning" class="dropdown-link">
                                     Learning
                                 </router-link>
-                            </li> -->
+                            </li>
                         </ul>
                     </li>
                     <li class="nav-item">

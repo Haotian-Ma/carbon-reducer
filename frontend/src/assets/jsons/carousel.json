@@ -6,22 +6,22 @@
       "description": "Plant trees, track their growth and get 100% of the profit from the sustainable timber, all while contributing to a greener future.",
       "buttonText": "Plant a tree",
       "buttonLink": "/virtual-tree",
-      "location": "Lanrivain Forest, France"
+      "location": "Online Virtual Tree"
     },
     {
       "image": "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=3000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "title": "Join our community cleanup events",
-      "description": "Take part in our monthly cleanup initiatives to keep our environment clean and reduce waste pollution.",
-      "buttonText": "Join an event",
-      "buttonLink": "/events",
-      "location": "City Parks Worldwide"
+      "title": "Take some environmental action now",
+      "description": "After a simple assessment, you can earn points by doing some small environmental protection activities that can be started right away!",
+      "buttonText": "Take action",
+      "buttonLink": "/eco-action",
+      "location": "Daily Life"
     },
     {
       "image": "https://images.unsplash.com/photo-1606092195730-5d7b9af1efc5?q=80&w=2970&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "title": "Plant a tree for the future",
-      "description": "Every tree planted contributes to carbon reduction. Start your own garden and make a difference for generations to come.",
+      "title": "Protect the Earth with Children",
+      "description": "For the future of our planet, let's act together with our children",
       "buttonText": "Get started",
-      "buttonLink": "/eco-action",
+      "buttonLink": "/climate-insight",
       "location": "Your Backyard"
     }
   ]

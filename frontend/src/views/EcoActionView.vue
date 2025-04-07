@@ -1,19 +1,27 @@
 <!-- EcoAction.vue -->
 <template>
     <div class="eco-action">
-        <header class="header">
-            <h1>Eco Action</h1>
-            <p>Personal Carbon Assessment & Environmental Action Suggestions</p>
-        </header>
-
-        <!-- Carbon Assessment Section -->
+        <div class="hero-section" :style="{ backgroundImage: `url(${currentBackground})` }">
+            <header class="header">
+                <h1>Eco Action</h1>
+                <p class="white-text">Personal Carbon Assessment & Environmental Action Suggestions</p>
+            </header>
+            <div class="step-indicator">
+                <div v-for="(step, index) in steps" :key="step.id" :class="{
+                    'active': currentStep === step.id,
+                    'completed': step.completed,
+                    'first': index === 0,
+                    'last': index === steps.length - 1
+                }" @click="goToStep(step.id)">
+                    <div class="step-number">{{ step.id }}</div>
+                    <div class="step-title">{{ step.title }}</div>
+                </div>
+            </div>
+        </div>
         <section class="assessment-section">
-            <h2>Carbon Footprint Assessment</h2>
-
-            <!-- Transportation Habits -->
-            <div class="assessment-group">
+            <h2>Carbon Footprint Assessment - Step {{ currentStep }} of {{ steps.length }}</h2>
+            <div v-if="currentStep === 1" class="assessment-group">
                 <h3>1. Transportation Habits</h3>
-
                 <div class="assessment-subgroup">
                     <label>Daily Commuting:<span class="required-field">*</span></label>
                     <div class="checkbox-group">
@@ -59,19 +67,19 @@
                     <label>Additional Options:</label>
                     <div class="checkbox-group">
                         <label class="checkbox-label">
-                            <input type="checkbox" v-model="transportation.additional.carpool"> I often carpool
-                        </label>
+                            <input type="checkbox" v-model="transportation.additional.carpool"> I often
+                            carpool</label>
                         <label class="checkbox-label">
-                            <input type="checkbox" v-model="transportation.additional.remoteWork"> I often work remotely
+                            <input type="checkbox" v-model="transportation.additional.remoteWork"> I often work
+                            remotely
                         </label>
                     </div>
                 </div>
             </div>
 
-            <!-- Household Energy -->
-            <div class="assessment-group">
+            <!-- step2 -->
+            <div v-else-if="currentStep === 2" class="assessment-group">
                 <h3>2. Household Energy</h3>
-
                 <div class="assessment-subgroup">
                     <label>Number of Family Members:<span class="required-field">*</span></label>
                     <input type="number" v-model="household.familyMembers" min="1" class="number-input" required>
@@ -105,18 +113,17 @@
                     </select>
                 </div>
 
-
-
-
                 <div class="assessment-subgroup">
                     <label>Energy-Saving Habits:</label>
                     <div class="checkbox-group">
                         <label class="checkbox-label">
-                            <input type="checkbox" v-model="household.habits.turnOff"> Often turn off lights/electrical
+                            <input type="checkbox" v-model="household.habits.turnOff"> Often turn off
+                            lights/electrical
                             appliances
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" v-model="household.habits.energySaving"> Use energy-saving equipment
+                            <input type="checkbox" v-model="household.habits.energySaving"> Use energy-saving
+                            equipment
                         </label>
                         <label class="checkbox-label">
                             <input type="checkbox" v-model="household.habits.noSpecial"> No special habits
@@ -125,8 +132,8 @@
                 </div>
             </div>
 
-            <!-- Environmental Preferences -->
-            <div class="assessment-group">
+            <!-- step 3 -->
+            <div v-else-if="currentStep === 3" class="assessment-group">
                 <h3>3. Environmental Preferences</h3>
                 <p>Topics you care about (select one or more):</p>
 
@@ -149,8 +156,8 @@
                 </div>
             </div>
 
-            <!-- Housing Type -->
-            <div class="assessment-group">
+            <!-- step 4 -->
+            <div v-else-if="currentStep === 4" class="assessment-group">
                 <h3>4. Housing Type</h3>
                 <select v-model="housingType" class="preference-select">
                     <option value="">-- Select Housing Type --</option>
@@ -160,11 +167,12 @@
                 </select>
             </div>
 
-            <!-- Get Assessment Button -->
-            <div class="action-button-container">
-                <button @click="calculateCarbonFootprint" class="primary-button" :disabled="loading">
-                    Calculate My Carbon Footprint
+            <div class="step-navigation">
+                <button v-if="currentStep > 1" @click="goToPrevStep" class="nav-button prev-button">
+                    Previous
                 </button>
+                <button @click="goToNextStep" class="nav-button next-button">
+                    {{ currentStep < steps.length ? 'Next' : 'Calculate My Carbon Footprint' }} </button>
             </div>
         </section>
 
@@ -231,8 +239,10 @@
         </section>
 
         <footer class="footer">
-            <p>Eco Action uses AI to provide personalized environmental suggestions based on your carbon footprint. Our
-                recommendations are general information only. Please refer to local regulations for specific actions.
+            <p>Eco Action uses AI to provide personalized environmental suggestions based on your carbon footprint.
+                Our
+                recommendations are general information only. Please refer to local regulations for specific
+                actions.
             </p>
         </footer>
         <div v-if="showCompletionModal" class="modal">
@@ -251,8 +261,18 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, computed } from 'vue';
 import electricityData from '../assets/jsons/electricity-data.json'
+
+//background image
+const backgroundImages = {
+    1: new URL('../assets/images/eco-action-step1.jpg', import.meta.url).href,
+    2: new URL('../assets/images/eco-action-step2.jpg', import.meta.url).href,
+    3: new URL('../assets/images/eco-action-step3.jpg', import.meta.url).href,
+    4: new URL('../assets/images/eco-action-step4.jpg', import.meta.url).href
+};
+const currentBackground = computed(() => backgroundImages[currentStep.value]);
+
 
 // User selections 
 const housingType = ref('');
@@ -271,8 +291,56 @@ const difyConfig = {
     apiKey: 'app-qdqefgJOJ5PCIOyziUDhQgYY',
     endpoint: 'https://api.dify.ai/v1/chat-messages'
 };
+const currentStep = ref(1); // Current step in the assessment process
+const steps = [
+    { id: 1, title: "Transportation Habits", completed: false },
+    { id: 2, title: "Household Energy", completed: false },
+    { id: 3, title: "Environmental Preferences", completed: false },
+    { id: 4, title: "Housing Type", completed: false }
+];
+const goToNextStep = () => {
+
+    if (!validateCurrentStep()) {
+        return;
+    }
 
 
+    steps[currentStep.value - 1].completed = true;
+
+    if (currentStep.value < steps.length) {
+        currentStep.value++;
+    } else {
+
+        calculateCarbonFootprint();
+    }
+};
+
+const goToPrevStep = () => {
+    if (currentStep.value > 1) {
+        currentStep.value--;
+    }
+};
+const validateCurrentStep = () => {
+    switch (currentStep.value) {
+        case 1:
+            if (!transportation.commuting.walking &&
+                !transportation.commuting.publicTransport &&
+                !transportation.commuting.fuelCar &&
+                !transportation.commuting.electricCar) {
+                alert("Please select at least one transportation method");
+                return false;
+            }
+            break;
+        case 2:
+            if (!household.electricityConsumption) {
+                alert("Please enter your monthly electricity consumption");
+                return false;
+            }
+            break;
+
+    }
+    return true;
+};
 
 // Carbon assessment results
 const carbonLevel = ref(''); // Will be one of: 'Low', 'Medium', 'High'
@@ -368,7 +436,6 @@ const calculateCarbonFootprint = () => {
     }
     loading.value = true;
     loadingMessage.value = "Calculating your carbon footprint...";
-
 
     let score = 0;
 
@@ -818,14 +885,28 @@ const markTaskComplete = (suggestion) => {
     padding: 20px;
 }
 
+.hero-section {
+    width: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    padding: 40px 0;
+    margin-bottom: 30px;
+}
+
 .header {
     text-align: center;
     margin-bottom: 30px;
 }
 
 .header h1 {
-    color: var(--primary-color);
-    margin-bottom: 5px;
+    color: white;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    font-size: 2.5rem;
+    font-weight: bold;
+    letter-spacing: 1px;
 }
 
 section {
@@ -844,7 +925,6 @@ section {
     font-size: 16px;
     min-width: 200px;
 }
-
 
 .primary-button {
     background: linear-gradient(135deg, var(--primary-gradient-start), var(--primary-gradient-end));
@@ -1157,7 +1237,6 @@ section {
     color: #999;
 }
 
-
 .completion-modal {
     position: relative;
     padding: 30px 20px;
@@ -1194,7 +1273,6 @@ section {
     }
 }
 
-
 .modal-enter-active,
 .modal-leave-active {
     transition: opacity 0.3s;
@@ -1203,6 +1281,139 @@ section {
 .modal-enter-from,
 .modal-leave-to {
     opacity: 0;
+}
+
+.step-indicator {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.step-indicator::before {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: #e0e0e0;
+    z-index: 1;
+}
+
+.step-indicator>div {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    cursor: pointer;
+}
+
+.step-number {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #e0e0e0;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-bottom: 5px;
+    transition: all 0.3s ease;
+}
+
+.step-title {
+    font-size: 0.9rem;
+    text-align: center;
+    color: white;
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    background-color: rgba(0, 0, 0, 0.5);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.step-indicator>div.active .step-number {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.step-indicator>div.completed .step-number {
+    background-color: #4caf50;
+    color: white;
+}
+
+.step-indicator>div.active .step-title,
+.step-indicator>div.completed .step-title {
+    color: greenyellow;
+    font-weight: 500;
+}
+
+.step-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.nav-button {
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.prev-button {
+    background-color: #f5f5f5;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+.prev-button:hover {
+    background-color: #e0e0e0;
+}
+
+.next-button {
+    background: linear-gradient(135deg, var(--primary-gradient-start), var(--primary-gradient-end));
+    color: white;
+    border: none;
+}
+
+.next-button:hover {
+    background-color: var(--primary-gradient-end);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.white-text {
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .step-indicator {
+        flex-wrap: wrap;
+    }
+
+    .step-indicator>div {
+        flex: 0 0 50%;
+        margin-bottom: 15px;
+    }
+
+    .step-title {
+        font-size: 0.8rem;
+    }
+
+    .step-navigation {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .nav-button {
+        width: 100%;
+    }
 }
 
 @media (max-width: 768px) {
