@@ -3,84 +3,214 @@
     <div class="eco-action">
         <header class="header">
             <h1>Eco Action</h1>
-            <p>Personalized Environmental Action Suggestions</p>
+            <p>Personal Carbon Assessment & Environmental Action Suggestions</p>
         </header>
 
-        <!-- Location Selection Section -->
-        <section class="location-section">
-            <h2>Select Location</h2>
-            <div class="location-controls">
-                <select v-model="selectedCity" class="city-select">
-                    <option value="">-- Select a City --</option>
-                    <option v-for="city in australianCities" :key="city.value" :value="city.value">
-                        {{ city.label }}
-                    </option>
+        <!-- Carbon Assessment Section -->
+        <section class="assessment-section">
+            <h2>Carbon Footprint Assessment</h2>
+
+            <!-- Transportation Habits -->
+            <div class="assessment-group">
+                <h3>1. Transportation Habits</h3>
+
+                <div class="assessment-subgroup">
+                    <label>Daily Commuting:<span class="required-field">*</span></label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" v-model="transportation.commuting.walking"> Walking/Bicycle
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" v-model="transportation.commuting.publicTransport"> Public
+                            Transportation
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" v-model="transportation.commuting.fuelCar"> Fuel Car
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" v-model="transportation.commuting.electricCar"> Electric Car
+                        </label>
+                    </div>
+                </div>
+
+                <div class="assessment-subgroup">
+                    <label>Long-Distance Travel:</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" v-model="transportation.longDistance.airplane"> Airplane
+                        </label>
+                        <div class="nested-option" v-if="transportation.longDistance.airplane">
+                            <select v-model="transportation.longDistance.airplaneFrequency" class="sub-select">
+                                <option value="low">Less than 2 times/year</option>
+                                <option value="medium">3-5 times/year</option>
+                                <option value="high">More than 5 times/year</option>
+                            </select>
+                        </div>
+                        <label class="checkbox-label">
+                            <input type="checkbox" v-model="transportation.longDistance.train"> Train
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" v-model="transportation.longDistance.selfDriving"> Self-Driving
+                        </label>
+                    </div>
+                </div>
+
+                <div class="assessment-subgroup">
+                    <label>Additional Options:</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" v-model="transportation.additional.carpool"> I often carpool
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" v-model="transportation.additional.remoteWork"> I often work remotely
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Household Energy -->
+            <div class="assessment-group">
+                <h3>2. Household Energy</h3>
+
+                <div class="assessment-subgroup">
+                    <label>Number of Family Members:<span class="required-field">*</span></label>
+                    <input type="number" v-model="household.familyMembers" min="1" class="number-input" required>
+                </div>
+
+                <div class="assessment-subgroup">
+                    <label>Monthly Electricity Consumption (kWh): <span class="required-field">*</span></label>
+                    <input type="number" v-model="household.electricityConsumption" min="0" class="number-input"
+                        required>
+
+                    <div v-if="household.familyMembers" class="reference-value">
+                        <p>
+                            Reference: {{ getReferenceElectricityUsage() }} kWh/month
+                            <span v-if="household.city">(Average for {{ getCityName() }} {{ displayFamilySize() }}
+                                household)</span>
+                            <span v-else>(Average for Australian {{ displayFamilySize() }} household)</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="assessment-subgroup">
+                    <label>City (Optional):</label>
+                    <select v-model="household.city" class="preference-select">
+                        <option value="">-- Select City --</option>
+                        <option value="sydney">Sydney</option>
+                        <option value="brisbane">Brisbane</option>
+                        <option value="adelaide">Adelaide</option>
+                        <option value="melbourne">Melbourne</option>
+                        <option value="canberra">Canberra</option>
+                        <option value="hobart">Hobart</option>
+                    </select>
+                </div>
+
+
+
+
+                <div class="assessment-subgroup">
+                    <label>Energy-Saving Habits:</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" v-model="household.habits.turnOff"> Often turn off lights/electrical
+                            appliances
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" v-model="household.habits.energySaving"> Use energy-saving equipment
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" v-model="household.habits.noSpecial"> No special habits
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Environmental Preferences -->
+            <div class="assessment-group">
+                <h3>3. Environmental Preferences</h3>
+                <p>Topics you care about (select one or more):</p>
+
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" v-model="preferences.waterResources"> Water Resources
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" v-model="preferences.energyUsage"> Energy Usage
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" v-model="preferences.wasteManagement"> Waste Management
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" v-model="preferences.biodiversity"> Biodiversity
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" v-model="preferences.airQuality"> Air Quality
+                    </label>
+                </div>
+            </div>
+
+            <!-- Housing Type -->
+            <div class="assessment-group">
+                <h3>4. Housing Type</h3>
+                <select v-model="housingType" class="preference-select">
+                    <option value="">-- Select Housing Type --</option>
+                    <option value="apartment">Apartment</option>
+                    <option value="house">House</option>
+                    <option value="townhouse">Townhouse</option>
                 </select>
-                <button @click="getUserLocation" class="secondary-button" :disabled="loading">
-                    <span v-if="!loading">Use My Location</span>
-                    <span v-else>Loading...</span>
-                </button>
-            </div>
-            <div v-if="locationError" class="error-message">
-                {{ locationError }}
-            </div>
-        </section>
-
-        <!-- Preferences Section (Displays only when city is selected) -->
-        <section class="preferences-section" v-if="selectedCity">
-            <h2>Environmental Preferences (Optional)</h2>
-            <div class="preferences-controls">
-                <div class="preference-item">
-                    <label>Main Concern:</label>
-                    <select v-model="environmentalConcern" class="preference-select">
-                        <option value="">-- Select Concern --</option>
-                        <option value="water">Water Resources</option>
-                        <option value="energy">Energy Usage</option>
-                        <option value="waste">Waste Management</option>
-                        <option value="biodiversity">Biodiversity</option>
-                        <option value="air">Air Quality</option>
-                    </select>
-                </div>
-                <div class="preference-item">
-                    <label>Housing Type:</label>
-                    <select v-model="housingType" class="preference-select">
-                        <option value="">-- Select Housing Type --</option>
-                        <option value="apartment">Apartment</option>
-                        <option value="house">House</option>
-                        <option value="townhouse">Townhouse</option>
-                    </select>
-                </div>
             </div>
 
-            <!-- Get Suggestions button moved here, only appears when city is selected -->
+            <!-- Get Assessment Button -->
             <div class="action-button-container">
-                <button @click="getEcoSuggestions" class="primary-button" :disabled="!selectedCity || loading">
-                    Get Suggestions
+                <button @click="calculateCarbonFootprint" class="primary-button" :disabled="loading">
+                    Calculate My Carbon Footprint
                 </button>
             </div>
         </section>
 
+        <!-- Loading Indicator -->
         <div class="loading-indicator" v-if="loading">
             <div class="spinner"></div>
-            <p>Generating your personalized eco suggestions...</p>
+            <p>{{ loadingMessage }}</p>
         </div>
 
-        <section class="results-section" v-if="suggestions && suggestions.length > 0">
-            <h2>Your Personalized Eco Suggestions</h2>
-            <div class="location-info">
-                <h3>{{ cityInfo.name }}, {{ cityInfo.state }}</h3>
-                <p>{{ cityInfo.description }}</p>
+        <!-- Carbon Footprint Results -->
+        <section class="results-section" v-if="carbonLevel">
+            <h2>Your Carbon Footprint Assessment</h2>
+
+            <div class="carbon-rating">
+                <div class="rating-label">Your Carbon Footprint Level:</div>
+                <div class="rating-value" :class="'carbon-level-' + carbonLevel.toLowerCase()">
+                    {{ carbonLevel }}
+                </div>
+                <div class="rating-description">{{ getCarbonLevelDescription() }}</div>
             </div>
 
+            <div class="action-button-container">
+                <button @click="getEcoSuggestions" class="primary-button" :disabled="loading">
+                    Get Personalized Eco Suggestions
+                </button>
+            </div>
+        </section>
+
+        <!-- Eco Suggestions Section -->
+        <section class="results-section" v-if="suggestions && suggestions.length > 0">
+            <h2>Your Personalized Eco Suggestions</h2>
             <div class="suggestions-container">
                 <div v-for="(suggestion, index) in suggestions" :key="index" class="suggestion-card">
-                    <h3>{{ suggestion.title }}</h3>
+                    <h3>{{ suggestion.title }} <span class="emoji">{{ suggestion.emoji }}</span></h3>
                     <p>{{ suggestion.content }}</p>
+                    <div v-if="suggestion.reason" class="suggestion-reason">
+                        {{ suggestion.reason }}
+                    </div>
                     <div class="difficulty-level" :class="'level-' + suggestion.difficulty">
                         Difficulty: {{ getDifficultyText(suggestion.difficulty) }}
                     </div>
+                    <div class="impact-level" :class="'impact-' + suggestion.impact">
+                        Impact: {{ getImpactText(suggestion.impact) }}
+                    </div>
                     <button class="complete-button" :class="{ 'completed': suggestion.completed }"
-                        @click="suggestion.completed = !suggestion.completed">
+                        @click="markTaskComplete(suggestion)">
                         <span v-if="suggestion.completed">✓ Done</span>
                         <span v-else>Complete</span>
                     </button>
@@ -88,6 +218,7 @@
             </div>
         </section>
 
+        <!-- Feedback Section -->
         <section class="feedback-section" v-if="suggestions && suggestions.length > 0">
             <h3>Were these suggestions helpful?</h3>
             <div class="feedback-buttons">
@@ -100,242 +231,315 @@
         </section>
 
         <footer class="footer">
-            <p>Eco Action uses AI to provide personalized environmental suggestions. Our recommendations are based on
-                general information. Please refer to local regulations for specific actions.</p>
+            <p>Eco Action uses AI to provide personalized environmental suggestions based on your carbon footprint. Our
+                recommendations are general information only. Please refer to local regulations for specific actions.
+            </p>
         </footer>
+        <div v-if="showCompletionModal" class="modal">
+            <div class="modal-content completion-modal">
+                <span @click="showCompletionModal = false" class="close-button">&times;</span>
+                <div class="celebration-animation">
+                    <span class="celebration-icon">🎉</span>
+                </div>
+                <h3>Great job!</h3>
+                <p>You just earned <span class="energy-value">{{ earnedEnergy }}</span> energy points!</p>
+                <p class="task-completed">Task: {{ completedTaskTitle }}</p>
+                <button @click="showCompletionModal = false" class="primary-button">Continue</button>
+            </div>
+        </div>
     </div>
 </template>
 
 <script setup>
 import { ref, reactive } from 'vue';
+import electricityData from '../assets/jsons/electricity-data.json'
 
-// User selections
-const selectedCity = ref('');
-const environmentalConcern = ref('');
+// User selections 
 const housingType = ref('');
 
 // API status
 const loading = ref(false);
-const locationError = ref('');
 const suggestions = ref([]);
 const feedbackSubmitted = ref(false);
-
-// City info (for display)
-const cityInfo = reactive({
-    name: '',
-    state: '',
-    description: ''
-});
-
-// Australian cities data
-const australianCities = ref([
-    { value: 'sydney', label: 'Sydney', state: 'New South Wales' },
-    { value: 'melbourne', label: 'Melbourne', state: 'Victoria' },
-    { value: 'brisbane', label: 'Brisbane', state: 'Queensland' },
-    { value: 'perth', label: 'Perth', state: 'Western Australia' },
-    { value: 'adelaide', label: 'Adelaide', state: 'South Australia' },
-    { value: 'hobart', label: 'Hobart', state: 'Tasmania' },
-    { value: 'darwin', label: 'Darwin', state: 'Northern Territory' },
-    { value: 'canberra', label: 'Canberra', state: 'Australian Capital Territory' },
-    { value: 'goldcoast', label: 'Gold Coast', state: 'Queensland' },
-    { value: 'cairns', label: 'Cairns', state: 'Queensland' }
-]);
-
-
-// City geographic coordinates (for location matching)
-const cityCoordinates = {
-    sydney: { lat: -33.8688, lon: 151.2093 },
-    melbourne: { lat: -37.8136, lon: 144.9631 },
-    brisbane: { lat: -27.4698, lon: 153.0251 },
-    perth: { lat: -31.9505, lon: 115.8605 },
-    adelaide: { lat: -34.9285, lon: 138.6007 },
-    hobart: { lat: -42.8821, lon: 147.3272 },
-    darwin: { lat: -12.4634, lon: 130.8456 },
-    canberra: { lat: -35.2809, lon: 149.1300 },
-    goldcoast: { lat: -28.0167, lon: 153.4000 },
-    cairns: { lat: -16.9186, lon: 145.7781 }
-};
-
+const loadingMessage = ref('Processing your information...');
+// Show completion modal
+const showCompletionModal = ref(false);
+const earnedEnergy = ref(0);
+const completedTaskTitle = ref('');
 // Dify API configuration
 const difyConfig = {
     apiKey: 'app-qdqefgJOJ5PCIOyziUDhQgYY',
     endpoint: 'https://api.dify.ai/v1/chat-messages'
 };
 
-// Get user geolocation
-const getUserLocation = () => {
+
+
+// Carbon assessment results
+const carbonLevel = ref(''); // Will be one of: 'Low', 'Medium', 'High'
+
+// New data structures for carbon assessment
+const transportation = reactive({
+    commuting: {
+        walking: false,
+        publicTransport: false,
+        fuelCar: false,
+        electricCar: false
+    },
+    longDistance: {
+        airplane: false,
+        airplaneFrequency: 'low',
+        train: false,
+        selfDriving: false
+    },
+    additional: {
+        carpool: false,
+        remoteWork: false
+    }
+});
+
+const household = reactive({
+    familyMembers: 1,
+    electricityConsumption: 0,
+    city: '',
+    habits: {
+        turnOff: false,
+        energySaving: false,
+        noSpecial: false
+    }
+});
+
+const preferences = reactive({
+    waterResources: false,
+    energyUsage: false,
+    wasteManagement: false,
+    biodiversity: false,
+    airQuality: false
+});
+// get reference electricity usage
+const getReferenceElectricityUsage = () => {
+    const familySize = household.familyMembers >= 5 ? "5+" : household.familyMembers.toString();
+
+    if (household.city && electricityData.monthlyElectricityUsage[household.city]) {
+        return electricityData.monthlyElectricityUsage[household.city][familySize];
+    } else {
+        return electricityData.monthlyElectricityUsage.average[familySize];
+    }
+};
+
+// show city name
+const getCityName = () => {
+    const cityNames = {
+        sydney: "Sydney",
+        brisbane: "Brisbane",
+        adelaide: "Adelaide",
+        melbourne: "Melbourne",
+        canberra: "Canberra",
+        hobart: "Hobart"
+    };
+
+    return cityNames[household.city] || "";
+};
+
+// show family size
+const displayFamilySize = () => {
+    return household.familyMembers >= 5 ? "5+ person" : household.familyMembers + " person";
+};
+
+// Calculate carbon footprint score
+const calculateCarbonFootprint = () => {
+    const errors = [];
+
+    const hasTransportationMethod = transportation.commuting.walking ||
+        transportation.commuting.publicTransport ||
+        transportation.commuting.fuelCar ||
+        transportation.commuting.electricCar;
+
+    if (!hasTransportationMethod) {
+        errors.push("Please select at least one transportation method");
+    }
+
+    if (!household.electricityConsumption) {
+        errors.push("Please enter your monthly electricity consumption");
+    }
+
+    if (errors.length > 0) {
+        alert(errors.join("\n"));
+        return;
+    }
     loading.value = true;
-    locationError.value = '';
+    loadingMessage.value = "Calculating your carbon footprint...";
 
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            handleLocationSuccess,
-            handleLocationError,
-            {
-                enableHighAccuracy: true,
-                timeout: 10000,
-                maximumAge: 0
-            }
-        );
-    } else {
-        locationError.value = "Your browser doesn't support geolocation";
-        loading.value = false;
+
+    let score = 0;
+
+    // Transportation score (0-100, higher is worse for environment)
+    let transportScore = 0;
+
+    // Commuting impact
+    if (transportation.commuting.walking) transportScore -= 20;
+    if (transportation.commuting.publicTransport) transportScore += 10;
+    if (transportation.commuting.fuelCar) transportScore += 40;
+    if (transportation.commuting.electricCar) transportScore += 15;
+
+    // Long distance travel impact
+    if (transportation.longDistance.airplane) {
+        if (transportation.longDistance.airplaneFrequency === 'low') transportScore += 20;
+        else if (transportation.longDistance.airplaneFrequency === 'medium') transportScore += 35;
+        else if (transportation.longDistance.airplaneFrequency === 'high') transportScore += 50;
     }
-};
 
-// Handle successful location retrieval
-const handleLocationSuccess = (position) => {
-    const lat = position.coords.latitude;
-    const lon = position.coords.longitude;
+    if (transportation.longDistance.train) transportScore += 10;
+    if (transportation.longDistance.selfDriving) transportScore += 30;
 
-    // Find nearest Australian city
-    const nearestCity = findNearestAustralianCity(lat, lon);
+    // Mitigating factors
+    if (transportation.additional.carpool) transportScore -= 15;
+    if (transportation.additional.remoteWork) transportScore -= 20;
 
-    if (nearestCity) {
-        selectedCity.value = nearestCity;
-        loading.value = false; // Stop loading state without triggering suggestions
-    } else {
-        locationError.value = "Could not find a matching Australian city, please select manually";
-        loading.value = false;
-    }
-};
+    // Normalize transportation score (0-100)
+    transportScore = Math.max(0, Math.min(100, transportScore));
 
-// Handle location retrieval error
-const handleLocationError = (error) => {
-    loading.value = false;
-    switch (error.code) {
-        case error.PERMISSION_DENIED:
-            locationError.value = "Location request was denied";
-            break;
-        case error.POSITION_UNAVAILABLE:
-            locationError.value = "Location information is unavailable";
-            break;
-        case error.TIMEOUT:
-            locationError.value = "Location request timed out";
-            break;
-        default:
-            locationError.value = "Unknown error occurred when getting location";
-    }
-};
+    // Household energy score (0-100)
+    let householdScore = 0;
+    // Get reference electricity usage
+    let referenceUsage = getReferenceElectricityUsage();
+    const actualUsage = household.electricityConsumption;
 
-// Find nearest Australian city
-const findNearestAustralianCity = (lat, lon) => {
-    // Check if coordinates are roughly in Australia
-    if (lat < -10 && lat > -45 && lon > 110 && lon < 155) {
-        let nearestCity = null;
-        let shortestDistance = Infinity;
+    if (referenceUsage > 0) {
+        // calculate usage ratio
+        const usageRatio = actualUsage / referenceUsage;
 
-        // Calculate distances to each city
-        for (const [city, coords] of Object.entries(cityCoordinates)) {
-            const distance = calculateDistance(lat, lon, coords.lat, coords.lon);
-            if (distance < shortestDistance) {
-                shortestDistance = distance;
-                nearestCity = city;
-            }
+        // rating based on usage ratio
+        if (usageRatio < 0.7) {
+            householdScore = 20; // low usage
+        } else if (usageRatio < 0.9) {
+            householdScore = 35; // below average usage
+        } else if (usageRatio < 1.1) {
+            householdScore = 50; // average usage
+        } else if (usageRatio < 1.3) {
+            householdScore = 65; // above average usage
+        } else if (usageRatio < 1.5) {
+            householdScore = 80; // high usage
+        } else {
+            householdScore = 100; // very high usage
         }
+    } else {
+        // if no reference data, use actual usage
+        const perPerson = actualUsage / Math.max(1, household.familyMembers);
 
-        return nearestCity;
+        // rating based on per person usage
+        if (perPerson < 100) householdScore = 20;
+        else if (perPerson < 167) householdScore = 40;
+        else if (perPerson < 233) householdScore = 60;
+        else if (perPerson < 300) householdScore = 80;
+        else householdScore = 100;
     }
 
-    return null;
+    // Household habits impact
+    if (household.habits.turnOff) householdScore -= 10;
+    if (household.habits.energySaving) householdScore -= 15;
+    if (household.habits.noSpecial) householdScore += 10;
+
+    // Housing type impact
+    if (housingType.value === 'apartment') householdScore -= 10;
+    else if (housingType.value === 'house') householdScore += 10;
+    else if (housingType.value === 'townhouse') householdScore += 5;
+
+    // Normalize household score (0-100)
+    householdScore = Math.max(0, Math.min(100, householdScore));
+
+    // Calculate final score (weighted average)
+    score = (transportScore * 0.6) + (householdScore * 0.4);
+
+    // Determine carbon level
+    if (score < 40) carbonLevel.value = 'Low';
+    else if (score < 70) carbonLevel.value = 'Medium';
+    else carbonLevel.value = 'High';
+
+    // For debugging
+    console.log('Carbon assessment:', {
+        transportScore,
+        householdScore,
+        finalScore: score,
+        level: carbonLevel.value
+    });
+
+    loading.value = false;
 };
 
-// Calculate distance between two points using Haversine formula
-const calculateDistance = (lat1, lon1, lat2, lon2) => {
-    const R = 6371; // Earth's radius in km
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLon = (lon2 - lon1) * Math.PI / 180;
-    const a =
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-        Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c; // Distance in km
+// Get carbon level description
+const getCarbonLevelDescription = () => {
+    switch (carbonLevel.value) {
+        case 'Low':
+            return "Your carbon footprint is below average. Great job! We'll suggest ways to maintain and improve your eco-friendly lifestyle.";
+        case 'Medium':
+            return "Your carbon footprint is average. There are several areas where you could make changes to reduce your environmental impact.";
+        case 'High':
+            return "Your carbon footprint is above average. We'll suggest key areas where you can make changes to significantly reduce your environmental impact.";
+        default:
+            return "";
+    }
 };
 
 // Get eco suggestions
 const getEcoSuggestions = async () => {
-    // Validate input
-    if (!selectedCity.value) {
-        locationError.value = "Please select a city";
+    if (!carbonLevel.value) {
         return;
     }
 
     loading.value = true;
+    loadingMessage.value = "Generating your personalized eco suggestions...";
     suggestions.value = [];
-    locationError.value = '';
 
     try {
-        // Set city info
-        const cityData = australianCities.value?.find(city =>
-            city.value === selectedCity.value
-        );
-        if (!cityData) throw new Error("Invalid city selection");
+        // Get primary environmental concern (or "general" if none selected)
+        let primaryConcern = "general";
+        if (preferences.waterResources) primaryConcern = "water";
+        else if (preferences.energyUsage) primaryConcern = "energy";
+        else if (preferences.wasteManagement) primaryConcern = "waste";
+        else if (preferences.biodiversity) primaryConcern = "biodiversity";
+        else if (preferences.airQuality) primaryConcern = "air";
 
-        cityInfo.value = {
-            name: cityData.label,
-            state: cityData.state,
-            description: getCityDescription(selectedCity.value)
-        };
-
-        // Prepare API payload with strict English requirements
+        // Prepare API payload for Dify
         const payload = {
             inputs: {
-                location: selectedCity.value,
-                region_characteristics: getRegionCharacteristics(selectedCity.value),
-                environmental_concern: environmentalConcern.value || "general",
+                carbon_level: carbonLevel.value.toLowerCase(),
+                environmental_concern: primaryConcern,
                 housing_type: housingType.value || "not specified",
+                transportation_habits: JSON.stringify(getTransportationSummary()),
+                household_energy: JSON.stringify(getHouseholdEnergySummary()),
                 language: "en" // Force English output
             },
-            query: `Provide exactly 5 eco-tips for ${cityData.label} following these rules:
-                    - Use English only
-                    - Each tip: max 25 words
-                    - Include difficulty (1-3)
-                    - Format as JSON`,
+            query: `Provide eco-tips for a person with ${carbonLevel.value.toLowerCase()} carbon footprint`,
             response_mode: "blocking",
-            user: "test_user",
-
+            user: "test_user"
         };
 
-        // Actual API call (remove mock in production)
-        const response = await callDifyAPI(payload);
-        suggestions.value = parseStreamingResponse(response);
+        // Call Dify API
+        try {
+            const response = await callDifyAPI(payload);
 
+            // Parse the response
+            const parsedSuggestions = parseStreamingResponse(response);
+            if (parsedSuggestions && parsedSuggestions.length > 0) {
+                suggestions.value = parsedSuggestions;
+            } else {
+                throw new Error("Failed to parse suggestions from API response");
+            }
+        } catch (apiError) {
+            console.error("API Error:", apiError);
+            // Fallback to mock suggestions
+            suggestions.value = getMockSuggestions(carbonLevel.value.toLowerCase());
+        }
     } catch (error) {
-        console.error("API Error:", error);
-        locationError.value = "Failed to load suggestions. Showing sample data...";
-        suggestions.value = getMockSuggestions(selectedCity.value);
+        console.error("Error generating suggestions:", error);
+        // Fallback to mock suggestions
+        suggestions.value = getMockSuggestions(carbonLevel.value.toLowerCase());
     } finally {
         loading.value = false;
     }
 };
-// Strict response parser for English content
-const parseStreamingResponse = (response) => {
-    console.log('Raw API response:', JSON.stringify(response, null, 2));
 
-    try {
-        if (Array.isArray(response.suggestions)) {
-            return response.suggestions;
-        }
-
-        if (typeof response.answer === 'string') {
-            // 直接移除 Markdown 代码块
-            const jsonStr = response.answer.replace(/```json|```/g, '').trim();
-            const parsed = JSON.parse(jsonStr);
-
-            if (Array.isArray(parsed.suggestions)) {
-                return parsed.suggestions;
-            }
-        }
-
-        throw new Error('Unrecognized response format');
-    } catch (error) {
-        console.error('Parsing failed:', error);
-        return getMockSuggestions();
-    }
-};
-
-// Call Dify API (implement in actual project)
+// Call Dify API (from your working code)
 const callDifyAPI = async (payload) => {
     const response = await fetch(difyConfig.endpoint, {
         method: 'POST',
@@ -352,47 +556,91 @@ const callDifyAPI = async (payload) => {
 
     return response.json();
 };
-const getCityDescription = (city) => {
-    const descriptions = {
-        sydney: "Australia's largest city with iconic harbors and beaches.",
-        melbourne: "Cultural capital known for variable weather patterns.",
-        brisbane: "Subtropical river city with abundant sunshine.",
-        perth: "Isolated coastal city with Mediterranean climate.",
-        adelaide: "Planned city with Mediterranean climate and innovative sustainability initiatives.",
-        hobart: "Temperate island capital with mountain backdrop.",
-        darwin: "Tropical northern capital with distinct wet and dry seasons.",
-        canberra: "Planned inland capital with four distinct seasons.",
-        goldcoast: "Coastal city with beaches, waterways and rainforest hinterland.",
-        cairns: "Tropical gateway to the Great Barrier Reef and rainforests."
-    };
-    return descriptions[city] || "Australian city";
+
+// Parse streaming response for Dify API
+const parseStreamingResponse = (response) => {
+
+    try {
+        // Check if response already has parsed suggestions array
+        if (response && Array.isArray(response.suggestions)) {
+            return response.suggestions.map(suggestion => ({
+                ...suggestion,
+                // Add impact level based on difficulty if not provided
+                impact: suggestion.impact || suggestion.difficulty,
+                // Ensure completed flag exists
+                completed: false
+            }));
+        }
+
+        // Check if response contains an answer field with JSON string
+        if (response && typeof response.answer === 'string') {
+            // Remove any markdown code blocks
+            const jsonStr = response.answer.replace(/```json|```/g, '').trim();
+
+            // Parse the JSON
+            const parsed = JSON.parse(jsonStr);
+
+            // Check for suggestions array in parsed JSON
+            if (parsed && Array.isArray(parsed.suggestions)) {
+                return parsed.suggestions.map(suggestion => ({
+                    title: suggestion.title,
+                    content: suggestion.content,
+                    difficulty: suggestion.difficulty,
+                    // Convert emoji to impact level or use difficulty as fallback
+                    impact: suggestion.impact || suggestion.difficulty,
+                    // Add emoji if available
+                    emoji: suggestion.emoji || "",
+                    // Add reason if available
+                    reason: suggestion.reason || "",
+                    // Initialize completed status
+                    completed: false
+                }));
+            }
+        }
+
+        throw new Error('Unrecognized response format');
+    } catch (error) {
+        console.error('Parsing failed:', error);
+        return [];
+    }
 };
-// Get region characteristics (example data, could be fetched from API)
-const getRegionCharacteristics = (city) => {
-    const characteristics = {
-        sydney: "coastal, urban, occasional drought, high population density",
-        melbourne: "variable weather, moderate rainfall, urban sprawl",
-        brisbane: "subtropical, flood-prone, river city, high humidity",
-        perth: "mediterranean climate, water scarcity, isolated",
-        adelaide: "dry, murray river dependent, mediterranean climate",
-        hobart: "cool temperate, mountainous surroundings, clean air",
-        darwin: "tropical monsoon, cyclone-prone, wet-dry extremes",
-        canberra: "inland, four distinct seasons, planned city",
-        goldcoast: "coastal, high rainfall, tourism impact, canal system",
-        cairns: "tropical, reef proximity, rainforest, high rainfall"
+
+// Helper function to get transportation summary for API
+const getTransportationSummary = () => {
+    const commuting = [];
+    if (transportation.commuting.walking) commuting.push("walking");
+    if (transportation.commuting.publicTransport) commuting.push("public_transport");
+    if (transportation.commuting.fuelCar) commuting.push("fuel_car");
+    if (transportation.commuting.electricCar) commuting.push("electric_car");
+
+    const longDistance = [];
+    if (transportation.longDistance.airplane) longDistance.push(`airplane_${transportation.longDistance.airplaneFrequency}`);
+    if (transportation.longDistance.train) longDistance.push("train");
+    if (transportation.longDistance.selfDriving) longDistance.push("self_driving");
+
+    const additional = [];
+    if (transportation.additional.carpool) additional.push("carpool");
+    if (transportation.additional.remoteWork) additional.push("remote_work");
+
+    return {
+        commuting: commuting.join(","),
+        long_distance: longDistance.join(","),
+        additional: additional.join(",")
     };
-    return characteristics[city] || "";
 };
 
+// Helper function to get household energy summary for API
+const getHouseholdEnergySummary = () => {
+    const habits = [];
+    if (household.habits.turnOff) habits.push("turn_off");
+    if (household.habits.energySaving) habits.push("energy_saving");
+    if (household.habits.noSpecial) habits.push("no_special");
 
-
-// Submit feedback (implement in actual project)
-const submitFeedback = (isPositive) => {
-    // In a real project, this would send feedback to backend
-    console.log(`User submitted ${isPositive ? 'positive' : 'negative'} feedback`);
-    feedbackSubmitted.value = true;
-
-    // Could add Dify feedback API call here
+    return {
+        family_members: household.familyMembers,
+        electricity_consumption: household.electricityConsumption,
+        habits: habits.join(",")
+    };
 };
 
 // Get difficulty text
@@ -405,69 +653,164 @@ const getDifficultyText = (level) => {
     }
 };
 
-const getMockSuggestions = (city) => {
-    // Hardcoded mock data, would be fetched from Dify API
-    const allSuggestions = {
-        sydney: [
+// Get impact text
+const getImpactText = (level) => {
+    switch (level) {
+        case 1: return "Small";
+        case 2: return "Medium";
+        case 3: return "Large";
+        default: return "Not specified";
+    }
+};
+
+// Submit feedback
+const submitFeedback = (isPositive) => {
+    console.log(`User submitted ${isPositive ? 'positive' : 'negative'} feedback`);
+    feedbackSubmitted.value = true;
+};
+
+// Get mock suggestions based on carbon level
+const getMockSuggestions = (carbonLevel) => {
+    // Common suggestions for all levels
+    const commonSuggestions = {
+        low: [
             {
-                title: "Water Conservation",
-                content: "Sydney often faces water restrictions. Install rainwater tanks for garden use, take shorter showers (4-minute limit recommended), and use drought-resistant native plants in your garden.",
-                difficulty: 1
+                title: "Enhanced Water Conservation",
+                content: "Install a smart water meter to track and further reduce household water usage. Many utilities offer rebates for these devices.",
+                difficulty: 2,
+                impact: 2,
+                completed: false
             },
             {
-                title: "Public Transport",
-                content: "Utilize Sydney's extensive public transport network including trains, buses, ferries, and light rail to reduce vehicle emissions in this congested city.",
-                difficulty: 1
+                title: "Community Sustainability",
+                content: "Start or join a neighborhood sustainability initiative to multiply your environmental impact through community action.",
+                difficulty: 2,
+                impact: 3,
+                completed: false
             },
             {
-                title: "Harbour Health",
-                content: "Be mindful about chemicals that could enter stormwater systems, as Sydney Harbour's water quality depends on responsible urban practices. Use eco-friendly cleaning products.",
-                difficulty: 2
+                title: "Zero Waste Challenge",
+                content: "Challenge yourself to a month of zero landfill waste by composting, recycling, and avoiding packaging waste completely.",
+                difficulty: 3,
+                impact: 2,
+                completed: false
             },
             {
-                title: "Heat Wave Protection",
-                content: "Plant native shade trees around your property to combat urban heat island effect and reduce cooling costs during Sydney's increasingly hot summers.",
-                difficulty: 2
+                title: "Biodiversity Garden",
+                content: "Convert part of your yard to native plants that support local pollinators and wildlife. Research species suited to your region.",
+                difficulty: 2,
+                impact: 2,
+                completed: false
             },
             {
-                title: "Reduce Plastic Use",
-                content: "Sydney is a coastal city where plastic pollution threatens marine life. Use reusable shopping bags, water bottles, and avoid single-use plastic items.",
-                difficulty: 1
+                title: "Eco-Education",
+                content: "Share your knowledge with friends and family. Host a workshop on sustainable practices you've mastered.",
+                difficulty: 1,
+                impact: 2,
+                completed: false
             }
         ],
-        melbourne: [
+        medium: [
             {
-                title: "Water Efficiency",
-                content: "Melbourne has faced severe drought conditions in the past. Install water-efficient appliances, collect shower warm-up water for plants, and consider drought-tolerant landscaping.",
-                difficulty: 2
+                title: "Smart Home Energy",
+                content: "Install a smart thermostat to optimize your home's energy use. Can reduce energy bills by 10-15% annually.",
+                difficulty: 2,
+                impact: 2,
+                completed: false
             },
             {
-                title: "Green Transport",
-                content: "Take advantage of Melbourne's excellent tram network (the largest in the world) and extensive bicycle paths. The city is designed for car-free living in many areas.",
-                difficulty: 1
+                title: "Meatless Mondays",
+                content: "Reduce your carbon footprint by avoiding meat one day a week. Plant-based meals typically have 1/3 the carbon impact.",
+                difficulty: 1,
+                impact: 2,
+                completed: false
             },
             {
-                title: "Energy Conservation",
-                content: "Due to Melbourne's variable weather, ensure your home has good insulation. Use draft stoppers to prevent heat loss during the city's cool winters.",
-                difficulty: 2
+                title: "Transportation Alternatives",
+                content: "Use public transportation, carpool, or cycle for your regular commute at least 2-3 days per week.",
+                difficulty: 2,
+                impact: 3,
+                completed: false
             },
             {
-                title: "Urban Gardening",
-                content: "Support Melbourne's biodiversity by creating home gardens with indigenous plants that support local wildlife, especially important in a city that has lost significant native grasslands.",
-                difficulty: 2
+                title: "Water Usage Reduction",
+                content: "Install low-flow shower heads and faucet aerators to reduce water usage by up to 60% without sacrificing water pressure.",
+                difficulty: 1,
+                impact: 2,
+                completed: false
             },
             {
-                title: "Adapt to Changing Weather",
-                content: "Melbourne is known for its 'four seasons in one day' weather. Prepare emergency items and adapt to rapidly changing weather conditions to reduce the impact of weather changes on energy use.",
-                difficulty: 1
+                title: "Energy Audit",
+                content: "Conduct a DIY home energy audit to identify energy waste. Focus on air leaks, insulation, and appliance efficiency.",
+                difficulty: 2,
+                impact: 2,
+                completed: false
             }
         ],
-        // Add other cities as needed
+        high: [
+            {
+                title: "Professional Energy Audit",
+                content: "Schedule a professional home energy audit to identify major inefficiencies and prioritize improvements.",
+                difficulty: 2,
+                impact: 3,
+                completed: false
+            },
+            {
+                title: "Reduce Air Travel",
+                content: "Cut your air travel by 50% and offset remaining flights. Consider train alternatives for shorter trips.",
+                difficulty: 3,
+                impact: 3,
+                completed: false
+            },
+            {
+                title: "Car-Free Commuting",
+                content: "Switch to public transit, cycling, or walking for your daily commute. Start with 2-3 days per week.",
+                difficulty: 2,
+                impact: 3,
+                completed: false
+            },
+            {
+                title: "Energy-Efficient Appliances",
+                content: "Replace your oldest, least efficient appliances with Energy Star models. Start with refrigerator and washing machine.",
+                difficulty: 2,
+                impact: 3,
+                completed: false
+            },
+            {
+                title: "Home Insulation Upgrade",
+                content: "Improve wall and attic insulation to reduce heating/cooling costs by up to 20%. Focus on biggest air leak areas first.",
+                difficulty: 3,
+                impact: 3,
+                completed: false
+            }
+        ]
     };
-}
 
+    return commonSuggestions[carbonLevel] || commonSuggestions.medium;
+};
+// Calculate energy points based on difficulty
+const calculateEnergyPoints = (difficulty) => {
+    switch (difficulty) {
+        case 1: return 25; // simple task
+        case 2: return 40; // medium task
+        case 3: return 60; // hard task
+        default: return 30;
+    }
+};
 
+// Mark task as complete
+const markTaskComplete = (suggestion) => {
+    suggestion.completed = !suggestion.completed;
+
+    // If the task is marked as completed, show the completion modal
+    if (suggestion.completed) {
+        completedTaskTitle.value = suggestion.title;
+        earnedEnergy.value = calculateEnergyPoints(suggestion.difficulty);
+        showCompletionModal.value = true;
+    }
+};
 </script>
+
 <style scoped>
 .eco-action {
     max-width: 1000px;
@@ -493,22 +836,15 @@ section {
     box-shadow: var(--shadow);
 }
 
-.location-controls,
-.preferences-controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    align-items: center;
-}
-
-.city-select,
-.preference-select {
+.preference-select,
+.sub-select {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 16px;
     min-width: 200px;
 }
+
 
 .primary-button {
     background: linear-gradient(135deg, var(--primary-gradient-start), var(--primary-gradient-end));
@@ -529,20 +865,6 @@ section {
     cursor: not-allowed;
 }
 
-.secondary-button {
-    background-color: #f5f5f5;
-    color: #333;
-    border: 1px solid #ccc;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.secondary-button:hover {
-    background-color: #e0e0e0;
-}
-
 .complete-button {
     padding: 6px 12px;
     border-radius: 4px;
@@ -558,14 +880,9 @@ section {
 }
 
 .complete-button.completed {
-    background-color: #4caf50;
+    background-color: var(--primary-color);
     color: white;
-    border-color: #4caf50;
-}
-
-.error-message {
-    color: #d32f2f;
-    margin-top: 10px;
+    border-color: var(--primary-color);
 }
 
 .loading-indicator {
@@ -583,13 +900,6 @@ section {
     height: 40px;
     animation: spin 1s linear infinite;
     margin-bottom: 10px;
-}
-
-.location-info {
-    margin-bottom: 20px;
-    padding: 15px;
-    background-color: #e8f5e9;
-    border-radius: 4px;
 }
 
 .suggestions-container {
@@ -617,17 +927,19 @@ section {
     margin-top: 0;
 }
 
-.difficulty-level {
+.difficulty-level,
+.impact-level {
     display: inline-block;
     padding: 3px 8px;
     border-radius: 4px;
     font-size: 14px;
     margin-top: 10px;
+    margin-right: 10px;
 }
 
 .level-1 {
     background-color: #e8f5e9;
-    color: var(--primary-color);
+    color: #2e7d32;
 }
 
 .level-2 {
@@ -638,6 +950,21 @@ section {
 .level-3 {
     background-color: #ffebee;
     color: #c62828;
+}
+
+.impact-1 {
+    background-color: #e3f2fd;
+    color: #1565c0;
+}
+
+.impact-2 {
+    background-color: #e8eaf6;
+    color: #3949ab;
+}
+
+.impact-3 {
+    background-color: #ede7f6;
+    color: #5e35b1;
 }
 
 .feedback-section {
@@ -661,7 +988,7 @@ section {
 
 .feedback-button.positive {
     background-color: #e8f5e9;
-    color: var(--primary-color);
+    color: #2e7d32;
 }
 
 .feedback-button.negative {
@@ -674,10 +1001,99 @@ section {
     color: var(--primary-color);
 }
 
-.preference-item {
+.assessment-group {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.assessment-group h3 {
+    margin-top: 0;
+    color: var(--primary-color);
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+}
+
+.assessment-subgroup {
+    margin-bottom: 15px;
+}
+
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.checkbox-label {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.nested-option {
+    margin-left: 25px;
+    margin-top: 5px;
+}
+
+.action-button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.number-input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100px;
+}
+
+.carbon-rating {
+    text-align: center;
+    padding: 20px;
+    margin: 0 auto 20px;
+    max-width: 500px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+.rating-label {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.rating-value {
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    padding: 10px 20px;
+    display: inline-block;
+    border-radius: 4px;
+}
+
+.carbon-level-low {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.carbon-level-medium {
+    background-color: #fff8e1;
+    color: #ff8f00;
+}
+
+.carbon-level-high {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.rating-description {
+    font-size: 16px;
+    line-height: 1.4;
 }
 
 .footer {
@@ -689,13 +1105,110 @@ section {
     text-align: center;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
+.reference-value {
+    margin-top: 5px;
+    font-size: 0.9em;
+    color: #666;
+    font-style: italic;
+}
 
-    .location-controls,
-    .preferences-controls {
+.emoji {
+    font-size: 1.2em;
+    margin-left: 5px;
+}
+
+.suggestion-reason {
+    font-style: italic;
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #999;
+}
+
+
+.completion-modal {
+    position: relative;
+    padding: 30px 20px;
+}
+
+.celebration-animation {
+    margin-bottom: 20px;
+}
+
+.celebration-icon {
+    font-size: 50px;
+    animation: bounce 0.8s ease infinite alternate;
+}
+
+.energy-value {
+    font-weight: bold;
+    color: #ff9800;
+    font-size: 1.2em;
+}
+
+.task-completed {
+    margin-top: 10px;
+    color: #666;
+    font-style: italic;
+}
+
+@keyframes bounce {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-10px);
+    }
+}
+
+
+.modal-enter-active,
+.modal-leave-active {
+    transition: opacity 0.3s;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+    opacity: 0;
+}
+
+@media (max-width: 768px) {
+    .checkbox-group {
         flex-direction: column;
-        align-items: stretch;
+        align-items: flex-start;
     }
 
     .suggestions-container {

@@ -1,50 +1,28 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
-// import ArticlesList from '../components/ArticleList.vue';
+import carouselData from '../assets/jsons/carousel.json';
 import axios from 'axios'
-// Data for carousel images
-const carouselImages = [
-    "https://media.istockphoto.com/id/1366228771/photo/volunteer-planting-trees-in-forest-carbon-emission-reforestation-restoration-gardener-with.jpg?s=1024x1024&w=is&k=20&c=C3FXOVv2nTUvNDhQYCeZ7_Z0-lX1VF0vf0FPGdE1FPQ=",
-    "https://media.istockphoto.com/id/1368724296/photo/recycling-conservation-in-the-park-group-of-happy-volunteer-with-garbage-bags-cleaning-area.jpg?s=612x612&w=0&k=20&c=z0QvnhTUfRFIKlARzNkk_uowU9yTNwgFBaX11-mzlsA=",
-    "https://media.istockphoto.com/id/1284382234/photo/young-couple-planting-tree-in-garden-together-as-save-world-concept.jpg?s=612x612&w=0&k=20&c=KBGW0mGxYV9v1_EAVF_wh7S9AFOGmGrQUZ_Z-4MTKFc=",
-];
+
 
 import { computed } from 'vue';
+
+const slides = ref(carouselData.slides);
 
 const currentImage = computed(() => {
     return carouselImages[currentSlide.value];
 });
-
-// Data for events
-const events = [
-    {
-        id: 1,
-        title: "Community Tree Planting Day",
-        date: "October 15, 2023",
-        location: "City Park",
-        description: "Join us for a free community event to plant trees and reduce our carbon footprint.",
-    },
-    {
-        id: 2,
-        title: "Carbon Reduction Workshop",
-        date: "November 1, 2023",
-        location: "Community Center",
-        description: "Learn practical ways to reduce your carbon emissions at home and in your community.",
-    },
-];
-
 // Carousel logic with auto-rotation
 const currentSlide = ref(0);
 const isCarouselPaused = ref(false);
 let carouselInterval = null;
 
 const nextSlide = () => {
-    currentSlide.value = (currentSlide.value + 1) % carouselImages.length;
+    currentSlide.value = (currentSlide.value + 1) % slides.value.length;
 };
 
 const prevSlide = () => {
-    currentSlide.value = (currentSlide.value - 1 + carouselImages.length) % carouselImages.length;
+    currentSlide.value = (currentSlide.value - 1 + slides.value.length) % slides.value.length;
 };
 
 const pauseCarousel = () => {
@@ -64,8 +42,6 @@ const startCarouselInterval = () => {
         }
     }, 5000);
 };
-
-// Animation on scroll
 const setupIntersectionObserver = () => {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -79,6 +55,25 @@ const setupIntersectionObserver = () => {
         observer.observe(el);
     });
 };
+
+// Data for events
+const events = [
+    {
+        id: 1,
+        title: "Community Tree Planting Day",
+        date: "October 15, 2023",
+        location: "City Park",
+        description: "Join us for a free community event to plant trees and reduce our carbon footprint.",
+    },
+    {
+        id: 2,
+        title: "Carbon Reduction Workshop",
+        date: "November 1, 2023",
+        location: "Community Center",
+        description: "Learn practical ways to reduce your carbon emissions at home and in your community.",
+    },
+];
+
 
 // Router for navigation
 const router = useRouter();
@@ -107,7 +102,7 @@ onMounted(() => {
             Plotly.newPlot('chart', fig.data, fig.layout);
         })
         .catch(error => {
-            console.error('Failed：', error);
+            console.error('Failed:', error);
         });
 });
 
@@ -119,28 +114,40 @@ onBeforeUnmount(() => {
 <template>
     <div class="home-page">
         <!-- Hero Section - Enhanced Carousel -->
-        <!-- <section class="hero">
+        <section class="hero">
             <div class="carousel" @mouseenter="pauseCarousel" @mouseleave="resumeCarousel">
                 <div class="carousel-container">
-                    <transition name="fade">
-                        <img v-if="currentImage" :src="currentImage" alt="Carousel Image" class="carousel-image" />
+                    <transition name="fade" mode="out-in">
+                        <div class="carousel-item" :key="currentSlide"
+                            :style="{ 'background-image': `url(${slides[currentSlide].image})` }">
+                            <div class="carousel-overlay">
+                                <div class="carousel-content">
+                                    <h1 class="carousel-title">{{ slides[currentSlide].title }}</h1>
+                                    <p class="carousel-subtitle">{{ slides[currentSlide].description }}</p>
+
+                                    <div class="carousel-actions">
+                                        <router-link :to="slides[currentSlide].buttonLink"
+                                            class="carousel-action-button">
+                                            {{ slides[currentSlide].buttonText }}
+                                        </router-link>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="location-tag">{{ slides[currentSlide].location }}</div>
+                        </div>
                     </transition>
-                    <div class="carousel-content">
-                        <h1 class="carousel-title">Plant Trees, Reduce Carbon, Save Earth</h1>
-                        <p class="carousel-subtitle">Join our mission to combat climate change through tree planting and
-                            carbon reduction</p>
-                    </div>
                 </div>
                 <button class="carousel-button prev" @click="prevSlide">&#10094;</button>
                 <button class="carousel-button next" @click="nextSlide">&#10095;</button>
                 <div class="carousel-indicators">
-                    <span v-for="(image, index) in carouselImages" :key="index"
-                        :class="{ active: currentSlide === index }" @click="currentSlide = index">
+                    <span v-for="(slide, index) in slides" :key="index" :class="{ active: currentSlide === index }"
+                        @click="currentSlide = index">
                     </span>
                 </div>
             </div>
-        </section> -->
-
+        </section>
         <!-- Check Carbon Footprint Section -->
         <section class="check-carbon">
             <h2>Calculate Your Carbon Footprint</h2>
@@ -243,4 +250,204 @@ onBeforeUnmount(() => {
         </footer>
     </div>
 </template>
-<style scoped></style>
+<style scoped>
+/* Hero Section - Carousel */
+.hero {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+}
+
+.carousel {
+    position: relative;
+    width: 100%;
+    height: 600px;
+    overflow: hidden;
+    border-radius: var(--border-radius, 10px);
+    box-shadow: var(--shadow, 0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+.carousel-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.carousel-item {
+    position: relative;
+    width: 100%;
+    height: 600px;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+}
+
+.carousel-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 60%, rgba(0, 0, 0, 0.1) 100%);
+}
+
+.carousel-overlay {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 10%;
+}
+
+.carousel-content {
+    display: flex;
+    flex-direction: column;
+    color: white;
+    max-width: 600px;
+    text-align: left;
+    gap: 1rem;
+}
+
+.carousel-title {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+}
+
+.carousel-subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    max-width: 500px;
+    line-height: 1.5;
+}
+
+.carousel-actions {
+    display: flex;
+
+    margin-top: 1rem;
+}
+
+.carousel-button {
+    white-space: nowrap;
+    display: inline-flex;
+    background-color: white;
+    color: #333;
+    padding: 12px 24px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.carousel-button:hover {
+    background-color: #f0f0f0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.carousel-action-button {
+    white-space: nowrap;
+    display: inline-flex;
+    background-color: white;
+    color: #333;
+    padding: 12px 24px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.carousel-action-button:hover {
+    background-color: #f0f0f0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.button-arrow {
+    margin-left: 5px;
+    font-size: 1.2em;
+}
+
+.carousel-button.prev,
+.carousel-button.next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s;
+}
+
+.carousel-button.prev:hover,
+.carousel-button.next:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.carousel-button.prev {
+    left: 20px;
+}
+
+.carousel-button.next {
+    right: 20px;
+}
+
+.carousel-indicators {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+}
+
+.carousel-indicators span {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.carousel-indicators span.active {
+    background: white;
+    transform: scale(1.2);
+}
+
+.location-tag {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    z-index: 2;
+}
+
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+</style>

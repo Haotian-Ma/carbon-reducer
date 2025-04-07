@@ -7,7 +7,7 @@
                     <router-link to="/" class="logo-link">
                         <img src="../assets/images/logo.jpg" alt="Logo" class="logo-image" />
                     </router-link>
-                    <h1 class="title">EcoSphere -Carbon Reduction</h1>
+                    <h1 class="title">EcoSphere</h1>
                 </div>
                 <ul class="nav">
                     <li class="nav-item">
@@ -33,11 +33,11 @@
                                     Climate Insight
                                 </router-link>
                             </li>
-                            <li class="dropdown-item">
+                            <!-- <li class="dropdown-item">
                                 <router-link to="/resources/learning" class="dropdown-link">
                                     Learning
                                 </router-link>
-                            </li>
+                            </li> -->
                         </ul>
                     </li>
                     <li class="nav-item">
@@ -110,7 +110,10 @@ onUnmounted(() => {
 }
 
 .header {
-    width: 100%;
+    width: 100vw;
+    max-width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
     background: linear-gradient(135deg, var(--primary-gradient-start), var(--primary-gradient-end));
     box-shadow: var(--shadow);
     border-radius: var(--border-radius);
@@ -126,6 +129,7 @@ onUnmounted(() => {
     border-radius: 0 0 var(--border-radius) var(--border-radius);
     box-shadow: var(--shadow-hover);
     animation: slideDown 0.3s ease-out;
+
 }
 
 .header-placeholder {
