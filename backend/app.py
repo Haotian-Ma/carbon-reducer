@@ -67,7 +67,7 @@ world_temp_data = loading_data_from_db("world_temp_data")
 
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True, automatic_options=True)
 
 @app.route('/')
 def home():
@@ -83,7 +83,7 @@ def load_data_from_db(table_name):
         print(f"Error loading table '{table_name}': {e}")
         return None
 
-@app.route('/api/chartdata1')
+@app.route('/api/chartdata1', methods=['POST',"GET","OPTIONS"])
 def chartdata1_api():
     data = [
         {
