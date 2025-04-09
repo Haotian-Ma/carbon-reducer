@@ -203,19 +203,13 @@ onBeforeUnmount(() => {
                         <div class="feature-content">
                             <h3>Educational Resources</h3>
                             <p>Learn about climate change, sustainability, and environmental conservation.</p>
-                            <router-link to="resources/learning" class="feature-button">
+                            <router-link to="resources/kids-learning" class="feature-button">
                                 Explore Resources
                             </router-link>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
-
-        <!-- Data Section -->
-        <section class="data-section animate-on-scroll">
-            <h2>Impact Analytics</h2>
-            <div id="chart" style="width: 100%; height: 500px;"></div>
         </section>
 
         <!-- Events Section -->
@@ -237,12 +231,12 @@ onBeforeUnmount(() => {
             </div>
         </section> -->
 
-        <!-- About Section -->
+        <!-- Hope Stories Section -->
         <section class="about animate-on-scroll">
             <div class="about-content">
-                <h2>About Us</h2>
+                <h2>Hope Stories</h2>
                 <p>
-                    GreenEarth Initiative is a non-profit organization dedicated to reducing carbon emissions through
+                    Ecospere is a non-profit website dedicated to reducing carbon emissions through
                     tree planting and environmental education. Through community engagement, outreach programs, and
                     advocacy,
                     we aim to protect our planet and create a sustainable future for all.

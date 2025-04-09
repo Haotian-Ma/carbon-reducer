@@ -4,7 +4,7 @@ import AboutView from '../views/AboutView.vue'
 import EcoActionView from '../views/EcoActionView.vue'
 import VirtualTreeView from '../views/VirtualTreeView.vue'
 import ClimateInsightView from '../views/ClimateInsightView.vue'
-import LearningView from '../views/LearningView.vue'
+import LearningView from '../views/KidsLearningView.vue'
 
 const routes = [
   {
@@ -34,7 +34,7 @@ const routes = [
     component: ClimateInsightView
   },
  {
-    path:'/resources/learning',
+    path:'/resources/kids-learning',
     name: 'Learning',
     component: LearningView
   },

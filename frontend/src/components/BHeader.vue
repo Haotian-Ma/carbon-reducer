@@ -34,8 +34,8 @@
                                 </router-link>
                             </li>
                             <li class="dropdown-item">
-                                <router-link to="/resources/learning" class="dropdown-link">
-                                    Learning
+                                <router-link to="/resources/kids-learning" class="dropdown-link">
+                                    Kids Learning
                                 </router-link>
                             </li>
                         </ul>
