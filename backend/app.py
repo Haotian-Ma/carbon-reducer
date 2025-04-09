@@ -67,7 +67,11 @@ world_temp_data = loading_data_from_db("world_temp_data")
 
 
 app = Flask(__name__)
-
+CORS(app, resources={
+    r"/api/*": {
+        "origins": ["https://ecosphere1.xyz", "https://sub.ecosphere1.xyz"]
+    }
+}, supports_credentials=True)
 
 @app.route('/')
 def home():
@@ -138,9 +142,7 @@ def chartdata1_api():
         }
     }
     
-    response = jsonify({"data": data, "layout": layout})
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    return response
+    return jsonify({"data": data, "layout": layout})
 
 @app.route('/api/chartdata2')
 def chartdata2_api():
