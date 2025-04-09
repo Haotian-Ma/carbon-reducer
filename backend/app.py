@@ -352,5 +352,9 @@ def chartdata6_api():
     
     return jsonify({"data": [trace], "layout": layout})
 
+@app.after_request
+def after_request(response):
+    print("Response Headers:", response.headers)
+    return response
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
