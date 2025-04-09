@@ -67,11 +67,7 @@ world_temp_data = loading_data_from_db("world_temp_data")
 
 
 app = Flask(__name__)
-CORS(app, resources={
-    r"/api/*": {
-        "origins": ["https://ecosphere1.xyz", "https://sub.ecosphere1.xyz"]
-    }
-}, supports_credentials=True)
+
 
 @app.route('/')
 def home():
@@ -357,8 +353,13 @@ def chartdata6_api():
     return jsonify({"data": [trace], "layout": layout})
 
 @app.after_request
-def after_request(response):
-    print("Response Headers:", response.headers)
+def add_cors_headers(response):
+    # 根据需要替换为允许的具体域名，或使用 '*'（如果不发送凭据）
+    response.headers.add('Access-Control-Allow-Origin', 'https://ecosphere1.xyz')
+    response.headers.add('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    # 如果需要支持凭据（例如 cookies），需要设置：
+    response.headers.add('Access-Control-Allow-Credentials', 'true')
     return response
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
