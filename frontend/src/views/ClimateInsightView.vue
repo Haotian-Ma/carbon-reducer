@@ -1,189 +1,170 @@
 <template>
-    <div class="climate-insight">
-        <header class="insight-header">
-            <h1>Climate Insight</h1>
-            <p class="subtitle">Data-driven analysis of climate trends and carbon emissions</p>
-        </header>
+  <div class="climate-insight">
+    <header class="insight-header">
+      <h1>Climate Insight</h1>
+      <p class="subtitle">Data-driven analysis of climate trends and carbon emissions</p>
+    </header>
 
-        <section class="filter-section">
-            <div class="container">
-                <div class="filter-controls">
-                    <div class="filter-group">
-                        <label for="region-select">Region</label>
-                        <select id="region-select" v-model="selectedRegion" class="filter-select">
-                            <option value="global">Global</option>
-                            <option value="asia">Asia</option>
-                            <option value="europe">Europe</option>
-                            <option value="northAmerica">North America</option>
-                            <option value="southAmerica">South America</option>
-                            <option value="africa">Africa</option>
-                            <option value="oceania">Oceania</option>
-                        </select>
-                    </div>
+    <!-- Section 1: Global Temperature and Emissions -->
+    <section class="section-group">
+      <h2 class="section-group-title">Global Temperature and Emissions Trends</h2>
+      <p class="section-description">
+        Scientists worldwide have tracked Earth's temperature for decades. The data clearly shows our planet's average
+        temperature rising at an unprecedented rate, particularly since the mid-20th century, strongly correlated with
+        increasing greenhouse gas emissions.
+      </p>
 
-                    <div class="filter-group">
-                        <label for="dataType-select">Data Type</label>
-                        <select id="dataType-select" v-model="selectedDataType" class="filter-select">
-                            <option value="emissions">Carbon Emissions</option>
-                            <option value="temperature">Temperature Change</option>
-                            <option value="sealevel">Sea Level Rise</option>
-                            <option value="icemelt">Ice Sheet Melting</option>
-                        </select>
-                    </div>
-
-                    <div class="filter-group">
-                        <label for="timeframe-select">Timeframe</label>
-                        <select id="timeframe-select" v-model="selectedTimeframe" class="filter-select">
-                            <option value="lastYear">Last Year</option>
-                            <option value="last5Years">Last 5 Years</option>
-                            <option value="last10Years">Last 10 Years</option>
-                            <option value="last50Years">Last 50 Years</option>
-                            <option value="historical">Historical Record</option>
-                        </select>
-                    </div>
-
-                    <button @click="updateData" class="update-button" :disabled="loading">
-                        <span v-if="!loading">Update View</span>
-                        <span v-else>Loading...</span>
-                    </button>
-                </div>
+      <div class="chart-row">
+        <div class="chart-section chart-section1">
+          <div class="container">
+            <h3>Average Temperature with Confidence Interval</h3>
+            <p class="chart-description">
+              This chart tracks global average temperature anomaly (deviation from baseline average) from 1850 to
+              present.
+              The confidence interval narrows over time, reflecting improved accuracy in measurements as technology
+              advances.
+            </p>
+            <div class="chart-container" ref="chartContainer1">
+              <!-- Plotly chart will be rendered here -->
             </div>
-        </section>
-
-        <section class="visualization-section">
-            <div class="container">
-                <div class="visualization-wrapper">
-                    <div v-if="loading" class="loading-overlay">
-                        <div class="spinner"></div>
-                        <p>Loading climate data...</p>
-                    </div>
-
-                    <!-- Chart Area -->
-                    <div class="chart-container" ref="chartContainer">
-                        <!-- This will be populated by a visualization library -->
-                    </div>
-
-                    <!-- Key Metrics Cards -->
-                    <div class="metrics-container">
-                        <!-- Key metric cards will be displayed here -->
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="data-table-section">
-            <div class="container">
-                <h2>Detailed Climate Data</h2>
-                <p class="section-description">
-                    Explore the raw data behind the visualizations with our comprehensive data tables.
-                </p>
-
-                <div class="data-table-wrapper">
-                    <div v-if="loading" class="loading-overlay">
-                        <div class="spinner"></div>
-                        <p>Loading table data...</p>
-                    </div>
-
-                    <div class="table-controls">
-                        <div class="search-control">
-                            <input type="text" v-model="searchQuery" placeholder="Search data..."
-                                class="search-input" />
-                        </div>
-                        <div class="table-pagination">
-                            <!-- Pagination controls will be placed here -->
-                        </div>
-                    </div>
-
-                    <!-- Data table will be rendered here -->
-                    <div class="table-container">
-                        <!-- Data table will be populated by external component or API data -->
-                    </div>
-
-                    <div class="table-footer">
-                        <div class="download-options">
-                            <button @click="downloadData('csv')" class="download-button">
-                                Download CSV
-                            </button>
-                            <button @click="downloadData('excel')" class="download-button">
-                                Download Excel
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="methodology-section">
-            <div class="container">
-                <h2>Data Methodology</h2>
-                <p>
-                    The climate data presented on this page is sourced from reputable scientific organizations
-                    including NASA, NOAA, and the IPCC. Our visualizations are updated regularly to ensure
-                    accuracy and relevance.
-                </p>
-            </div>
-        </section>
-        <section class="chart-section1">
-        <div class="container">
-          <h2>Chart 1: Average Temperature with Confidence Interval</h2>
-          <div class="chart-container" ref="chartContainer1">
-            <!-- Plotly chart will be rendered here -->
+            <div v-if="loading1" class="loading-indicator"></div>
           </div>
-          <div v-if="loading1" class="loading-indicator"></div>
         </div>
-      </section>
 
-      <section class="chart-section2">
-        <div class="container">
-          <h2>Chart 2: Temperature and Emissions Over Time</h2>
-          <div class="chart-container" ref="chartContainer2">
-            <!-- Plotly chart will be rendered here -->
+        <div class="chart-section chart-section2">
+          <div class="container">
+            <h3>Temperature and Emissions Over Time</h3>
+            <p class="chart-description">
+              This visualization shows the relationship between rising greenhouse gas emissions and global temperature.
+              CO₂ from burning fossil fuels is the main contributor, but Methane (CH₄) and other gases also trap heat in
+              our atmosphere.
+            </p>
+            <div class="chart-container" ref="chartContainer2">
+              <!-- Plotly chart will be rendered here -->
+            </div>
+            <div v-if="loading2" class="loading-indicator"></div>
           </div>
-          <div v-if="loading2" class="loading-indicator"></div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section class="chart-section3">
+    <!-- Section 2: Emissions Breakdown and Impact -->
+    <section class="section-group">
+      <h2 class="section-group-title">Carbon Emissions and Environmental Impact</h2>
+      <p class="section-description">
+        Human activities contribute to climate change through various sectors. Understanding these emissions sources and
+        their environmental impacts is crucial for developing effective climate policies.
+      </p>
+
+      <div class="chart-section chart-section3">
         <div class="container">
-          <h2>Chart 3: CO₂ Emissions by Sector in Australia (2021)</h2>
+          <h3>CO₂ Emissions by Sector in Australia (2021)</h3>
+
           <div class="chart-container" ref="chartContainer3">
             <!-- Plotly chart will be rendered here -->
           </div>
           <div v-if="loading3" class="loading-indicator"></div>
         </div>
-      </section>
+      </div>
 
-      <section class="chart-section4">
+
+      <div class="chart-section forest-analysis">
         <div class="container">
-          <h2>Chart 4: Percentage Change in Forest Area (2000-2022)</h2>
-          <div class="chart-container" ref="chartContainer4">
-            <!-- Plotly chart will be rendered here -->
+          <h3>Forest Change Analysis</h3>
+          <div class="tab-controls">
+            <button :class="['tab-button', { active: activeForestTab === 'percentage' }]"
+              @click="activeForestTab = 'percentage'">
+              Percentage Change by Country
+            </button>
+            <button :class="['tab-button', { active: activeForestTab === 'distribution' }]"
+              @click="activeForestTab = 'distribution'">
+              Global Distribution
+            </button>
           </div>
-          <div v-if="loading4" class="loading-indicator"></div>
-        </div>
-      </section>
 
-      <section class="chart-section5">
-        <div class="container">
-          <h2>Chart 5: Distribution of Forest Trend (2000-2020)</h2>
-          <div class="chart-container" ref="chartContainer5">
-            <!-- Plotly chart will be rendered here -->
+          <div class="chart-tab-content">
+            <div v-show="activeForestTab === 'percentage'" class="chart-container" ref="chartContainer4">
+              <!-- Percentage Change chart will be rendered here -->
+            </div>
+            <div v-show="activeForestTab === 'distribution'" class="chart-container" ref="chartContainer5">
+              <!-- Distribution chart will be rendered here -->
+            </div>
+            <div v-if="loading4 || loading5" class="loading-indicator"></div>
           </div>
-          <div v-if="loading5" class="loading-indicator"></div>
-        </div>
-      </section>
 
-      <section class="chart-section6">
+          <div class="chart-description-panel">
+            <div v-if="activeForestTab === 'percentage'">
+              <p class="chart-description">
+                Forests act as major carbon sinks, absorbing billions of tons of CO₂ annually. This chart shows how
+                forest
+                cover has changed globally, with some regions experiencing significant deforestation.
+              </p>
+            </div>
+            <div v-if="activeForestTab === 'distribution'">
+              <p class="chart-description">
+                This distribution shows that most countries fall within moderate ranges of forest change, with fewer at
+                the extremes. The peak suggests that moderate changes in forest cover are most common globally.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Urban Heat Impact -->
+    <section class="section-group">
+      <h2 class="section-group-title">Urban Heat Impact in Australian Cities</h2>
+      <p class="section-description">
+        Climate change is causing more frequent and intense heat waves in urban areas. Recent studies suggest extreme
+        heat in Australia's cities may be underreported by traditional measurement methods.
+      </p>
+
+      <div class="chart-section chart-section6">
         <div class="container">
-          <h2>Chart 6: Number of Hot Days per Year by City</h2>
+          <h3>Number of Hot Days per Year by City</h3>
+
           <div class="chart-container" ref="chartContainer6">
             <!-- Plotly chart will be rendered here -->
           </div>
           <div v-if="loading6" class="loading-indicator"></div>
         </div>
-      </section>
-    </div>
-    
+      </div>
+
+      <div class="impact-box">
+        <h3>Climate Change Impacts</h3>
+        <div class="impact-grid">
+          <div class="impact-item">
+            <h4>Health Risks</h4>
+            <p>Beyond heatstroke, climate change affects health through worse air quality (bushfire smoke, pollution),
+              potentially changing patterns of infectious diseases, and impacts on mental health.</p>
+          </div>
+          <div class="impact-item">
+            <h4>Nature Under Pressure</h4>
+            <p>Increased bushfire risk threatens forests like the Blue Mountains. Unique ecosystems face disruptions,
+              and iconic wildlife struggle with changing conditions.</p>
+          </div>
+          <div class="impact-item">
+            <h4>Economic Costs</h4>
+            <p>Climate impacts have real economic costs: rising insurance premiums, infrastructure damage from extreme
+              weather, agricultural disruption affecting food prices, and effects on tourism.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Taking Action Section -->
+    <section class="action-brief">
+      <h2>Taking Action Together</h2>
+      <p class="section-description">
+        The challenge is significant, but despair is not an option. We have the knowledge and increasingly the tools to
+        make a difference. As urban residents, our collective actions and choices matter.
+      </p>
+
+      <div class="action-button-container">
+        <a href="/eco-action" class="action-button">Explore EcoAction Solutions</a>
+      </div>
+    </section>
+  </div>
 </template>
 
 <script setup>
@@ -211,352 +192,423 @@ const loading3 = ref(false)
 const loading4 = ref(false)
 const loading5 = ref(false)
 const loading6 = ref(false)
+const activeForestTab = ref('percentage');
 
 // Method to update data
 const updateData = () => {
-    loading.value = true;
-    // Actual data fetching logic should be added here
-    setTimeout(() => {
-        loading.value = false;
-    }, 1000);
+  loading.value = true;
+  // Actual data fetching logic should be added here
+  setTimeout(() => {
+    loading.value = false;
+  }, 1000);
 };
 
 // Method to download data
 const downloadData = (format) => {
-    console.log(`Downloading data in ${format} format`);
-    // Implement download functionality
+  console.log(`Downloading data in ${format} format`);
+  // Implement download functionality
 };
 
 const fetchChartData1 = async () => {
-    try {
-      loading1.value = true;
-      const response = await fetch(`${API_BASE_URL}/api/chartdata1`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const chartData = await response.json();
-      Plotly.newPlot(chartContainer1.value, chartData.data, chartData.layout);
-    } catch (error) {
-      console.error("Error fetching chart data:", error);
-    } finally {
-      loading1.value = false;
+  try {
+    loading1.value = true;
+    const response = await fetch(`${API_BASE_URL}/api/chartdata1`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-  };
-  
-  const fetchChartData2 = async () => {
-    try {
-      loading2.value = true;
-      const response = await fetch(`${API_BASE_URL}/api/chartdata2`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const chartData = await response.json();
-      Plotly.newPlot(chartContainer2.value, chartData.data, chartData.layout);
-    } catch (error) {
-      console.error("Error fetching chart data:", error);
-    } finally {
-      loading2.value = false;
-    }
-  };
+    const chartData = await response.json();
+    Plotly.newPlot(chartContainer1.value, chartData.data, chartData.layout);
+  } catch (error) {
+    console.error("Error fetching chart data:", error);
+  } finally {
+    loading1.value = false;
+  }
+};
 
-  const fetchChartData3 = async () => {
-    try {
-      loading3.value = true;
-      const response = await fetch(`${API_BASE_URL}/api/chartdata3`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const chartData = await response.json();
-      Plotly.newPlot(chartContainer3.value, chartData.data, chartData.layout);
-    } catch (error) {
-      console.error("Error fetching chart data:", error);
-    } finally {
-      loading3.value = false;
+const fetchChartData2 = async () => {
+  try {
+    loading2.value = true;
+    const response = await fetch(`${API_BASE_URL}/api/chartdata2`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-  };
+    const chartData = await response.json();
+    Plotly.newPlot(chartContainer2.value, chartData.data, chartData.layout);
+  } catch (error) {
+    console.error("Error fetching chart data:", error);
+  } finally {
+    loading2.value = false;
+  }
+};
 
-  const fetchChartData4 = async () => {
-    try {
-      loading4.value = true;
-      const response = await fetch(`${API_BASE_URL}/api/chartdata4`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const chartData = await response.json();
-      Plotly.newPlot(chartContainer4.value, chartData.data, chartData.layout);
-    } catch (error) {
-      console.error("Error fetching chart data:", error);
-    } finally {
-      loading4.value = false;
+const fetchChartData3 = async () => {
+  try {
+    loading3.value = true;
+    const response = await fetch(`${API_BASE_URL}/api/chartdata3`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-  };
+    const chartData = await response.json();
+    Plotly.newPlot(chartContainer3.value, chartData.data, chartData.layout);
+  } catch (error) {
+    console.error("Error fetching chart data:", error);
+  } finally {
+    loading3.value = false;
+  }
+};
 
-  const fetchChartData5 = async () => {
-    try {
-      loading5.value = true;
-      const response = await fetch(`${API_BASE_URL}/api/chartdata5`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const chartData = await response.json();
-      Plotly.newPlot(chartContainer5.value, chartData.data, chartData.layout);
-    } catch (error) {
-      console.error("Error fetching chart data:", error);
-    } finally {
-      loading5.value = false;
+const fetchChartData4 = async () => {
+  try {
+    loading4.value = true;
+    const response = await fetch(`${API_BASE_URL}/api/chartdata4`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-  };
+    const chartData = await response.json();
+    Plotly.newPlot(chartContainer4.value, chartData.data, chartData.layout);
+  } catch (error) {
+    console.error("Error fetching chart data:", error);
+  } finally {
+    loading4.value = false;
+  }
+};
 
-  const fetchChartData6 = async () => {
-    try {
-      loading6.value = true;
-      const response = await fetch(`${API_BASE_URL}/api/chartdata6`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const chartData = await response.json();
-      Plotly.newPlot(chartContainer6.value, chartData.data, chartData.layout);
-    } catch (error) {
-      console.error("Error fetching chart data:", error);
-    } finally {
-      loading6.value = false;
+const fetchChartData5 = async () => {
+  try {
+    loading5.value = true;
+    const response = await fetch(`${API_BASE_URL}/api/chartdata5`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-  };
-  onMounted(() => {
-    fetchChartData1();
-    fetchChartData2();
-    fetchChartData3();
-    fetchChartData4();
-    fetchChartData5();
-    fetchChartData6();
-  });
+    const chartData = await response.json();
+    Plotly.newPlot(chartContainer5.value, chartData.data, chartData.layout);
+  } catch (error) {
+    console.error("Error fetching chart data:", error);
+  } finally {
+    loading5.value = false;
+  }
+};
+
+const fetchChartData6 = async () => {
+  try {
+    loading6.value = true;
+    const response = await fetch(`${API_BASE_URL}/api/chartdata6`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const chartData = await response.json();
+    Plotly.newPlot(chartContainer6.value, chartData.data, chartData.layout);
+  } catch (error) {
+    console.error("Error fetching chart data:", error);
+  } finally {
+    loading6.value = false;
+  }
+};
+onMounted(() => {
+  fetchChartData1();
+  fetchChartData2();
+  fetchChartData3();
+  fetchChartData4();
+  fetchChartData5();
+  fetchChartData6();
+});
 </script>
 
 <style scoped>
 .climate-insight {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: var(--background);
+  color: var(--text-dark);
 }
 
 .insight-header {
-    text-align: center;
-    margin-bottom: 30px;
+  text-align: center;
+  margin-bottom: 40px;
+  padding: 60px 20px;
+  background-color: var(--primary-light);
+  background-image: url('../assets/images/climate-insight-back.jpg');
+
+  background-size: cover;
+
+  background-position: center;
+
+  background-repeat: no-repeat;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  position: relative;
+}
+
+
+.insight-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+
+  border-radius: var(--border-radius);
+}
+
+
+.insight-header h1,
+.insight-header .subtitle {
+  position: relative;
+  z-index: 1;
+  color: white;
+
 }
 
 .insight-header h1 {
-    color: var(--primary-color, #2c3e50);
-    margin-bottom: 5px;
+  margin-bottom: 15px;
+  font-size: 42px;
+  font-weight: 700;
+}
+
+.insight-header .subtitle {
+  font-size: 18px;
+  max-width: 700px;
+  margin: 0 auto;
+  opacity: 0.9;
 }
 
 .subtitle {
-    color: var(--text-light, #666);
-    font-size: 18px;
+  color: var(--text-light);
+  font-size: 18px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.section-group {
+  margin-bottom: 60px;
+  background-color: var(--section-bg);
+  border-radius: var(--border-radius);
+  padding: 30px;
+  box-shadow: var(--box-shadow);
+}
+
+.section-group-title {
+  color: var(--primary-color);
+  margin-bottom: 15px;
+  font-size: 24px;
+  border-bottom: 2px solid var(--primary-light);
+  padding-bottom: 15px;
+}
+
+
+
+.chart-section {
+  margin-bottom: 40px;
+}
+
+.chart-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.chart-row .chart-section {
+  flex: 1 1 45%;
+  min-width: 300px;
 }
 
 .container {
-    margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
-/* Filter section styles */
-.filter-section {
-    background-color: #f9f9f9;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 30px;
+.container h3 {
+  color: var(--primary-color);
+  margin-bottom: 10px;
+  font-size: 20px;
 }
 
-.filter-controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    align-items: flex-end;
-}
-
-.filter-group {
-    display: flex;
-    flex-direction: column;
-    min-width: 200px;
-}
-
-.filter-group label {
-    margin-bottom: 5px;
-    font-weight: 500;
-}
-
-.filter-select {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
-}
-
-.update-button {
-    background-color: var(--primary-color, #2c3e50);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    height: 42px;
-}
-
-.update-button:hover {
-    background-color: var(--primary-hover, #1e2b3c);
-}
-
-.update-button:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-}
-
-/* Visualization section styles */
-.visualization-section {
-    margin-bottom: 40px;
-}
-
-.visualization-wrapper {
-    position: relative;
-    min-height: 400px;
+.chart-description {
+  color: var(--text-light);
+  margin-bottom: 15px;
+  font-size: 15px;
+  line-height: 1.5;
 }
 
 .chart-container {
-    height: 400px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    border: 1px dashed #ddd;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  height: 450px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.metrics-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-    margin-top: 20px;
+.loading-indicator {
+  text-align: center;
+  padding: 20px;
 }
 
-/* Data table section styles */
-.data-table-section h2 {
-    margin-bottom: 10px;
+.impact-box {
+  background-color: var(--primary-light);
+  padding: 25px;
+  border-radius: var(--border-radius);
+  margin-top: 30px;
 }
 
-.section-description {
-    color: var(--text-light, #666);
-    margin-bottom: 20px;
+.impact-box h3 {
+  color: var(--primary-color);
+  margin-bottom: 20px;
+  text-align: center;
 }
 
-.data-table-wrapper {
-    position: relative;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+.impact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
 }
 
-.table-controls {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 15px;
+.impact-item {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
-.search-input {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
-    width: 250px;
+.impact-item h4 {
+  color: var(--primary-color);
+  margin-bottom: 10px;
 }
 
-.table-container {
-    min-height: 300px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    border: 1px dashed #ddd;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.action-section {
+  background-color: var(--primary-light);
+  padding: 40px 30px;
+  border-radius: var(--border-radius);
+  margin-bottom: 40px;
+  box-shadow: var(--box-shadow);
 }
 
-.table-footer {
-    display: flex;
-    justify-content: flex-end;
+.action-section h2 {
+  color: var(--primary-color);
+  margin-bottom: 15px;
+  text-align: center;
 }
 
-.download-button {
-    background-color: #f0f0f0;
-    border: 1px solid #ddd;
-    padding: 8px 15px;
-    border-radius: 4px;
-    margin-left: 10px;
-    cursor: pointer;
+.action-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 30px;
 }
 
-.download-button:hover {
-    background-color: #e0e0e0;
+.action-item {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
-/* Loader styles */
-.loading-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(255, 255, 255, 0.8);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 10;
-    border-radius: 8px;
+.action-item h3 {
+  color: var(--primary-color);
+  margin-bottom: 10px;
+  font-size: 18px;
 }
 
-.spinner {
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid var(--primary-color, #2c3e50);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    animation: spin 1s linear infinite;
-    margin-bottom: 10px;
+.tab-controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
 }
 
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
+.tab-button {
+  background-color: #f5f5f5;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  color: var(--text-light);
+}
 
-    100% {
-        transform: rotate(360deg);
-    }
+.tab-button:hover {
+  background-color: #e0e0e0;
+}
+
+.tab-button.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.chart-tab-content {
+  position: relative;
+}
+
+.chart-description-panel {
+  margin-top: 15px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border-left: 3px solid var(--primary-color);
+}
+
+
+.action-brief {
+  background-color: var(--primary-light);
+  padding: 40px 30px;
+  border-radius: var(--border-radius);
+  margin-bottom: 40px;
+  box-shadow: var(--box-shadow);
+  text-align: center;
+}
+
+.action-brief h2 {
+  color: var(--primary-color);
+  margin-bottom: 15px;
+}
+
+.action-button-container {
+  margin-top: 30px;
+}
+
+.action-button {
+  display: inline-block;
+  background-color: var(--primary-color);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.action-button:hover {
+  background-color: #14574b;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* Responsive design */
 @media (max-width: 768px) {
-    .filter-controls {
-        flex-direction: column;
-    }
+  .chart-row {
+    flex-direction: column;
+  }
 
-    .filter-group {
-        width: 100%;
-    }
+  .chart-row .chart-section {
+    width: 100%;
+  }
 
-    .update-button {
-        width: 100%;
-        margin-top: 10px;
-    }
+  .impact-grid,
+  .action-grid {
+    grid-template-columns: 1fr;
+  }
 
-    .table-controls {
-        flex-direction: column;
-        gap: 10px;
-    }
+  .chart-container {
+    height: 350px;
+  }
 
-    .search-input {
-        width: 100%;
-    }
+  .section-group,
+  .action-section {
+    padding: 20px 15px;
+  }
 }
 </style>

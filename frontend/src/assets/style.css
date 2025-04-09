@@ -15,6 +15,14 @@
     --shadow-hover: 0 6px 12px rgba(0, 0, 0, 0.15);
     --border-radius: 10px;
     --transition: all 0.3s ease;
+    --primary-light: #e6f2ef;
+        --secondary-color: #f39c12;
+        --text-dark: #2c3e50;
+        --text-light: #666;
+        --background: #f5f7f9;
+        --section-bg: #fff;
+        --border-radius: 10px;
+        --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 body {
@@ -519,6 +527,29 @@ h2::after {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
+}
+.section-description {
+    color: var(--text-light);
+    margin-bottom: 25px;
+    font-size: 16px;
+    line-height: 1.6;
+}
+.action-button {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.action-button:hover {
+    background-color: #14574b;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 @keyframes slideDown {
     from {

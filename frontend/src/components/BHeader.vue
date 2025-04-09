@@ -267,6 +267,11 @@ onUnmounted(() => {
         text-align: center;
     }
 
+    .dropdown-toggle {
+        text-align: center;
+        justify-content: center;
+    }
+
     .dropdown-menu {
         position: static;
         width: 100%;
