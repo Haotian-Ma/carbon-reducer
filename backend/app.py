@@ -67,14 +67,7 @@ world_temp_data = loading_data_from_db("world_temp_data")
 
 
 app = Flask(__name__)
-CORS(app, resources={
-    r"/api/*": {
-        "origins": ["https://ecosphere1.xyz"],
-        "methods": ["GET", "POST", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization"],
-        "supports_credentials": True
-    }
-})
+CORS(app)
 
 @app.route('/')
 def home():
