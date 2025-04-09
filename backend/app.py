@@ -140,7 +140,7 @@ def chartdata1_api():
     
     return jsonify({"data": data, "layout": layout})
 
-@app.route('/api/chartdata2')
+@app.route('/api/chartdata2', methods=['POST',"GET","OPTIONS"])
 def chartdata2_api():
     data = [
         {
@@ -202,7 +202,7 @@ def chartdata2_api():
     
     return jsonify({"data": data, "layout": layout})
 
-@app.route('/api/chartdata3')
+@app.route('/api/chartdata3', methods=['POST',"GET","OPTIONS"])
 def chartdata3_api():
     # chart3：CO2 Emissions by Sector in Australia (2021)
     url = "https://ourworldindata.org/grapher/co-emissions-by-sector.csv?v=1&csvType=full&useColumnShortNames=true"
@@ -242,7 +242,7 @@ def chartdata3_api():
     
     return jsonify({"data": data, "layout": layout})
 
-@app.route('/api/chartdata4')
+@app.route('/api/chartdata4', methods=['POST',"GET","OPTIONS"])
 def chartdata4_api():
     data = [
         {
@@ -271,7 +271,7 @@ def chartdata4_api():
     
     return jsonify({"data": data, "layout": layout})
 
-@app.route('/api/chartdata5')
+@app.route('/api/chartdata5', methods=['POST',"GET","OPTIONS"])
 def chartdata5_api():
 
     data_series = forest_trend['percentage_change_norm'].dropna()
@@ -312,7 +312,7 @@ def chartdata5_api():
     
     return jsonify({"data": data, "layout": layout})
 
-@app.route('/api/chartdata6')
+@app.route('/api/chartdata6', methods=['POST',"GET","OPTIONS"])
 def chartdata6_api():
 
     heat_data['date'] = pd.to_datetime(heat_data['date'])
