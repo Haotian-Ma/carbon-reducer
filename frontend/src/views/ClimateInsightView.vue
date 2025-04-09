@@ -123,11 +123,73 @@
                 </p>
             </div>
         </section>
+        <section class="chart-section1">
+        <div class="container">
+          <h2>Chart 1: Average Temperature with Confidence Interval</h2>
+          <div class="chart-container" ref="chartContainer1">
+            <!-- Plotly chart will be rendered here -->
+          </div>
+          <div v-if="loading1" class="loading-indicator"></div>
+        </div>
+      </section>
+
+      <section class="chart-section2">
+        <div class="container">
+          <h2>Chart 2: Temperature and Emissions Over Time</h2>
+          <div class="chart-container" ref="chartContainer2">
+            <!-- Plotly chart will be rendered here -->
+          </div>
+          <div v-if="loading2" class="loading-indicator"></div>
+        </div>
+      </section>
+
+      <section class="chart-section3">
+        <div class="container">
+          <h2>Chart 3: CO₂ Emissions by Sector in Australia (2021)</h2>
+          <div class="chart-container" ref="chartContainer3">
+            <!-- Plotly chart will be rendered here -->
+          </div>
+          <div v-if="loading3" class="loading-indicator"></div>
+        </div>
+      </section>
+
+      <section class="chart-section4">
+        <div class="container">
+          <h2>Chart 4: Percentage Change in Forest Area (2000-2022)</h2>
+          <div class="chart-container" ref="chartContainer4">
+            <!-- Plotly chart will be rendered here -->
+          </div>
+          <div v-if="loading4" class="loading-indicator"></div>
+        </div>
+      </section>
+
+      <section class="chart-section5">
+        <div class="container">
+          <h2>Chart 5: Distribution of Forest Trend (2000-2020)</h2>
+          <div class="chart-container" ref="chartContainer5">
+            <!-- Plotly chart will be rendered here -->
+          </div>
+          <div v-if="loading5" class="loading-indicator"></div>
+        </div>
+      </section>
+
+      <section class="chart-section6">
+        <div class="container">
+          <h2>Chart 6: Number of Hot Days per Year by City</h2>
+          <div class="chart-container" ref="chartContainer6">
+            <!-- Plotly chart will be rendered here -->
+          </div>
+          <div v-if="loading6" class="loading-indicator"></div>
+        </div>
+      </section>
     </div>
+    
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import Plotly from 'plotly.js-dist-min';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 // Filter state
 const selectedRegion = ref('global');
@@ -137,7 +199,18 @@ const loading = ref(false);
 const searchQuery = ref('');
 
 // Chart reference
-const chartContainer = ref(null);
+const chartContainer1 = ref(null)
+const chartContainer2 = ref(null)
+const chartContainer3 = ref(null)
+const chartContainer4 = ref(null)
+const chartContainer5 = ref(null)
+const chartContainer6 = ref(null)
+const loading1 = ref(false)
+const loading2 = ref(false)
+const loading3 = ref(false)
+const loading4 = ref(false)
+const loading5 = ref(false)
+const loading6 = ref(false)
 
 // Method to update data
 const updateData = () => {
@@ -154,9 +227,109 @@ const downloadData = (format) => {
     // Implement download functionality
 };
 
-onMounted(() => {
-    // Initialization logic when the page loads
-});
+const fetchChartData1 = async () => {
+    try {
+      loading1.value = true;
+      const response = await fetch(`${API_BASE_URL}/api/chartdata1`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const chartData = await response.json();
+      Plotly.newPlot(chartContainer1.value, chartData.data, chartData.layout);
+    } catch (error) {
+      console.error("Error fetching chart data:", error);
+    } finally {
+      loading1.value = false;
+    }
+  };
+  
+  const fetchChartData2 = async () => {
+    try {
+      loading2.value = true;
+      const response = await fetch(`${API_BASE_URL}/api/chartdata2`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const chartData = await response.json();
+      Plotly.newPlot(chartContainer2.value, chartData.data, chartData.layout);
+    } catch (error) {
+      console.error("Error fetching chart data:", error);
+    } finally {
+      loading2.value = false;
+    }
+  };
+
+  const fetchChartData3 = async () => {
+    try {
+      loading3.value = true;
+      const response = await fetch(`${API_BASE_URL}/api/chartdata3`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const chartData = await response.json();
+      Plotly.newPlot(chartContainer3.value, chartData.data, chartData.layout);
+    } catch (error) {
+      console.error("Error fetching chart data:", error);
+    } finally {
+      loading3.value = false;
+    }
+  };
+
+  const fetchChartData4 = async () => {
+    try {
+      loading4.value = true;
+      const response = await fetch(`${API_BASE_URL}/api/chartdata4`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const chartData = await response.json();
+      Plotly.newPlot(chartContainer4.value, chartData.data, chartData.layout);
+    } catch (error) {
+      console.error("Error fetching chart data:", error);
+    } finally {
+      loading4.value = false;
+    }
+  };
+
+  const fetchChartData5 = async () => {
+    try {
+      loading5.value = true;
+      const response = await fetch(`${API_BASE_URL}/api/chartdata5`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const chartData = await response.json();
+      Plotly.newPlot(chartContainer5.value, chartData.data, chartData.layout);
+    } catch (error) {
+      console.error("Error fetching chart data:", error);
+    } finally {
+      loading5.value = false;
+    }
+  };
+
+  const fetchChartData6 = async () => {
+    try {
+      loading6.value = true;
+      const response = await fetch(`${API_BASE_URL}/api/chartdata6`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const chartData = await response.json();
+      Plotly.newPlot(chartContainer6.value, chartData.data, chartData.layout);
+    } catch (error) {
+      console.error("Error fetching chart data:", error);
+    } finally {
+      loading6.value = false;
+    }
+  };
+  onMounted(() => {
+    fetchChartData1();
+    fetchChartData2();
+    fetchChartData3();
+    fetchChartData4();
+    fetchChartData5();
+    fetchChartData6();
+  });
 </script>
 
 <style scoped>
