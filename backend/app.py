@@ -361,5 +361,8 @@ def add_cors_headers(response):
     # 如果需要支持凭据（例如 cookies），需要设置：
     response.headers.add('Access-Control-Allow-Credentials', 'true')
     return response
+
+print(app.url_map)
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
