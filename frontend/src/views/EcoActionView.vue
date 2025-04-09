@@ -182,16 +182,30 @@
             <p>{{ loadingMessage }}</p>
         </div>
 
-        <!-- Carbon Footprint Results -->
-        <section class="results-section" v-if="carbonLevel">
+        <!-- Carbon Footprint Results Section -->
+        <section class="results-section" v-if="transportScore !== null && householdScore !== null">
             <h2>Your Carbon Footprint Assessment</h2>
 
-            <div class="carbon-rating">
-                <div class="rating-label">Your Carbon Footprint Level:</div>
-                <div class="rating-value" :class="'carbon-level-' + carbonLevel.toLowerCase()">
-                    {{ carbonLevel }}
+            <div class="carbon-results-container">
+                <!-- Transportation Results -->
+                <div class="carbon-rating">
+                    <div class="rating-label">Transportation Footprint:</div>
+                    <div class="rating-value" :class="'carbon-level-' + getTransportLevel().toLowerCase()">
+                        {{ getTransportLevel() }}
+                    </div>
+                    <div class="rating-description">{{ getTransportDescription() }}</div>
                 </div>
-                <div class="rating-description">{{ getCarbonLevelDescription() }}</div>
+
+                <!-- Energy Results -->
+                <div class="carbon-rating">
+                    <div class="rating-label">Household Energy Footprint:</div>
+                    <div class="rating-value" :class="'carbon-level-' + getEnergyLevel().toLowerCase()">
+                        {{ getEnergyLevel() }}
+                    </div>
+                    <div class="rating-description">{{ getEnergyDescription() }}</div>
+                </div>
+
+
             </div>
 
             <div class="action-button-container">
@@ -286,10 +300,13 @@ const loadingMessage = ref('Processing your information...');
 const showCompletionModal = ref(false);
 const earnedEnergy = ref(0);
 const completedTaskTitle = ref('');
+
+const transportScore = ref(null);
+const householdScore = ref(null);
 // Dify API configuration
 const difyConfig = {
-    apiKey: 'app-qdqefgJOJ5PCIOyziUDhQgYY',
-    endpoint: 'https://api.dify.ai/v1/chat-messages'
+    apiKey: import.meta.env.VITE_DIFY_API_KEY,
+    endpoint: import.meta.env.VITE_DIFY_API_URL
 };
 const currentStep = ref(1); // Current step in the assessment process
 const steps = [
@@ -344,6 +361,19 @@ const validateCurrentStep = () => {
 
 // Carbon assessment results
 const carbonLevel = ref(''); // Will be one of: 'Low', 'Medium', 'High'
+const getTransportLevel = () => {
+    if (transportScore.value === null) return '';
+    if (transportScore.value < 35) return 'Low';
+    if (transportScore.value < 65) return 'Medium';
+    return 'High';
+};
+
+const getEnergyLevel = () => {
+    if (householdScore.value === null) return '';
+    if (householdScore.value < 35) return 'Low';
+    if (householdScore.value < 65) return 'Medium';
+    return 'High';
+};
 
 // New data structures for carbon assessment
 const transportation = reactive({
@@ -394,6 +424,34 @@ const getReferenceElectricityUsage = () => {
     }
 };
 
+const getTransportDescription = () => {
+    const level = getTransportLevel();
+    switch (level) {
+        case 'Low':
+            return "Your transportation footprint is low. You're making great choices with your travel methods!";
+        case 'Medium':
+            return "Your transportation footprint is average. There's room for improvement in how you travel.";
+        case 'High':
+            return "Your transportation footprint is high. Consider more sustainable transportation options.";
+        default:
+            return "";
+    }
+};
+
+const getEnergyDescription = () => {
+    const level = getEnergyLevel();
+    switch (level) {
+        case 'Low':
+            return "Your household energy usage is efficient. Keep up the good energy-saving habits!";
+        case 'Medium':
+            return "Your energy usage is moderate. Consider implementing more energy-efficient practices.";
+        case 'High':
+            return "Your energy usage is high. Focus on ways to reduce your household energy consumption.";
+        default:
+            return "";
+    }
+};
+
 // show city name
 const getCityName = () => {
     const cityNames = {
@@ -440,33 +498,36 @@ const calculateCarbonFootprint = () => {
     let score = 0;
 
     // Transportation score (0-100, higher is worse for environment)
-    let transportScore = 0;
+    let transportScoreVal = 0;
 
     // Commuting impact
-    if (transportation.commuting.walking) transportScore -= 20;
-    if (transportation.commuting.publicTransport) transportScore += 10;
-    if (transportation.commuting.fuelCar) transportScore += 40;
-    if (transportation.commuting.electricCar) transportScore += 15;
+    if (transportation.commuting.walking) transportScoreVal -= 20;
+    if (transportation.commuting.publicTransport) transportScoreVal += 10;
+    if (transportation.commuting.fuelCar) transportScoreVal += 40;
+    if (transportation.commuting.electricCar) transportScoreVal += 15;
 
     // Long distance travel impact
     if (transportation.longDistance.airplane) {
-        if (transportation.longDistance.airplaneFrequency === 'low') transportScore += 20;
-        else if (transportation.longDistance.airplaneFrequency === 'medium') transportScore += 35;
-        else if (transportation.longDistance.airplaneFrequency === 'high') transportScore += 50;
+        if (transportation.longDistance.airplaneFrequency === 'low') transportScoreVal += 20;
+        else if (transportation.longDistance.airplaneFrequency === 'medium') transportScoreVal += 35;
+        else if (transportation.longDistance.airplaneFrequency === 'high') transportScoreVal += 50;
     }
 
-    if (transportation.longDistance.train) transportScore += 10;
-    if (transportation.longDistance.selfDriving) transportScore += 30;
+    if (transportation.longDistance.train) transportScoreVal += 10;
+    if (transportation.longDistance.selfDriving) transportScoreVal += 30;
 
     // Mitigating factors
-    if (transportation.additional.carpool) transportScore -= 15;
-    if (transportation.additional.remoteWork) transportScore -= 20;
+    if (transportation.additional.carpool) transportScoreVal -= 15;
+    if (transportation.additional.remoteWork) transportScoreVal -= 20;
 
     // Normalize transportation score (0-100)
-    transportScore = Math.max(0, Math.min(100, transportScore));
+    transportScoreVal = Math.max(0, Math.min(100, transportScoreVal));
+
+    // Save the transportation score to the ref
+    transportScore.value = transportScoreVal;
 
     // Household energy score (0-100)
-    let householdScore = 0;
+    let householdScoreVal = 0;
     // Get reference electricity usage
     let referenceUsage = getReferenceElectricityUsage();
     const actualUsage = household.electricityConsumption;
@@ -477,45 +538,48 @@ const calculateCarbonFootprint = () => {
 
         // rating based on usage ratio
         if (usageRatio < 0.7) {
-            householdScore = 20; // low usage
+            householdScoreVal = 20; // low usage
         } else if (usageRatio < 0.9) {
-            householdScore = 35; // below average usage
+            householdScoreVal = 35; // below average usage
         } else if (usageRatio < 1.1) {
-            householdScore = 50; // average usage
+            householdScoreVal = 50; // average usage
         } else if (usageRatio < 1.3) {
-            householdScore = 65; // above average usage
+            householdScoreVal = 65; // above average usage
         } else if (usageRatio < 1.5) {
-            householdScore = 80; // high usage
+            householdScoreVal = 80; // high usage
         } else {
-            householdScore = 100; // very high usage
+            householdScoreVal = 100; // very high usage
         }
     } else {
         // if no reference data, use actual usage
         const perPerson = actualUsage / Math.max(1, household.familyMembers);
 
         // rating based on per person usage
-        if (perPerson < 100) householdScore = 20;
-        else if (perPerson < 167) householdScore = 40;
-        else if (perPerson < 233) householdScore = 60;
-        else if (perPerson < 300) householdScore = 80;
-        else householdScore = 100;
+        if (perPerson < 100) householdScoreVal = 20;
+        else if (perPerson < 167) householdScoreVal = 40;
+        else if (perPerson < 233) householdScoreVal = 60;
+        else if (perPerson < 300) householdScoreVal = 80;
+        else householdScoreVal = 100;
     }
 
     // Household habits impact
-    if (household.habits.turnOff) householdScore -= 10;
-    if (household.habits.energySaving) householdScore -= 15;
-    if (household.habits.noSpecial) householdScore += 10;
+    if (household.habits.turnOff) householdScoreVal -= 10;
+    if (household.habits.energySaving) householdScoreVal -= 15;
+    if (household.habits.noSpecial) householdScoreVal += 10;
 
     // Housing type impact
-    if (housingType.value === 'apartment') householdScore -= 10;
-    else if (housingType.value === 'house') householdScore += 10;
-    else if (housingType.value === 'townhouse') householdScore += 5;
+    if (housingType.value === 'apartment') householdScoreVal -= 10;
+    else if (housingType.value === 'house') householdScoreVal += 10;
+    else if (housingType.value === 'townhouse') householdScoreVal += 5;
 
     // Normalize household score (0-100)
-    householdScore = Math.max(0, Math.min(100, householdScore));
+    householdScoreVal = Math.max(0, Math.min(100, householdScoreVal));
+
+    // Save the household score to the ref
+    householdScore.value = householdScoreVal;
 
     // Calculate final score (weighted average)
-    score = (transportScore * 0.6) + (householdScore * 0.4);
+    score = (transportScoreVal * 0.6) + (householdScoreVal * 0.4);
 
     // Determine carbon level
     if (score < 40) carbonLevel.value = 'Low';
@@ -524,8 +588,8 @@ const calculateCarbonFootprint = () => {
 
     // For debugging
     console.log('Carbon assessment:', {
-        transportScore,
-        householdScore,
+        transportScore: transportScoreVal,
+        householdScore: householdScoreVal,
         finalScore: score,
         level: carbonLevel.value
     });
@@ -533,19 +597,6 @@ const calculateCarbonFootprint = () => {
     loading.value = false;
 };
 
-// Get carbon level description
-const getCarbonLevelDescription = () => {
-    switch (carbonLevel.value) {
-        case 'Low':
-            return "Your carbon footprint is below average. Great job! We'll suggest ways to maintain and improve your eco-friendly lifestyle.";
-        case 'Medium':
-            return "Your carbon footprint is average. There are several areas where you could make changes to reduce your environmental impact.";
-        case 'High':
-            return "Your carbon footprint is above average. We'll suggest key areas where you can make changes to significantly reduce your environmental impact.";
-        default:
-            return "";
-    }
-};
 
 // Get eco suggestions
 const getEcoSuggestions = async () => {

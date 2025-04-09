@@ -355,7 +355,7 @@ def chartdata6_api():
 @app.after_request
 def add_cors_headers(response):
     # 根据需要替换为允许的具体域名，或使用 '*'（如果不发送凭据）
-    response.headers.add('Access-Control-Allow-Origin', 'https://ecosphere1.xyz')
+    response.headers.add('Access-Control-Allow-Origin', '*')
     response.headers.add('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
     # 如果需要支持凭据（例如 cookies），需要设置：

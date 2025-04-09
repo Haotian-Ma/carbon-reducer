@@ -56,31 +56,12 @@ const setupIntersectionObserver = () => {
     });
 };
 
-// Data for events
-const events = [
-    {
-        id: 1,
-        title: "Community Tree Planting Day",
-        date: "October 15, 2023",
-        location: "City Park",
-        description: "Join us for a free community event to plant trees and reduce our carbon footprint.",
-    },
-    {
-        id: 2,
-        title: "Carbon Reduction Workshop",
-        date: "November 1, 2023",
-        location: "Community Center",
-        description: "Learn practical ways to reduce your carbon emissions at home and in your community.",
-    },
-];
+
 
 
 // Router for navigation
 const router = useRouter();
 
-const goToEmissionCalculator = () => {
-    router.push('/emission-calculator');
-};
 
 const goToAbout = () => {
     router.push('/about');
@@ -91,19 +72,7 @@ const apiUrl = import.meta.env.VITE_APP_API_URL;
 onMounted(() => {
     startCarouselInterval();
     setupIntersectionObserver();
-    axios.get(`${apiUrl}/api/chart-data`)
-        .then(response => {
-            const fig = response.data;
-            fig.layout.title = {
-                text: "Carbon Emission Reduction by Tree Planting Initiatives",
-                x: 0.5,
-                font: { size: 24 }
-            };
-            Plotly.newPlot('chart', fig.data, fig.layout);
-        })
-        .catch(error => {
-            console.error('Failed:', error);
-        });
+
 });
 
 onBeforeUnmount(() => {
@@ -162,7 +131,7 @@ onBeforeUnmount(() => {
                             <img src="../assets/images/feature1.jpg" alt="Buy Trees">
                         </div>
                         <div class="feature-content">
-                            <h3>Eco Actions</h3>
+                            <h3>Eco Action</h3>
                             <p>Assess your personal carbon footprint and show some suggestions.</p>
                             <router-link to="/eco-action" class="feature-button">
                                 Start Now
@@ -188,7 +157,7 @@ onBeforeUnmount(() => {
                             <img src="../assets/images/feature3.jpg" alt="Forest Subscription">
                         </div>
                         <div class="feature-content">
-                            <h3>Climate Insights</h3>
+                            <h3>Climate Insight</h3>
                             <p>Quickly understand environmental conditions and carbon emissions</p>
                             <router-link to="/resources/climate-insight" class="feature-button">
                                 View Insights
@@ -201,8 +170,9 @@ onBeforeUnmount(() => {
                             <img src="../assets/images/feature4.jpg" alt="Biodiversity">
                         </div>
                         <div class="feature-content">
-                            <h3>Educational Resources</h3>
-                            <p>Learn about climate change, sustainability, and environmental conservation.</p>
+                            <h3>Kids Learning</h3>
+                            <p>Help children learn about climate change, sustainability, and environmental conservation.
+                            </p>
                             <router-link to="resources/kids-learning" class="feature-button">
                                 Explore Resources
                             </router-link>
@@ -265,7 +235,7 @@ onBeforeUnmount(() => {
                             <router-link to="/about">About Us</router-link>
                         </li>
                         <li>
-                            <router-link to="/emission-calculator">Carbon Calculator</router-link>
+                            <router-link to="/eco-action">Eco action</router-link>
                         </li>
                         <li>
                             <a href="#">Contact</a>
