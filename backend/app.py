@@ -9,16 +9,17 @@ from sqlalchemy.pool import QueuePool
 from dotenv import load_dotenv
 from flask_cors import CORS
 import psycopg2
+# Load environment variables from .env file
 load_dotenv()
-
+# Retrieve database credentials from environment variables
 DB_HOST = os.environ.get("DB_HOST")
 DB_PORT = os.environ.get("DB_PORT")
 DB_USER = os.environ.get("DB_USER")
 DB_PASSWORD = os.environ.get("DB_PASSWORD")
 DB_NAME = os.environ.get("DB_NAME")
-
+# Construct the database URI for SQLAlchemy using psycopg2 driver
 DATABASE_URI = f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-
+# Create a SQLAlchemy engine with connection pooling
 engine = create_engine(
     DATABASE_URI,
     poolclass=QueuePool,
@@ -26,7 +27,7 @@ engine = create_engine(
     max_overflow=10,
     pool_timeout=30
 )
-
+# Function to load data from a specified database table using psycopg2 directly
 def loading_data_from_db(database_name):
     # Database connection parameters
     host = "34.129.179.229"
@@ -60,6 +61,7 @@ def loading_data_from_db(database_name):
     except Exception as e:
         print(f"An error occurred: {e}")
 
+# Load data from various tables
 heat_data = loading_data_from_db("heat_data")
 global_climate = loading_data_from_db("global_climate_data")
 forest_trend = loading_data_from_db("forest_trend")
@@ -68,11 +70,12 @@ world_temp_data = loading_data_from_db("world_temp_data")
 
 app = Flask(__name__)
 
-
+# Define a simple home route to verify the service is running.
 @app.route('/')
 def home():
     return jsonify({"status": "OK"})
 
+# Helper function to load data from a given table using the SQLAlchemy engine.
 def load_data_from_db(table_name):
     query = f"SELECT * FROM {table_name}"
     try:
@@ -82,7 +85,9 @@ def load_data_from_db(table_name):
     except Exception as e:
         print(f"Error loading table '{table_name}': {e}")
         return None
-
+    
+# API route: /api/chartdata1
+# Returns JSON data containing Plotly traces and layout for a specific chart.
 @app.route('/api/chartdata1', methods=['POST',"GET","OPTIONS"])
 def chartdata1_api():
     data = [
@@ -140,6 +145,8 @@ def chartdata1_api():
     
     return jsonify({"data": data, "layout": layout})
 
+# API route: /api/chartdata2
+# Returns JSON data for a second chart with temperature and emissions.
 @app.route('/api/chartdata2', methods=['POST',"GET","OPTIONS"])
 def chartdata2_api():
     data = [
@@ -202,6 +209,8 @@ def chartdata2_api():
     
     return jsonify({"data": data, "layout": layout})
 
+# API route: /api/chartdata3
+# Returns JSON data for a pie chart showing CO2 emissions by sector in Australia (2021).
 @app.route('/api/chartdata3', methods=['POST',"GET","OPTIONS"])
 def chartdata3_api():
     # chart3：CO2 Emissions by Sector in Australia (2021)
@@ -242,6 +251,8 @@ def chartdata3_api():
     
     return jsonify({"data": data, "layout": layout})
 
+# API route: /api/chartdata4
+# Returns JSON data for a choropleth map visualizing percentage change in forest area.
 @app.route('/api/chartdata4', methods=['POST',"GET","OPTIONS"])
 def chartdata4_api():
     data = [
@@ -271,6 +282,8 @@ def chartdata4_api():
     
     return jsonify({"data": data, "layout": layout})
 
+# API route: /api/chartdata5
+# Returns JSON data for a combined histogram and kernel density estimation (KDE) chart.
 @app.route('/api/chartdata5', methods=['POST',"GET","OPTIONS"])
 def chartdata5_api():
 
@@ -312,6 +325,8 @@ def chartdata5_api():
     
     return jsonify({"data": data, "layout": layout})
 
+# API route: /api/chartdata6
+# Returns JSON data for a heatmap showing the number of hot days per year by city.
 @app.route('/api/chartdata6', methods=['POST',"GET","OPTIONS"])
 def chartdata6_api():
 
@@ -352,6 +367,7 @@ def chartdata6_api():
     
     return jsonify({"data": [trace], "layout": layout})
 
+# An after_request hook to add CORS headers to every response for debugging purposes.
 @app.after_request
 def add_cors_headers(response):
     
@@ -362,6 +378,7 @@ def add_cors_headers(response):
     response.headers.add('Access-Control-Allow-Credentials', 'true')
     return response
 
+# Print the URL map for debugging purposes (shows all registered routes)
 print(app.url_map)
 
 if __name__ == '__main__':
