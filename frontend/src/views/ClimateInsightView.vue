@@ -14,40 +14,52 @@
         increasing greenhouse gas emissions.
       </p>
 
-      <div class="chart-row">
-        <div class="chart-section chart-section1">
-          <div class="container">
-            <h3>Average Temperature with Confidence Interval</h3>
-            <p class="chart-description">
-              This chart tracks global average temperature anomaly (deviation from baseline average) from 1850 to
-              present.
-              The confidence interval narrows over time, reflecting improved accuracy in measurements as technology
-              advances.
-            </p>
-            <div class="chart-container" ref="chartContainer1">
-              <!-- Plotly chart will be rendered here -->
-            </div>
-            <div v-if="loading1" class="loading-indicator"></div>
+      <div class="chart-section temperature-analysis">
+        <div class="container">
+          <h3>Temperature Analysis</h3>
+          <div class="tab-controls">
+            <button :class="['tab-button', { active: activeTempTab === 'confidence' }]"
+              @click="activeTempTab = 'confidence'">
+              Temperature with Confidence Interval
+            </button>
+            <button :class="['tab-button', { active: activeTempTab === 'emissions' }]"
+              @click="activeTempTab = 'emissions'">
+              Temperature and Emissions Over Time
+            </button>
           </div>
-        </div>
 
-        <div class="chart-section chart-section2">
-          <div class="container">
-            <h3>Temperature and Emissions Over Time</h3>
-            <p class="chart-description">
-              This visualization shows the relationship between rising greenhouse gas emissions and global temperature.
-              CO₂ from burning fossil fuels is the main contributor, but Methane (CH₄) and other gases also trap heat in
-              our atmosphere.
-            </p>
-            <div class="chart-container" ref="chartContainer2">
-              <!-- Plotly chart will be rendered here -->
+          <div class="chart-tab-content">
+            <div v-show="activeTempTab === 'confidence'" class="chart-container" ref="chartContainer1">
+              <!-- Confidence Interval chart will be rendered here -->
             </div>
-            <div v-if="loading2" class="loading-indicator"></div>
+            <div v-show="activeTempTab === 'emissions'" class="chart-container" ref="chartContainer2">
+              <!-- Temperature and Emissions chart will be rendered here -->
+            </div>
+            <div v-if="loading1 || loading2" class="loading-indicator"></div>
+          </div>
+
+          <div class="chart-description-panel">
+            <div v-if="activeTempTab === 'confidence'">
+              <p class="chart-description">
+                This chart tracks global average temperature anomaly (deviation from baseline average) from 1850 to
+                present. The confidence interval narrows over time, reflecting improved accuracy in measurements as
+                technology
+                advances.
+              </p>
+            </div>
+            <div v-if="activeTempTab === 'emissions'">
+              <p class="chart-description">
+                This visualization shows the relationship between rising greenhouse gas emissions and global
+                temperature.
+                CO₂ from burning fossil fuels is the main contributor, but Methane (CH₄) and other gases also trap heat
+                in
+                our atmosphere.
+              </p>
+            </div>
           </div>
         </div>
       </div>
     </section>
-
     <!-- Section 2: Emissions Breakdown and Impact -->
     <section class="section-group">
       <h2 class="section-group-title">Carbon Emissions and Environmental Impact</h2>
@@ -168,7 +180,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import Plotly from 'plotly.js-dist-min';
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -193,6 +205,7 @@ const loading4 = ref(false)
 const loading5 = ref(false)
 const loading6 = ref(false)
 const activeForestTab = ref('percentage');
+const activeTempTab = ref('confidence');
 
 // Method to update data
 const updateData = () => {
@@ -312,6 +325,18 @@ onMounted(() => {
   fetchChartData5();
   fetchChartData6();
 });
+
+watch(activeTempTab, (newVal) => {
+  if (newVal === 'emissions' && chartContainer2.value) {
+    setTimeout(() => Plotly.relayout(chartContainer2.value, { autosize: true }), 150);
+  }
+});
+
+watch(activeForestTab, (newVal) => {
+  if (newVal === 'distribution' && chartContainer5.value) {
+    setTimeout(() => Plotly.relayout(chartContainer5.value, { autosize: true }), 150);
+  }
+});
 </script>
 
 <style scoped>
@@ -414,6 +439,29 @@ onMounted(() => {
 .chart-row .chart-section {
   flex: 1 1 45%;
   min-width: 300px;
+}
+
+/* Create a specific class for centering Plotly charts */
+.chart-tab-content {
+  position: relative;
+}
+
+/* Ensure Plotly is centered within its container */
+.chart-tab-content .js-plotly-plot,
+.chart-container .js-plotly-plot {
+  width: 100% !important;
+}
+
+.chart-container>div {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.temperature-analysis .chart-container[ref="chartContainer2"] .js-plotly-plot,
+.forest-analysis .chart-container[ref="chartContainer5"] .js-plotly-plot {
+  width: 100% !important;
 }
 
 .container {

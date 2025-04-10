@@ -204,7 +204,7 @@ onBeforeUnmount(() => {
         <!-- Hope Stories Section -->
         <section class="about animate-on-scroll">
             <div class="about-content">
-                <h2>Hope Stories</h2>
+                <h2>About us</h2>
                 <p>
                     Ecospere is a non-profit website dedicated to reducing carbon emissions through
                     tree planting and environmental education. Through community engagement, outreach programs, and
