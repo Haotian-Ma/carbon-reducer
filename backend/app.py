@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 from scipy.stats import gaussian_kde
 import plotly.graph_objects as go
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine, text, MetaData, Table, select
 from sqlalchemy.pool import QueuePool
 from dotenv import load_dotenv
 from flask_cors import CORS
@@ -29,32 +29,34 @@ engine = create_engine(
 )
 # Function to load data from a specified database table using psycopg2 directly
 def loading_data_from_db(database_name):
-    # Database connection parameters
-    host = "34.129.179.229"
-    database = "project"
-    user = "postgres"
-    password = "Iti<FVBpR:05tTOU"
-    port = "5432"
-
-    # SQL query to fetch data
-    query = f"SELECT * FROM {database_name}"
-
-    # Connect to PostgreSQL and fetch data
+    """
+    Load data from the specified table using SQLAlchemy's reflection.
+    This method avoids SQL injection risks by using SQLAlchemy's safe methods.
+    
+    Parameters:
+        database_name (str): Name of the table to load data from.
+    
+    Returns:
+        pd.DataFrame: DataFrame containing the table's data.
+    """
+    # Define a whitelist of allowed table names to prevent unauthorized access.
+    allowed_tables = ["heat_data", "global_climate_data", "forest_trend", "world_temp_data"]
+    if database_name not in allowed_tables:
+        raise ValueError("Invalid table name provided.")
+    
     try:
-        # Establish the connection
-        conn = psycopg2.connect(
-            host=host,
-            database=database,
-            user=user,
-            password=password,
-            port=port
-        )
-        # Load data into a DataFrame
-        df = pd.read_sql_query(query, conn)
+        # Use SQLAlchemy's MetaData to reflect the table structure
+        metadata = MetaData()
+        # Reflect the table from the existing database
+        table = Table(database_name, metadata, autoload_with=engine)
         
-        # Close the connection
-        conn.close()
-
+        # Build a SELECT query to fetch all records from the table
+        query = select(table)
+        
+        # Execute the query and load the results into a Pandas DataFrame
+        with engine.connect() as conn:
+            df = pd.read_sql_query(query, conn)
+        
         print(f"{database_name} downloaded successfully!")
         return df
 
@@ -76,15 +78,15 @@ def home():
     return jsonify({"status": "OK"})
 
 # Helper function to load data from a given table using the SQLAlchemy engine.
-def load_data_from_db(table_name):
-    query = f"SELECT * FROM {table_name}"
-    try:
-        df = pd.read_sql_query(query, engine)
-        print(f"Table '{table_name}' loaded successfully!")
-        return df
-    except Exception as e:
-        print(f"Error loading table '{table_name}': {e}")
-        return None
+# def load_data_from_db(table_name):
+#     query = f"SELECT * FROM {table_name}"
+#     try:
+#         df = pd.read_sql_query(query, engine)
+#         print(f"Table '{table_name}' loaded successfully!")
+#         return df
+#     except Exception as e:
+#         print(f"Error loading table '{table_name}': {e}")
+#         return None
     
 # API route: /api/chartdata1
 # Returns JSON data containing Plotly traces and layout for a specific chart.
