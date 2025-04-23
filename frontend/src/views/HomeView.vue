@@ -206,7 +206,7 @@ onBeforeUnmount(() => {
             <div class="about-content">
                 <h2>About us</h2>
                 <p>
-                    Ecospere is a non-profit website dedicated to reducing carbon emissions through
+                    Ecospere is a non-profit website dedicated to reducing Carbon Emissions through
                     tree planting and environmental education. Through community engagement, outreach programs, and
                     advocacy,
                     we aim to protect our planet and create a sustainable future for all.
