@@ -370,7 +370,7 @@ def chartdata6_api():
     
     return jsonify({"data": [trace], "layout": layout})
 
-@app.route('/api/youtube/search')
+@app.route('/api/youtube/search', methods=['POST',"GET","OPTIONS"])
 def youtube_search():
     q = request.args.get('q', 'news')
     api_key = os.environ['YOUTUBE_API_KEY']
