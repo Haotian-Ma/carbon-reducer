@@ -142,41 +142,10 @@
     </div>
     <input v-model="query" placeholder="Search YouTube…" @keyup.enter="search" />
     <button @click="search">Search</button>
-
-    <div v-if="videos.length">
-      <div v-for="v in videos" :key="v.videoId" class="video-card">
-        <h4>{{ v.title }}</h4>
-        <img :src="v.thumb" />
-        <iframe
-          width="320" height="180"
-          :src="`https://www.youtube.com/embed/${v.videoId}`"
-          frameborder="0" allowfullscreen>
-        </iframe>
-      </div>
-    </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import axios from 'axios'
-
-const query = ref('climate change')
-const videos = ref([])
-
-async function search() {
-  try {
-    const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/youtube/search`, {
-      params: { q: query.value }
-    })
-    videos.value = res.data
-  } catch (err) {
-    console.error(err)
-  }
-}
-
-// 页面加载时默认搜索一次
-search()
 </script>
 
 <style>
@@ -422,9 +391,6 @@ search()
   
   .action-list li {
     font-size: 1.1rem;
-  }
-  .video-card { 
-    margin-bottom: 20px; 
   }
 }
 </style>
