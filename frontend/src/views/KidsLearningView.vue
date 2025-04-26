@@ -140,8 +140,6 @@
         </div>
       </div>
     </div>
-    <input v-model="query" placeholder="Search YouTube…" @keyup.enter="search" />
-    <button @click="search">Search</button>
   </div>
 </template>
 
