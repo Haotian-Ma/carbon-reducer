@@ -1,0 +1,28 @@
+{
+  "slides": [
+    {
+      "image": "https://images.unsplash.com/photo-1517157488732-b80ab10430e4?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHRyZWV8ZW58MHx8MHx8fDA%3D",
+      "title": "Become a tree owner and help fight climate change!",
+      "description": "Plant trees, track their growth and get 100% of the profit from the sustainable timber, all while contributing to a greener future.",
+      "buttonText": "Plant a tree",
+      "buttonLink": "/virtual-tree",
+      "location": "Online Virtual Tree"
+    },
+    {
+      "image": "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=3000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "title": "Take some environmental action now",
+      "description": "After a simple assessment, you can earn points by doing some small environmental protection activities that can be started right away!",
+      "buttonText": "Take action",
+      "buttonLink": "/eco-action",
+      "location": "Daily Life"
+    },
+    {
+      "image": "https://images.unsplash.com/photo-1606092195730-5d7b9af1efc5?q=80&w=2970&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "title": "Protect the Earth with Children",
+      "description": "For the future of our planet, let's act together with our children",
+      "buttonText": "Get started",
+      "buttonLink": "/resources/kids-learning",
+      "location": "Your Backyard"
+    }
+  ]
+}

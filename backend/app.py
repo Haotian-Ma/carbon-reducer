@@ -1,5 +1,5 @@
 import os
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, request
 import pandas as pd
 import numpy as np
 from scipy.stats import gaussian_kde
@@ -9,6 +9,7 @@ from sqlalchemy.pool import QueuePool
 from dotenv import load_dotenv
 from flask_cors import CORS
 import psycopg2
+# from googleapiclient.discovery import build
 # Load environment variables from .env file
 load_dotenv()
 # Retrieve database credentials from environment variables
@@ -369,6 +370,26 @@ def chartdata6_api():
     
     return jsonify({"data": [trace], "layout": layout})
 
+# @app.route('/api/youtube/search', methods=['POST',"GET","OPTIONS"])
+# def youtube_search():
+#     q = request.args.get('q', 'news')
+#     api_key = os.environ['YOUTUBE_API_KEY']
+#     youtube = build('youtube', 'v3', developerKey=api_key)
+#     # Perform a search query on YouTube
+#     res = youtube.search().list(
+#         part='snippet',
+#         q=q,
+#         maxResults=5,
+#         type='video'
+#     ).execute()
+#     # Extract video IDs, titles, and thumbnail URLs from the search results
+#     videos = [{
+#         'videoId': item['id']['videoId'],
+#         'title': item['snippet']['title'],
+#         'thumb': item['snippet']['thumbnails']['medium']['url']
+#     } for item in res['items']]
+
+#     return jsonify(videos)
 # An after_request hook to add CORS headers to every response for debugging purposes.
 @app.after_request
 def add_cors_headers(response):
