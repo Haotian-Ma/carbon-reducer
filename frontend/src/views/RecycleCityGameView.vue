@@ -3,7 +3,7 @@
         <div class="game-header">
             <router-link to="/resources/kids-learning" class="back-button">← Back to Climate Kids Corner</router-link>
         </div>
-        <iframe src="/games/recyclecity/index.htm" width="1024px" height="700px" frameborder="0"
+        <iframe src="./games/recyclecity/index.htm" width="1024px" height="700px" frameborder="0"
             allowfullscreen></iframe>
     </div>
 </template>
