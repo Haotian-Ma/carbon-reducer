@@ -4,7 +4,8 @@
     <div class="hero-section">
       <div class="container">
         <h1 class="text-center">Climate Kids Corner</h1>
-        <p class="text-center hero-subtitle">Join us on an adventure to learn about our planet and how we can protect it!</p>
+        <p class="text-center hero-subtitle">Join us on an adventure to learn about our planet and how we can protect
+          it!</p>
       </div>
     </div>
 
@@ -15,101 +16,119 @@
         <div class="col-lg-8 offset-lg-2">
           <div class="intro-card">
             <h2>Hey Climate Explorers! 🌍</h2>
-            <p>Our planet Earth is amazing! It's home to millions of plants, animals, and of course, us! But our planet is changing because of something called <strong>climate change</strong>.</p>
-            <p>Climate change means that Earth is getting warmer, and that can cause problems for all living things. But don't worry! By learning about climate change, you can become a Planet Protector and help make a difference!</p>
+            <p>Our planet Earth is amazing! It's home to millions of plants, animals, and of course, us! But our planet
+              is changing because of something called <strong>climate change</strong>.</p>
+            <p>Climate change means that Earth is getting warmer, and that can cause problems for all living things. But
+              don't worry! By learning about climate change, you can become a Planet Protector and help make a
+              difference!</p>
           </div>
         </div>
       </div>
 
+      <!-- YouTube Video Section -->
+      <div class="video-section mt-5 mb-5">
+        <h2 class="section-title text-center mb-4">Learn with Videos</h2>
+
+        <div class="row mb-4">
+          <div class="col-12">
+            <div class="topic-buttons">
+              <button v-for="topic in videoTopics" :key="topic.id" @click="selectTopic(topic)"
+                :class="{ active: selectedTopic.id === topic.id }" class="topic-button">
+                {{ topic.name }}
+              </button>
+            </div>
+
+            <!-- searching bar -->
+            <div class="custom-search mt-3">
+              <input type="text" v-model="customSearchQuery" placeholder="Search for environmental videos..."
+                class="search-input" @keyup.enter="searchCustomTopic">
+              <button @click="searchCustomTopic" class="search-button">
+                Search
+              </button>
+              <p class="search-note">Note: All searches are limited to environmental topics</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-10 offset-lg-1">
+            <!-- loading status -->
+            <div v-if="isLoading" class="loading-spinner">
+              <div class="spinner"></div>
+              <p>Loading videos...</p>
+            </div>
+
+            <!-- video lists -->
+            <div v-if="selectedVideos.length > 0" class="video-list">
+              <div v-for="(video, index) in selectedVideos" :key="index" class="video-item">
+                <div class="video-container">
+                  <iframe width="100%" height="315" :src="'https://www.youtube.com/embed/' + video.id.videoId"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                  </iframe>
+                  <h3 class="video-title">{{ video.snippet.title }}</h3>
+                  <p class="video-description">{{ truncateDescription(video.snippet.description) }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- no video tips -->
+            <div v-else class="video-placeholder">
+              <p>Select a topic above or search for environmental videos!</p>
+            </div>
+          </div>
+        </div>
+      </div>
       <!-- Interactive Resources -->
       <h2 class="section-title text-center mb-4">Fun Learning Activities</h2>
-      
+
       <div class="row resource-cards">
         <!-- Card 1 -->
         <div class="col-md-6 col-lg-3 mb-4">
           <div class="resource-card">
             <div class="card-image-container">
-              <img src="https://placehold.co/600x400/9DDCFF/333333?text=Card+Game" alt="Nature's Benefits Card Game" class="card-img">
+              <img src="https://placehold.co/600x400/9DDCFF/333333?text=Card+Game" alt="Nature's Benefits Card Game"
+                class="card-img">
             </div>
             <div class="card-content">
               <h3>Nature's Benefits Card Game(Age: 11-18)</h3>
-              <p>Play a fun card game to learn how nature helps us every day! Match the cards and discover nature's superpowers.</p>
+              <p>Play a fun card game to learn how nature helps us every day! Match the cards and discover nature's
+                superpowers.</p>
               <div class="button-container">
-                <a href="https://www.epa.gov/eco-research/natures-benefits-card-game" target="_blank" class="resource-button">Play Now</a>
+                <a href="https://www.epa.gov/eco-research/natures-benefits-card-game" target="_blank"
+                  class="resource-button">Play Now</a>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Card 2 -->
-        <div class="col-md-6 col-lg-3 mb-4">
-          <div class="resource-card">
-            <div class="card-image-container">
-              <img src="https://placehold.co/600x400/FFCE87/333333?text=Virtual+Tour" alt="Indoor Air Quality House" class="card-img">
-            </div>
-            <div class="card-content">
-              <h3>Indoor Air Quality House(Age: 6-12)</h3>
-              <p>Take a virtual tour inside a house and find out how to keep the air clean and healthy for everyone!</p>
-              <div class="button-container">
-                <a href="https://www.epa.gov/indoor-air-quality-iaq/interactive-tour-indoor-air-quality-demo-house" target="_blank" class="resource-button">Explore</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 3 -->
-        <div class="col-md-6 col-lg-3 mb-4">
-          <div class="resource-card">
-            <div class="card-image-container">
-              <img src="https://placehold.co/600x400/AEF78E/333333?text=Climate+Evidence" alt="Climate Change Evidence" class="card-img">
-            </div>
-            <div class="card-content">
-              <h3>Climate Change Detectives(Age: 8-13)</h3>
-              <p>Become a science detective and discover the evidence that shows our climate is changing. What clues can you find?</p>
-              <div class="button-container">
-                <a href="https://climatekids.nasa.gov/climate-change-evidence/" target="_blank" class="resource-button">Investigate</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 4 -->
-        <div class="col-md-6 col-lg-3 mb-4">
-          <div class="resource-card">
-            <div class="card-image-container">
-              <img src="https://placehold.co/600x400/FFA7A7/333333?text=Clean+Buses" alt="Clean School Bus" class="card-img">
-            </div>
-            <div class="card-content">
-              <h3>Clean School Bus Adventure(Age: 3-10)</h3>
-              <p>Learn about clean school buses that help reduce pollution! Find out how your school can get involved.</p>
-              <div class="button-container">
-                <a href="https://www.epa.gov/cleanschoolbus/resources-engage-your-community" target="_blank" class="resource-button">Learn More</a>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
+
 
       <!-- Fun Facts Section -->
       <div class="fun-facts-section mt-5">
         <h2 class="section-title text-center mb-4">Cool Climate Facts</h2>
-        
+
         <div class="row">
           <div class="col-md-4 mb-4">
             <div class="fact-bubble fact-bubble-1">
-              <p>Did you know that trees are like nature's air filters? They absorb carbon dioxide (a greenhouse gas) and release oxygen that we breathe!</p>
+              <p>Did you know that trees are like nature's air filters? They absorb carbon dioxide (a greenhouse gas)
+                and release oxygen that we breathe!</p>
             </div>
           </div>
-          
+
           <div class="col-md-4 mb-4">
             <div class="fact-bubble fact-bubble-2">
-              <p>Polar bears are amazing swimmers, but they need ice to rest and hunt. As the Arctic ice melts due to climate change, polar bears have to swim longer distances!</p>
+              <p>Polar bears are amazing swimmers, but they need ice to rest and hunt. As the Arctic ice melts due to
+                climate change, polar bears have to swim longer distances!</p>
             </div>
           </div>
-          
+
           <div class="col-md-4 mb-4">
             <div class="fact-bubble fact-bubble-3">
-              <p>The energy from the sun that reaches Earth in just one hour could power the entire world for a whole year! That's why solar power is so important.</p>
+              <p>The energy from the sun that reaches Earth in just one hour could power the entire world for a whole
+                year! That's why solar power is so important.</p>
             </div>
           </div>
         </div>
@@ -118,12 +137,12 @@
       <!-- What You Can Do Section -->
       <div class="action-section mt-5 mb-5">
         <h2 class="section-title text-center mb-4">Be a Planet Protector!</h2>
-        
+
         <div class="row">
           <div class="col-lg-8 offset-lg-2">
             <div class="action-card">
               <h3 class="text-center">Here are 5 super easy ways YOU can help:</h3>
-              
+
               <ol class="action-list">
                 <li>Turn off lights when you leave a room to save energy</li>
                 <li>Use reusable water bottles instead of plastic ones</li>
@@ -131,7 +150,7 @@
                 <li>Plant flowers or trees that help butterflies and bees</li>
                 <li>Tell your friends and family what you've learned about climate change</li>
               </ol>
-              
+
               <div class="text-center mt-4">
                 <a href="/eco-action" class="pledge-button">I Pledge to Help Our Planet!</a>
               </div>
@@ -144,7 +163,75 @@
 </template>
 
 <script setup>
-// No script needed for now
+import { ref, onMounted } from 'vue';
+
+// YouTube API key 
+const API_KEY = 'AIzaSyAD9fWdOwiKZQ3UPZE24gn6MApbFZWv89g';
+const MAX_RESULTS = 3; // Number of videos to show per topic
+
+// Video topics
+const videoTopics = ref([
+  { id: 1, name: 'Climate Basics', query: 'climate change for kids' },
+  { id: 2, name: 'Renewable Energy', query: 'renewable energy for children' },
+  { id: 3, name: 'Recycling', query: 'recycling for kids' },
+  { id: 4, name: 'Endangered Animals', query: 'endangered animals climate change' },
+  { id: 5, name: 'Weather vs Climate', query: 'weather vs climate for kids' }
+]);
+
+const selectedTopic = ref(videoTopics.value[0]);
+const selectedVideos = ref([]);
+const isLoading = ref(false);
+const customSearchQuery = ref('');
+
+function truncateDescription(desc, maxLength = 150) {
+  return desc.length > maxLength ? desc.substring(0, maxLength) + '...' : desc;
+}
+function searchCustomTopic() {
+  if (!customSearchQuery.value.trim()) return;
+
+  const searchQuery = customSearchQuery.value + ' environment|eco|green|sustainability';
+  fetchVideos({
+    id: 0,
+    name: 'Custom Search: ' + customSearchQuery.value,
+    query: searchQuery
+  });
+}
+
+// Function to fetch videos from YouTube API
+async function fetchVideos(topic) {
+  isLoading.value = true;
+  selectedTopic.value = topic;
+  selectedVideos.value = [];
+
+  try {
+    // Check if the topic query already includes environment-related keywords
+    const query = topic.query.includes('environment|eco')
+      ? topic.query
+      : topic.query + ' environment|eco|green|sustainability';
+
+    const response = await fetch(
+      `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&maxResults=${MAX_RESULTS}&type=video&key=${API_KEY}`
+    );
+
+    const data = await response.json();
+    selectedVideos.value = data.items || [];
+  } catch (error) {
+    console.error('Error fetching YouTube videos:', error);
+    selectedVideos.value = [];
+  } finally {
+    isLoading.value = false;
+  }
+}
+
+// Function to select a topic
+function selectTopic(topic) {
+  fetchVideos(topic);
+}
+
+// Fetch initial videos when component mounts
+onMounted(() => {
+  fetchVideos(selectedTopic.value);
+});
 </script>
 
 <style>
@@ -201,6 +288,73 @@
 .intro-card p {
   font-size: 1.2rem;
   line-height: 1.6;
+}
+
+/* Video Section */
+.video-section {
+  background-color: #F5F9FF;
+  border-radius: 20px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.topic-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.topic-button {
+  background-color: #9DDCFF;
+  border: none;
+  border-radius: 30px;
+  padding: 8px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: bold;
+  color: #2C3E50;
+}
+
+.topic-button:hover {
+  background-color: #7ACBFF;
+  transform: translateY(-2px);
+}
+
+.topic-button.active {
+  background-color: #FF8A5B;
+  color: white;
+}
+
+.video-container {
+  background-color: white;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.video-title {
+  margin-top: 15px;
+  color: #2C3E50;
+  font-size: 1.3rem;
+}
+
+.video-description {
+  color: #666;
+  margin-top: 10px;
+  font-size: 1rem;
+}
+
+.video-placeholder {
+  background-color: white;
+  border-radius: 15px;
+  padding: 40px 20px;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  font-size: 1.2rem;
+  color: #666;
 }
 
 /* Resource Cards */
@@ -371,25 +525,105 @@
   .hero-section h1 {
     font-size: 2.5rem;
   }
-  
+
   .hero-subtitle {
     font-size: 1.2rem;
   }
-  
+
   .section-title {
     font-size: 1.8rem;
   }
-  
+
   .intro-card h2 {
     font-size: 1.7rem;
   }
-  
+
   .intro-card p {
     font-size: 1.1rem;
   }
-  
+
   .action-list li {
     font-size: 1.1rem;
   }
+
+  .topic-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .topic-button {
+    width: 100%;
+    max-width: 250px;
+  }
+
+  .video-container iframe {
+    height: 250px;
+  }
+}
+
+.custom-search {
+  margin: 20px auto;
+  max-width: 600px;
+  text-align: center;
+}
+
+.search-input {
+  padding: 10px 15px;
+  width: 70%;
+  border: 2px solid #9DDCFF;
+  border-radius: 30px;
+  font-size: 1rem;
+  outline: none;
+}
+
+.search-button {
+  padding: 10px 20px;
+  margin-left: 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.search-button:hover {
+  background-color: #3E8E41;
+}
+
+.search-note {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 5px;
+}
+
+.video-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.video-item {
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.loading-spinner {
+  text-align: center;
+  padding: 30px;
+}
+
+.spinner {
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #4CAF50;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 15px;
 }
 </style>
