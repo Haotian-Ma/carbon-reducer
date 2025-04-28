@@ -88,16 +88,18 @@
         <div class="col-md-6 col-lg-3 mb-4">
           <div class="resource-card">
             <div class="card-image-container">
-              <img src="https://placehold.co/600x400/9DDCFF/333333?text=Card+Game" alt="Nature's Benefits Card Game"
+              <img src="https://placehold.co/600x400/9DDCFF/333333?text=RecycleCity" alt="RecycleCity Game"
                 class="card-img">
             </div>
             <div class="card-content">
-              <h3>Nature's Benefits Card Game(Age: 11-18)</h3>
-              <p>Play a fun card game to learn how nature helps us every day! Match the cards and discover nature's
-                superpowers.</p>
+              <h3>RecycleCity Game (Age: 6-15)</h3>
+              <p>Explore RecycleCity and learn how recycling works! Visit different locations and discover how to reduce
+                waste in your community.</p>
+              <!-- <div class="button-container">
+                <a href="/games/recyclecity/index.htm" target="_blank" class="resource-button">Play Now</a>
+              </div> -->
               <div class="button-container">
-                <a href="https://www.epa.gov/eco-research/natures-benefits-card-game" target="_blank"
-                  class="resource-button">Play Now</a>
+                <router-link to="/recyclecity" class="resource-button">Play Now</router-link>
               </div>
             </div>
           </div>
@@ -182,6 +184,8 @@ const selectedTopic = ref(videoTopics.value[0]);
 const selectedVideos = ref([]);
 const isLoading = ref(false);
 const customSearchQuery = ref('');
+// game modal
+const showGameModal = ref(false);
 
 function truncateDescription(desc, maxLength = 150) {
   return desc.length > maxLength ? desc.substring(0, maxLength) + '...' : desc;
@@ -625,5 +629,51 @@ onMounted(() => {
   height: 50px;
   animation: spin 1s linear infinite;
   margin: 0 auto 15px;
+}
+
+.game-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-modal-content {
+  width: 90%;
+  height: 90%;
+  background-color: white;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.close-modal {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #FF8A5B;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.game-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
 }
 </style>
