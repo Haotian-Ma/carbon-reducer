@@ -85,55 +85,16 @@ app = Flask(__name__, template_folder="templates")
 def home():
     return jsonify({"status": "OK"})
 
-# Helper function to load data from a given table using the SQLAlchemy engine.
-# def load_data_from_db(table_name):
-#     query = f"SELECT * FROM {table_name}"
-#     try:
-#         df = pd.read_sql_query(query, engine)
-#         print(f"Table '{table_name}' loaded successfully!")
-#         return df
-#     except Exception as e:
-#         print(f"Error loading table '{table_name}': {e}")
-#         return None
-
-@app.route("/map")
-def map_view():
-    # load GeoJSON
-    gdf = gpd.read_file(os.path.join("data", "geo_sub_data.geojson"))
-    for col in gdf.select_dtypes(["datetime64"]).columns:
-        gdf[col] = gdf[col].astype(str)
-
-    m = folium.Map(location=[-37.8136, 144.9631], zoom_start=9, tiles="CartoDB positron")
-    folium.Choropleth(
-        geo_data=gdf,
-        data=gdf,
-        columns=["LOC_NAME","VegRate"],
-        key_on="feature.properties.LOC_NAME",
-        fill_color="YlGn", fill_opacity=0.7, line_opacity=0.2,
-        legend_name="Vegetation Coverage (%)"
-    ).add_to(m)
-    folium.GeoJson(
-        gdf,
-        tooltip=folium.GeoJsonTooltip(
-          fields=["LOC_NAME","Postcode","VegRate","TreeRate"],
-          aliases=["Suburb:","Postcode:","Veg (%)","Tree (%)"],
-          localize=True, sticky=False, labels=True
-        )
-    ).add_to(m)
-    folium.LayerControl().add_to(m)
-
-    # save into your Flask templates folder
-    map_html = m.get_root().render()
-    return render_template("map.html", map_html=map_html)
-
+#Reads the GeoJSON file containing suburb boundaries and vegetation data
 @app.route('/api/geojson')
 def get_geojson():
-    # 方式 A：直接读文件
+    # Load the GeoJSON file
     with open('data/geo_sub_data.geojson', encoding='utf-8') as f:
         data = json.load(f)
     return jsonify(data)
+
 # API route: /api/chartdata1
-# Returns JSON data containing Plotly traces and layout for a specific chart.
+# Returns JSON data for the chart with Global Temperature and Emissions.
 @app.route('/api/chartdata1', methods=['POST',"GET","OPTIONS"])
 def chartdata1_api():
     data = [
@@ -192,7 +153,7 @@ def chartdata1_api():
     return jsonify({"data": data, "layout": layout})
 
 # API route: /api/chartdata2
-# Returns JSON data for a second chart with temperature and emissions.
+# Returns JSON data for the chart with temperature and emissions.
 @app.route('/api/chartdata2', methods=['POST',"GET","OPTIONS"])
 def chartdata2_api():
     data = [
@@ -413,26 +374,6 @@ def chartdata6_api():
     
     return jsonify({"data": [trace], "layout": layout})
 
-# @app.route('/api/youtube/search', methods=['POST',"GET","OPTIONS"])
-# def youtube_search():
-#     q = request.args.get('q', 'news')
-#     api_key = os.environ['YOUTUBE_API_KEY']
-#     youtube = build('youtube', 'v3', developerKey=api_key)
-#     # Perform a search query on YouTube
-#     res = youtube.search().list(
-#         part='snippet',
-#         q=q,
-#         maxResults=5,
-#         type='video'
-#     ).execute()
-#     # Extract video IDs, titles, and thumbnail URLs from the search results
-#     videos = [{
-#         'videoId': item['id']['videoId'],
-#         'title': item['snippet']['title'],
-#         'thumb': item['snippet']['thumbnails']['medium']['url']
-#     } for item in res['items']]
-
-#     return jsonify(videos)
 # An after_request hook to add CORS headers to every response for debugging purposes.
 @app.after_request
 def add_cors_headers(response):

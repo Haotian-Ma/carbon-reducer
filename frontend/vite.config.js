@@ -5,4 +5,11 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   base: '/',
   plugins: [vue()],
+  optimizeDeps: {
+    // force Vite to pre‐bundle these two
+    include: [
+      'mapbox-gl',
+      '@mapbox/mapbox-gl-geocoder'
+    ],
+  }
 })
