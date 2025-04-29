@@ -23,7 +23,7 @@
 import { LMap, LTileLayer, LGeoJson } from '@vue-leaflet/vue-leaflet'
 import L from 'leaflet'
 import axios from 'axios'
-import 'leaflet-control-geocoder/dist/Control.Geocoder.js'
+import 'leaflet-control-geocoder'
 import 'leaflet-control-geocoder/dist/Control.Geocoder.css'
 
 export default {
