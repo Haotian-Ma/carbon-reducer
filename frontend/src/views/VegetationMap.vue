@@ -14,8 +14,15 @@
   </template>
   
   <script setup>
- const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? ''
-  const mapUrl = `${API_BASE_URL}/api/map`
+const rawBase = import.meta.env.VITE_API_BASE_URL
+
+const origin = window.location.origin
+
+const API_BASE_URL = rawBase && rawBase !== origin
+  ? rawBase
+  : ''
+
+const mapUrl = `${API_BASE_URL}/api/map`
   </script>
   
   <style scoped>
