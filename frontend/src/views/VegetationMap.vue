@@ -16,16 +16,16 @@
   import { ref, onMounted } from 'vue'
   import { fromLonLat } from 'ol/proj'
   import GeoJSON from 'ol/format/GeoJSON'
-  
+  const API = import.meta.env.VITE_API_BASE_URL || ''
   const center = ref(fromLonLat([144.9631, -37.8136]))
   const zoom   = ref(9)
   const features = ref([])
   
   onMounted(async () => {
     try {
-      const res = await fetch('/api/geojson')
+      const res = await fetch(`${API}/api/geojson`)
       const gj  = await res.json()
-      const format = new GeoJSON()
+      const format = new GeoJSON() 
       features.value = format.readFeatures(gj, {
         featureProjection: 'EPSG:3857'
       })
