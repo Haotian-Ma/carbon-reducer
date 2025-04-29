@@ -25,7 +25,8 @@
   <script setup>
   import { ref, onMounted } from 'vue'
   // 从 vue-leaflet 里按需引入
-  import { LMap, LTileLayer, LGeoJson } from 'vue-leaflet'
+ import { LMap, LTileLayer, LMarker } from '@vue-leaflet/vue-leaflet'
+import 'leaflet/dist/leaflet.css'
   
   const center = ref([-37.8136, 144.9631])  // 墨尔本中心
   const zoom   = ref(9)
