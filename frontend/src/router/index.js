@@ -6,7 +6,7 @@ import VirtualTreeView from '../views/VirtualTreeView.vue'
 import ClimateInsightView from '../views/ClimateInsightView.vue'
 import LearningView from '../views/KidsLearningView.vue'
 import RecycleCityGameView from '../views/RecycleCityGameView.vue'
-
+import VegetationMap from '../views/VegetationMap.vue'
 const routes = [
   {
     path: '/',
@@ -38,6 +38,11 @@ const routes = [
     path:'/resources/kids-learning',
     name: 'Learning',
     component: LearningView
+  },
+  {
+    path:'/resources/Map',
+    name: 'Map',
+    component: VegetationMap
   },
   {
     path: '/recyclecity',

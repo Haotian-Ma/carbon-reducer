@@ -38,6 +38,11 @@
                                     Kids Learning
                                 </router-link>
                             </li>
+                            <li class="dropdown-item">
+                                <router-link to="/resources/Map" class="dropdown-link">
+                                    VegetationMap
+                                </router-link>
+                            </li>
                         </ul>
                     </li>
                     <li class="nav-item">
