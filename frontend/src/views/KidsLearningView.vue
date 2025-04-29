@@ -168,7 +168,7 @@
 import { ref, onMounted } from 'vue';
 
 // YouTube API key 
-const API_KEY = 'AIzaSyAD9fWdOwiKZQ3UPZE24gn6MApbFZWv89g';
+const YOUTUBE_API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
 const MAX_RESULTS = 3; // Number of videos to show per topic
 
 // Video topics
@@ -214,7 +214,7 @@ async function fetchVideos(topic) {
       : topic.query + ' environment|eco|green|sustainability';
 
     const response = await fetch(
-      `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&maxResults=${MAX_RESULTS}&type=video&key=${API_KEY}`
+      `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&maxResults=${MAX_RESULTS}&type=video&key=${YOUTUBE_API_KEY}`
     );
 
     const data = await response.json();
