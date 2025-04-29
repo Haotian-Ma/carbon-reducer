@@ -143,7 +143,7 @@ def home():
 #         print(f"Error loading table '{table_name}': {e}")
 #         return None
 
-@app.route('/map')
+@app.route('/api/map', methods=['POST',"GET","OPTIONS"])
 def map_view():
     # Render the map in a template
     folium_map = create_folium_map()

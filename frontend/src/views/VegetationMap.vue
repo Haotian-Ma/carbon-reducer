@@ -15,7 +15,7 @@
   
   <script setup>
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
-  const mapUrl = `${API_BASE_URL}/map`
+  const mapUrl = `${API_BASE_URL}/api//map`
   </script>
   
   <style scoped>
