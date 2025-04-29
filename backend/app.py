@@ -8,7 +8,12 @@ from sqlalchemy import create_engine, text, MetaData, Table, select
 from sqlalchemy.pool import QueuePool
 from dotenv import load_dotenv
 from flask_cors import CORS
+import geopandas as gpd
+import folium
+from folium.features import GeoJsonTooltip
 import psycopg2
+DATA_PATH = os.path.join(os.path.dirname(__file__), 'data', 'geo_sub_data.geojson')
+
 # from googleapiclient.discovery import build
 # Load environment variables from .env file
 load_dotenv()
@@ -28,6 +33,55 @@ engine = create_engine(
     max_overflow=10,
     pool_timeout=30
 )
+
+def create_folium_map():
+    gdf = gpd.read_file(DATA_PATH)
+    for col in gdf.select_dtypes(include=['datetime64']).columns:
+        gdf[col] = gdf[col].astype(str)
+
+    m = folium.Map(location=[-37.8136, 144.9631],
+                   zoom_start=9,
+                   tiles='CartoDB positron')
+
+    folium.Choropleth(
+        geo_data=gdf,
+        name='Vegetation Coverage',
+        data=gdf,
+        columns=['LOC_NAME', 'VegRate'],
+        key_on='feature.properties.LOC_NAME',
+        fill_color='YlGn',
+        fill_opacity=0.7,
+        line_opacity=0.2,
+        legend_name='Vegetation Coverage (%)'
+    ).add_to(m)
+
+    tooltip = GeoJsonTooltip(
+        fields=['LOC_NAME', 'Postcode', 'VegRate', 'TreeRate'],
+        aliases=['Suburb:', 'Postcode:', 'Vegetation (%):', 'Tree Rate (%):'],
+        localize=True,
+        sticky=False,
+        labels=True,
+        style="""
+            background-color: #F0EFEF;
+            border: 2px solid black;
+            border-radius: 3px;
+            box-shadow: 3px;
+        """
+    )
+    folium.GeoJson(
+        gdf,
+        style_function=lambda x: {
+            'fillColor': '#ffffff',
+            'color': '#000000',
+            'fillOpacity': 0.0,
+            'weight': 0.5
+        },
+        tooltip=tooltip
+    ).add_to(m)
+
+    folium.LayerControl().add_to(m)
+    return m
+
 # Function to load data from a specified database table using psycopg2 directly
 def loading_data_from_db(database_name):
     """
@@ -88,7 +142,13 @@ def home():
 #     except Exception as e:
 #         print(f"Error loading table '{table_name}': {e}")
 #         return None
-    
+
+@app.route('/map')
+def map_view():
+    # Render the map in a template
+    folium_map = create_folium_map()
+    return folium_map.get_root().render()
+
 # API route: /api/chartdata1
 # Returns JSON data containing Plotly traces and layout for a specific chart.
 @app.route('/api/chartdata1', methods=['POST',"GET","OPTIONS"])
