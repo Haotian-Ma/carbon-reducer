@@ -1,5 +1,6 @@
 import os
-from flask import Flask, jsonify, render_template, request
+import json
+from flask import Flask, send_from_directory, jsonify, render_template, request
 import pandas as pd
 import numpy as np
 from scipy.stats import gaussian_kde
@@ -125,6 +126,12 @@ def map_view():
     map_html = m.get_root().render()
     return render_template("map.html", map_html=map_html)
 
+@app.route('/api/geojson')
+def get_geojson():
+    # 方式 A：直接读文件
+    with open('data/geo_sub_data.geojson', encoding='utf-8') as f:
+        data = json.load(f)
+    return jsonify(data)
 # API route: /api/chartdata1
 # Returns JSON data containing Plotly traces and layout for a specific chart.
 @app.route('/api/chartdata1', methods=['POST',"GET","OPTIONS"])

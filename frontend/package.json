@@ -9,6 +9,7 @@
     "plotly": "^1.0.6",
     "plotly.js-dist-min": "^3.0.1",
     "vue": "^3.2.31",
+    "vue-leaflet": "^0.1.0",
     "vue-router": "^4.5.0"
   },
   "scripts": {
