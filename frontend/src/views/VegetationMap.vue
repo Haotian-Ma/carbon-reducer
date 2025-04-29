@@ -1,77 +1,49 @@
 <template>
-    <div class="map-wrapper">
-      <l-map
-        v-if="geojson"
-        :zoom="zoom"
-        :center="center"
-        style="height: 600px; width: 100%;"
-      >
-        <l-tile-layer
-          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://carto.com/">CARTO</a>'
-        />
+    <o-map style="height: 600px; width: 100%;">
+      <!-- 视图：中心点 & 缩放 -->
+      <o-view :center="center" :zoom="zoom" />
   
-        <!-- 这里必须确保 LGeoJson 已注册 -->
-        <l-geo-json
-          :geojson="geojson"
-          :options="geoOptions"
-        />
-      </l-map>
+      <!-- 瓦片图层：OpenStreetMap -->
+      <o-layer-tile>
+        <o-source-osm />
+      </o-layer-tile>
   
-      <div v-else class="loading">正在加载地图数据…</div>
-    </div>
+      <!-- 如果有 GeoJSON 数据，可用矢量图层渲染 -->
+      <o-layer-vector>
+        <o-source-vector :features="features" />
+      </o-layer-vector>
+    </o-map>
   </template>
   
   <script setup>
   import { ref, onMounted } from 'vue'
-  import {
-    LMap,
-    LTileLayer,
-    LGeoJson    // ← 新增这一行
-  } from '@vue-leaflet/vue-leaflet'
-  import 'leaflet/dist/leaflet.css'
+  import { fromLonLat } from 'ol/proj'
+  import GeoJSON from 'ol/format/GeoJSON'
+  import { Vector as VectorSource } from 'ol/source'
+  import { Feature } from 'ol'
+  import { Style, Fill, Stroke } from 'ol/style'
   
-  const center  = ref([-37.8136, 144.9631])
-  const zoom    = ref(9)
-  const geojson = ref(null)
-  
-  // 样式和 tooltip 配置
-  const geoOptions = {
-    style: () => ({
-      fillColor: '#2a9d8f',
-      color:     '#264653',
-      weight:     1,
-      fillOpacity: 0.6,
-    }),
-    onEachFeature: (feature, layer) => {
-      const { LOC_NAME, VegRate } = feature.properties
-      layer.bindTooltip(`
-        <strong>Suburb:</strong> ${LOC_NAME}<br/>
-        <strong>Vegetation Rate:</strong> ${VegRate}%
-      `)
-    }
-  }
-  
-  // 从环境变量里读后端基础 URL
-  const API = import.meta.env.VITE_API_BASE_URL || ''
+  const center = ref(fromLonLat([144.9631, -37.8136]))  // 墨尔本经纬度转投影
+  const zoom   = ref(9)
+  const features = ref([])
   
   onMounted(async () => {
-    try {
-      const res = await fetch(`${API}/api/geojson`)
-      if (!res.ok) throw new Error(res.statusText)
-      geojson.value = await res.json()
-    } catch (err) {
-      console.error('加载 GeoJSON 失败:', err)
-    }
+    // 从后端拉 GeoJSON
+    const res = await fetch('/api/geojson')
+    const gj = await res.json()
+    
+    // 使用 OpenLayers 的 GeoJSON 格式化器
+    const format = new GeoJSON()
+    features.value = format.readFeatures(gj, {
+      featureProjection: 'EPSG:3857'
+    }).map(f => {
+      // 可选：给每个要素设置样式
+      f.setStyle(new Style({
+        fill: new Fill({ color: 'rgba(42,157,143,0.6)' }),
+        stroke: new Stroke({ color: '#264653', width: 1 })
+      }))
+      return f
+    })
   })
   </script>
-  
-  <style>
-  .map-wrapper { position: relative; }
-  .loading {
-    text-align: center;
-    padding: 2em;
-    font-size: 1.2em;
-  }
-  </style>
   
