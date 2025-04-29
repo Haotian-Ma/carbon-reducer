@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 from flask_cors import CORS
 import geopandas as gpd
 import folium
-from folium.features import GeoJsonTooltip
+import geopandas as gpd, folium
 import psycopg2
 DATA_PATH = os.path.join(os.path.dirname(__file__), 'data', 'geo_sub_data.geojson')
 
@@ -33,54 +33,6 @@ engine = create_engine(
     max_overflow=10,
     pool_timeout=30
 )
-
-def create_folium_map():
-    gdf = gpd.read_file(DATA_PATH)
-    for col in gdf.select_dtypes(include=['datetime64']).columns:
-        gdf[col] = gdf[col].astype(str)
-
-    m = folium.Map(location=[-37.8136, 144.9631],
-                   zoom_start=9,
-                   tiles='CartoDB positron')
-
-    folium.Choropleth(
-        geo_data=gdf,
-        name='Vegetation Coverage',
-        data=gdf,
-        columns=['LOC_NAME', 'VegRate'],
-        key_on='feature.properties.LOC_NAME',
-        fill_color='YlGn',
-        fill_opacity=0.7,
-        line_opacity=0.2,
-        legend_name='Vegetation Coverage (%)'
-    ).add_to(m)
-
-    tooltip = GeoJsonTooltip(
-        fields=['LOC_NAME', 'Postcode', 'VegRate', 'TreeRate'],
-        aliases=['Suburb:', 'Postcode:', 'Vegetation (%):', 'Tree Rate (%):'],
-        localize=True,
-        sticky=False,
-        labels=True,
-        style="""
-            background-color: #F0EFEF;
-            border: 2px solid black;
-            border-radius: 3px;
-            box-shadow: 3px;
-        """
-    )
-    folium.GeoJson(
-        gdf,
-        style_function=lambda x: {
-            'fillColor': '#ffffff',
-            'color': '#000000',
-            'fillOpacity': 0.0,
-            'weight': 0.5
-        },
-        tooltip=tooltip
-    ).add_to(m)
-
-    folium.LayerControl().add_to(m)
-    return m
 
 # Function to load data from a specified database table using psycopg2 directly
 def loading_data_from_db(database_name):
@@ -125,7 +77,7 @@ forest_trend = loading_data_from_db("forest_trend")
 world_temp_data = loading_data_from_db("world_temp_data")
 
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder="templates")
 
 # Define a simple home route to verify the service is running.
 @app.route('/')
@@ -143,11 +95,35 @@ def home():
 #         print(f"Error loading table '{table_name}': {e}")
 #         return None
 
-@app.route('/api/map', methods=['POST',"GET","OPTIONS"])
+@app.route("/map")
 def map_view():
-    # Render the map in a template
-    folium_map = create_folium_map()
-    return folium_map.get_root().render()
+    # load GeoJSON
+    gdf = gpd.read_file(os.path.join("data", "geo_sub_data.geojson"))
+    for col in gdf.select_dtypes(["datetime64"]).columns:
+        gdf[col] = gdf[col].astype(str)
+
+    m = folium.Map(location=[-37.8136, 144.9631], zoom_start=9, tiles="CartoDB positron")
+    folium.Choropleth(
+        geo_data=gdf,
+        data=gdf,
+        columns=["LOC_NAME","VegRate"],
+        key_on="feature.properties.LOC_NAME",
+        fill_color="YlGn", fill_opacity=0.7, line_opacity=0.2,
+        legend_name="Vegetation Coverage (%)"
+    ).add_to(m)
+    folium.GeoJson(
+        gdf,
+        tooltip=folium.GeoJsonTooltip(
+          fields=["LOC_NAME","Postcode","VegRate","TreeRate"],
+          aliases=["Suburb:","Postcode:","Veg (%)","Tree (%)"],
+          localize=True, sticky=False, labels=True
+        )
+    ).add_to(m)
+    folium.LayerControl().add_to(m)
+
+    # save into your Flask templates folder
+    map_html = m.get_root().render()
+    return render_template("map.html", map_html=map_html)
 
 # API route: /api/chartdata1
 # Returns JSON data containing Plotly traces and layout for a specific chart.
