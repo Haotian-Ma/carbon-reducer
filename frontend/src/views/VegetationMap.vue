@@ -1,92 +1,105 @@
 <template>
-  <div class="veg-map-container">
-    <!-- Error Alert -->
-    <div v-if="error" class="error-section">
-      <p class="error-message">{{ error }}</p>
-    </div>
+  <div class="veg-map-wrapper">
+    <div class="veg-map-container">
+      <!-- Error Alert -->
+      <div v-if="error" class="error-section">
+        <p class="error-message">{{ error }}</p>
+      </div>
 
-    <h2 class="map-title">Vegetation Coverage Map</h2>
+      <h2 class="map-title">Vegetation Coverage Map</h2>
 
-    <!-- Top Section: Map and Search -->
-    <div class="top-section">
-      <h3>Find Vegetation Coverage by Location</h3>
+      <!-- Top Section: Map and Search -->
+      <div class="top-section">
+        <h3>Find Vegetation Coverage by Location</h3>
 
-      <!-- Search Section -->
-      <div class="search-section">
-        <div class="address-input-wrapper">
-          <input v-model="searchQuery" @input="handleInput" placeholder="Enter postcode or location"
-            class="address-input" />
-          <!-- Dropdown address suggestions -->
-          <div v-if="suggestions.length > 0" class="suggestions-dropdown">
-            <div v-for="suggestion in suggestions" :key="suggestion.id" @click="handleAddressSelect(suggestion)"
-              class="suggestion-item">
-              {{ suggestion.place_name }}
+        <!-- Search Section -->
+        <div class="search-section">
+          <div class="address-input-wrapper">
+            <input 
+              v-model="searchQuery" 
+              @input="handleInput" 
+              @focus="showSuggestions = true"
+              @blur="handleSearchBlur"
+              placeholder="Enter postcode or location"
+              class="address-input" 
+              ref="searchInput"
+            />
+            <!-- Dropdown address suggestions -->
+            <div v-if="showSuggestions && suggestions.length > 0" class="suggestions-dropdown">
+              <div 
+                v-for="suggestion in suggestions" 
+                :key="suggestion.id" 
+                @mousedown="handleAddressSelect(suggestion)"
+                class="suggestion-item"
+              >
+                {{ suggestion.place_name }}
+              </div>
+            </div>
+          </div>
+          <button @click="searchLocation" class="btn-primary">Search</button>
+          <button @click="useMyLocation" class="location-button">
+            <span class="location-icon">📍</span> Use My Location
+          </button>
+        </div>
+
+        <!-- Map Container -->
+        <div class="map-wrapper">
+          <div class="map-container">
+            <div ref="mapContainer" class="map"></div>
+            <!-- Loading Indicator -->
+            <div v-if="isLoading" class="loading-overlay">
+              <div class="loading-spinner"></div>
+              <p>Loading vegetation data...</p>
             </div>
           </div>
         </div>
-        <button @click="searchLocation" class="btn-primary">Search</button>
-        <button @click="useMyLocation" class="location-button">
-          <span class="location-icon">📍</span> Use My Location
-        </button>
       </div>
 
-      <!-- Map Container -->
-      <div class="map-container">
-        <div ref="mapContainer" class="map"></div>
-        <!-- Loading Indicator -->
-        <div v-if="isLoading" class="loading-overlay">
-          <div class="loading-spinner"></div>
-          <p>Loading vegetation data...</p>
+      <!-- Bottom Section: Vegetation Data Display -->
+      <div v-if="locationInfo" class="bottom-section">
+        <h3>Vegetation Coverage for {{ locationStr || 'Selected Location' }}</h3>
+
+        <div class="veg-data-section">
+          <!-- Vegetation Rate Display -->
+          <div class="veg-display">
+            <div class="veg-circle" :style="getVegCircleStyle(locationInfo.vegRate)">
+              <span class="veg-value">{{ locationInfo.vegRate }}%</span>
+              <span class="veg-type">Vegetation</span>
+            </div>
+
+            <div class="tree-circle" :style="getTreeCircleStyle(locationInfo.treeRate)">
+              <span class="tree-value">{{ locationInfo.treeRate }}%</span>
+              <span class="tree-type">Tree Cover</span>
+            </div>
+          </div>
+
+          <div class="veg-location">
+            <p class="location-name">
+              <span class="location-icon">📍</span> {{ locationStr || 'Selected Location' }}
+            </p>
+            <p class="postcode">Postcode: {{ locationInfo.postcode }}</p>
+            <p class="coordinates" v-if="coordinates">{{ coordinates.lat.toFixed(4) }}, {{ coordinates.lng.toFixed(4) }}</p>
+          </div>
+
+          <!-- Vegetation Scale Bar -->
+          <div class="veg-scale-container">
+            <span class="veg-label low-label">Low</span>
+            <div class="veg-meter-scale">
+              <div class="scale-segment"></div>
+            </div>
+            <span class="veg-label high-label">High</span>
+          </div>
+
+          <!-- Vegetation summary -->
+          <div class="veg-summary">
+            <p>{{ getVegetationRecommendation(locationInfo.vegRate) }}</p>
+          </div>
         </div>
       </div>
 
-    </div>
-
-    <!-- Bottom Section: Vegetation Data Display -->
-    <div v-if="locationInfo" class="bottom-section">
-      <h3>Vegetation Coverage for {{ locationStr || 'Selected Location' }}</h3>
-
-      <div class="veg-data-section">
-        <!-- Vegetation Rate Display -->
-        <div class="veg-display">
-          <div class="veg-circle" :style="getVegCircleStyle(locationInfo.vegRate)">
-            <span class="veg-value">{{ locationInfo.vegRate }}%</span>
-            <span class="veg-type">Vegetation</span>
-          </div>
-
-          <div class="tree-circle" :style="getTreeCircleStyle(locationInfo.treeRate)">
-            <span class="tree-value">{{ locationInfo.treeRate }}%</span>
-            <span class="tree-type">Tree Cover</span>
-          </div>
-        </div>
-
-        <div class="veg-location">
-          <p class="location-name">
-            <span class="location-icon">📍</span> {{ locationStr || 'Selected Location' }}
-          </p>
-          <p class="postcode">Postcode: {{ locationInfo.postcode }}</p>
-          <p class="coordinates" v-if="coordinates">{{ coordinates.lat.toFixed(4) }}, {{ coordinates.lng.toFixed(4) }}
-          </p>
-        </div>
-
-        <!-- Vegetation Scale Bar -->
-        <div class="veg-scale-container">
-          <span class="veg-label low-label">Low</span>
-          <div class="veg-meter-scale">
-            <div class="scale-segment"></div>
-          </div>
-          <span class="veg-label high-label">High</span>
-        </div>
-
-        <!-- Vegetation summary -->
-        <div class="veg-summary">
-          <p>{{ getVegetationRecommendation(locationInfo.vegRate) }}</p>
-        </div>
+      <div v-else-if="!isLoading" class="no-data-message">
+        <p>Search for a location or click on the map to get vegetation information</p>
       </div>
-    </div>
-
-    <div v-else-if="!isLoading" class="no-data-message">
-      <p>Search for a location or click on the map to get vegetation information</p>
     </div>
   </div>
 </template>
@@ -97,11 +110,11 @@ import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-// Mapbox Access Token
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN || '<YOUR_MAPBOX_TOKEN>'
 
 // Reactive variables
 const mapContainer = ref(null)
+const searchInput = ref(null)
 const map = ref(null)
 const marker = ref(null)
 const locationInfo = ref(null)
@@ -109,12 +122,12 @@ const isLoading = ref(false)
 const error = ref('')
 const searchQuery = ref('')
 const suggestions = ref([])
+const showSuggestions = ref(false)
 const locationStr = ref('')
 const coordinates = ref(null)
 
 // Get style object for vegetation circle
 const getVegCircleStyle = (vegRate) => {
-  // Fixed green color with varying opacity based on value
   return {
     backgroundColor: '#238b45',
     color: 'white',
@@ -124,7 +137,6 @@ const getVegCircleStyle = (vegRate) => {
 
 // Get style object for tree circle
 const getTreeCircleStyle = (treeRate) => {
-  // Fixed blue color with varying opacity based on value
   return {
     backgroundColor: '#2878b8',
     color: 'white',
@@ -132,7 +144,7 @@ const getTreeCircleStyle = (treeRate) => {
   };
 };
 
-// Get vegetation recommendation based on rate
+// Get vegetation recommendation
 const getVegetationRecommendation = (vegRate) => {
   if (vegRate < 20) {
     return "This area has very low vegetation coverage. Urban greening initiatives could significantly improve environmental quality and livability.";
@@ -155,7 +167,6 @@ const handleInput = async () => {
     return;
   }
   try {
-    // Restrict to Australia by adding country=au parameter
     const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
       searchQuery.value
     )}.json?access_token=${mapboxgl.accessToken}&country=au&limit=5`;
@@ -169,29 +180,34 @@ const handleInput = async () => {
   }
 };
 
-// Handle address selection from suggestions
+// Handle search blur
+const handleSearchBlur = () => {
+  setTimeout(() => {
+    showSuggestions.value = false;
+  }, 200);
+};
+
+// Handle address selection
 const handleAddressSelect = (suggestion) => {
   searchQuery.value = suggestion.place_name;
   suggestions.value = [];
+  showSuggestions.value = false;
   locationStr.value = suggestion.place_name;
 
-  // Update map marker
   if (marker.value) {
     marker.value.setLngLat(suggestion.center);
     map.value.flyTo({ center: suggestion.center });
   }
 
-  // Store coordinates
   coordinates.value = {
     lat: suggestion.center[1],
     lng: suggestion.center[0]
   };
 
-  // Find vegetation data for this location
   findVegetationData([suggestion.center[0], suggestion.center[1]]);
 };
 
-// Manual search if user types an address and clicks "Search"
+// Manual search
 const searchLocation = async () => {
   error.value = '';
   if (!searchQuery.value) {
@@ -228,9 +244,8 @@ const searchLocation = async () => {
   }
 };
 
-// Geocode an address via Mapbox, returning { lat, lng }
+// Geocode an address
 const geocodeAddress = async (address) => {
-  // Restrict to Victoria, Australia by adding bbox parameter (bounding box for Victoria)
   const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
     address
   )}.json?access_token=${mapboxgl.accessToken}&country=au&limit=1`;
@@ -253,16 +268,13 @@ const useMyLocation = () => {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        const { longitude, latitude } = position.coords
-
-        // Fly to current location
+        const { longitude, latitude } = position.coords;
         map.value.flyTo({
           center: [longitude, latitude],
           zoom: 14,
           essential: true
         });
 
-        // Add marker at current location
         if (marker.value) {
           marker.value.setLngLat([longitude, latitude]);
         } else {
@@ -271,19 +283,17 @@ const useMyLocation = () => {
             .addTo(map.value);
         }
 
-        // Store coordinates
         coordinates.value = {
           lat: latitude,
           lng: longitude
         };
 
-        // Find vegetation data for this location
         locationStr.value = 'My Location';
         findVegetationData([longitude, latitude]);
       },
       (error) => {
         console.error('Failed to get location:', error);
-        this.error = 'Failed to get your location: ' + error.message;
+        error.value = 'Failed to get your location: ' + error.message;
       },
       { enableHighAccuracy: true }
     );
@@ -292,14 +302,13 @@ const useMyLocation = () => {
   }
 };
 
-// Find vegetation data for specific coordinates
+// Find vegetation data
 const findVegetationData = (coordinates) => {
   if (!map.value) return;
 
   isLoading.value = true;
   error.value = '';
 
-  // Perform point query to get area information for this location
   setTimeout(() => {
     try {
       const features = map.value.queryRenderedFeatures(
@@ -325,7 +334,7 @@ const findVegetationData = (coordinates) => {
     } finally {
       isLoading.value = false;
     }
-  }, 500); // Short delay to ensure map has loaded
+  }, 500);
 };
 
 onMounted(async () => {
@@ -338,16 +347,10 @@ onMounted(async () => {
         zoom: 9
       });
 
-      // Add navigation controls
       map.value.addControl(new mapboxgl.NavigationControl(), 'top-left');
-
-      // Add fullscreen control
       map.value.addControl(new mapboxgl.FullscreenControl(), 'top-right');
-
-      // Add scale control
       map.value.addControl(new mapboxgl.ScaleControl(), 'bottom-left');
 
-      // Add marker
       marker.value = new mapboxgl.Marker()
         .setLngLat([144.9931, -37.8136])
         .addTo(map.value);
@@ -380,7 +383,6 @@ onMounted(async () => {
             }
           });
 
-          // Add boundary lines layer
           map.value.addLayer({
             id: 'suburb-boundaries',
             type: 'line',
@@ -391,7 +393,6 @@ onMounted(async () => {
             }
           });
 
-          // Interactive tooltip
           const popup = new mapboxgl.Popup({
             closeButton: false,
             closeOnClick: false,
@@ -416,7 +417,6 @@ onMounted(async () => {
             popup.remove();
           });
 
-          // Click event to get information
           map.value.on('click', 'veg-choropleth', e => {
             const props = e.features[0].properties;
             locationInfo.value = {
@@ -430,8 +430,6 @@ onMounted(async () => {
               lat: e.lngLat.lat,
               lng: e.lngLat.lng
             };
-
-            // Update marker position
             marker.value.setLngLat(e.lngLat);
           });
 
@@ -449,16 +447,25 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-/* Main Container */
+.veg-map-wrapper {
+  width: 100%;
+  overflow-x: hidden;
+  display: flex;
+  justify-content: center;
+  background-color: #f9f9f9;
+}
+
 .veg-map-container {
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
   padding: 20px;
   font-family: 'Poppins', Arial, sans-serif;
   color: #333;
-  background-color: #f9f9f9;
 }
 
 .map-title {
@@ -499,39 +506,28 @@ h3::after {
   background: linear-gradient(to right, #2c9d44, #1a5829);
 }
 
-/* Main Content - Two Columns */
-.veg-map-content {
-  display: flex;
-  gap: 30px;
-  margin-bottom: 40px;
-}
-
-/* Left Section - Map & Search */
-.left-section {
-  flex: 1;
-  min-width: 300px;
-}
-
 .search-section {
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .address-input-wrapper {
   position: relative;
   flex: 1;
+  min-width: 250px;
 }
 
 .address-input {
-  width: calc(100% - 50px);
+  width: 100%;
   padding: 12px 15px;
   font-size: 1rem;
   border: 1px solid #ddd;
-  border-radius: 50px;
+  border-radius: 4px;
   outline: none;
   transition: all 0.3s ease;
-  margin-right: 10px;
 }
 
 .address-input:focus {
@@ -543,21 +539,22 @@ h3::after {
   position: absolute;
   top: 100%;
   left: 0;
-  width: 100%;
-  max-height: 200px;
-  overflow-y: auto;
+  right: 0;
   background-color: white;
   border: 1px solid #ddd;
-  border-radius: 8px;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  margin-top: 5px;
+  max-height: 200px;
+  overflow-y: auto;
 }
 
 .suggestion-item {
   padding: 10px 15px;
   cursor: pointer;
   transition: background-color 0.2s;
+  text-align: left;
 }
 
 .suggestion-item:hover {
@@ -572,11 +569,10 @@ h3::after {
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
-  border-radius: 50px;
+  border-radius: 4px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  min-width: 120px;
 }
 
 .btn-primary:hover {
@@ -584,22 +580,52 @@ h3::after {
   transform: translateY(-2px);
 }
 
-.map-container {
-  position: relative;
-  height: 600px;
-  width: 80vw;
-  margin: 0 auto 20px auto;
-  border-radius: 10px;
-  overflow: hidden;
+.location-button {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  min-width: 180px;
 }
 
-.map {
-  width: 80vw;
+.location-button:hover {
+  background-color: #0b7dda;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.location-icon {
+  margin-right: 8px;
+}
+
+.map-wrapper {
+
+  width: 1200px;
+  display: flex;
+  justify-content: center;
+
+}
+
+.map-container {
+  position: relative;
+  width: 1200px;
   height: 600px;
   border-radius: 8px;
   overflow: hidden;
-  margin: 0 auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.map {
+  width: 100%;
+  height: 100%;
 }
 
 .loading-overlay {
@@ -632,49 +658,8 @@ h3::after {
   }
 }
 
-.location-button-container {
-  margin-top: 15px;
-  text-align: center;
-}
-
-.location-button {
-  display: inline-flex;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: #2196F3;
-  color: white;
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 500;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-}
-
-.location-button:hover {
-  background-color: #0b7dda;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  transform: translateY(-2px);
-}
-
-.location-icon {
-  margin-right: 8px;
-}
-
-/* Right Section - Vegetation Data Display */
-.right-section {
-  flex: 1;
-  min-width: 300px;
-}
-
-.right-section h3 {
-  text-align: center;
-}
-
-.right-section h3::after {
-  left: 50%;
-  transform: translateX(-50%);
+.bottom-section {
+  margin-top: 30px;
 }
 
 .veg-data-section {
@@ -684,13 +669,12 @@ h3::after {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Vegetation Circles */
 .veg-display {
   display: flex;
-  align-items: center;
   justify-content: center;
   gap: 40px;
   margin-bottom: 20px;
+  flex-wrap: wrap;
 }
 
 .veg-circle,
@@ -702,9 +686,7 @@ h3::after {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #f0f0f0;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
 }
 
 .veg-value,
@@ -721,7 +703,6 @@ h3::after {
   margin-top: 5px;
 }
 
-/* Location info */
 .veg-location {
   padding: 15px;
   background-color: #f8f9fa;
@@ -750,7 +731,6 @@ h3::after {
   font-size: 0.9rem;
 }
 
-/* Vegetation Scale Bar */
 .veg-scale-container {
   display: flex;
   align-items: center;
@@ -784,13 +764,9 @@ h3::after {
 .scale-segment {
   flex: 1;
   height: 100%;
-}
-
-.scale-segment {
   background: linear-gradient(to right, rgba(35, 139, 69, 0.3), rgba(35, 139, 69, 1));
 }
 
-/* Recommendation summary */
 .veg-summary {
   background-color: #f8f9fa;
   padding: 15px;
@@ -813,61 +789,6 @@ h3::after {
   color: #666;
 }
 
-/* Benefits Section */
-.benefits-section {
-  margin-top: 40px;
-}
-
-.benefits-section h3 {
-  text-align: center;
-}
-
-.benefits-section h3::after {
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.benefits-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.benefit-card {
-  display: flex;
-  align-items: center;
-  background: white;
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 300px;
-  transition: all 0.3s ease;
-}
-
-.benefit-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-.benefit-icon {
-  font-size: 2.5rem;
-  margin-right: 15px;
-}
-
-.benefit-content h4 {
-  margin: 0 0 5px 0;
-  font-size: 1.2rem;
-}
-
-.benefit-content p {
-  margin: 0;
-  color: #666;
-  font-size: 0.9rem;
-}
-
-/* Error message */
 .error-section {
   background-color: #ffebee;
   border-left: 4px solid #f44336;
@@ -881,42 +802,44 @@ h3::after {
   margin: 0;
 }
 
-/* Responsive Design */
-@media (max-width: 992px) {
-
-  .top-section,
-  .bottom-section {
-    width: 100%;
-  }
-
-  .map-container {
-    height: 300px;
-  }
-}
-
 @media (max-width: 768px) {
   .veg-display {
     flex-direction: column;
     gap: 20px;
   }
 
-  .veg-location {
-    text-align: center;
-    padding: 10px;
-  }
-
-  .location-name {
-    justify-content: center;
-  }
-}
-
-@media (max-width: 576px) {
   .search-section {
     flex-direction: column;
   }
 
-  .btn-primary {
+  .address-input-wrapper {
     width: 100%;
+  }
+
+  .btn-primary, .location-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .map-container {
+    height: 400px;
+  }
+
+  .veg-map-container {
+    padding: 15px;
+  }
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  .map-container {
+    width: 98%;
+  }
+}
+
+@supports (-moz-appearance:none) {
+  .map {
+    margin-left: 1px;
   }
 }
 </style>
