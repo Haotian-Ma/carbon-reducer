@@ -50,8 +50,8 @@
           </div>
         </div>
 
-        <div class="row">
-          <div class="col-lg-10 offset-lg-1">
+        <div class="row justify-content-center">
+          <div class="col-12">
             <!-- loading status -->
             <div v-if="isLoading" class="loading-spinner">
               <div class="spinner"></div>
@@ -79,82 +79,83 @@
             </div>
           </div>
         </div>
-      </div>
-      <!-- Interactive Resources -->
-      <h2 class="section-title text-center mb-4">Fun Learning Activities</h2>
+        <!-- Interactive Resources -->
+        <h2 class="section-title text-center mb-4">Fun Learning Activities</h2>
 
-      <div class="row resource-cards">
-        <!-- Card 1 -->
-        <div class="col-md-6 col-lg-3 mb-4">
-          <div class="resource-card">
-            <div class="card-image-container">
-              <img src="https://placehold.co/600x400/9DDCFF/333333?text=RecycleCity" alt="RecycleCity Game"
-                class="card-img">
-            </div>
-            <div class="card-content">
-              <h3>RecycleCity Game (Age: 6-15)</h3>
-              <p>Explore RecycleCity and learn how recycling works! Visit different locations and discover how to reduce
-                waste in your community.</p>
-              <!-- <div class="button-container">
+        <div class="row resource-cards">
+          <!-- Card 1 -->
+          <div class="col-md-6 col-lg-3 mb-4">
+            <div class="resource-card">
+              <div class="card-image-container">
+                <img src="https://placehold.co/600x400/9DDCFF/333333?text=RecycleCity" alt="RecycleCity Game"
+                  class="card-img">
+              </div>
+              <div class="card-content">
+                <h3>RecycleCity Game (Age: 6-15)</h3>
+                <p>Explore RecycleCity and learn how recycling works! Visit different locations and discover how to
+                  reduce
+                  waste in your community.</p>
+                <!-- <div class="button-container">
                 <a href="/games/recyclecity/index.htm" target="_blank" class="resource-button">Play Now</a>
               </div> -->
-              <div class="button-container">
-                <router-link to="/recyclecity" class="resource-button">Play Now</router-link>
+                <div class="button-container">
+                  <router-link to="/recyclecity" class="resource-button">Play Now</router-link>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+
+        <!-- Fun Facts Section -->
+        <div class="fun-facts-section mt-5">
+          <h2 class="section-title text-center mb-4">Cool Climate Facts</h2>
+
+          <div class="row">
+            <div class="col-md-4 mb-4">
+              <div class="fact-bubble fact-bubble-1">
+                <p>Did you know that trees are like nature's air filters? They absorb carbon dioxide (a greenhouse gas)
+                  and release oxygen that we breathe!</p>
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+              <div class="fact-bubble fact-bubble-2">
+                <p>Polar bears are amazing swimmers, but they need ice to rest and hunt. As the Arctic ice melts due to
+                  climate change, polar bears have to swim longer distances!</p>
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+              <div class="fact-bubble fact-bubble-3">
+                <p>The energy from the sun that reaches Earth in just one hour could power the entire world for a whole
+                  year! That's why solar power is so important.</p>
               </div>
             </div>
           </div>
         </div>
 
-      </div>
+        <!-- What You Can Do Section -->
+        <div class="action-section mt-5 mb-5">
+          <h2 class="section-title text-center mb-4">Be a Planet Protector!</h2>
 
+          <div class="row">
+            <div class="col-lg-8 offset-lg-2">
+              <div class="action-card">
+                <h3 class="text-center">Here are 5 super easy ways YOU can help:</h3>
 
-      <!-- Fun Facts Section -->
-      <div class="fun-facts-section mt-5">
-        <h2 class="section-title text-center mb-4">Cool Climate Facts</h2>
+                <ol class="action-list">
+                  <li>Turn off lights when you leave a room to save energy</li>
+                  <li>Use reusable water bottles instead of plastic ones</li>
+                  <li>Walk, bike, or take the bus when possible</li>
+                  <li>Plant flowers or trees that help butterflies and bees</li>
+                  <li>Tell your friends and family what you've learned about climate change</li>
+                </ol>
 
-        <div class="row">
-          <div class="col-md-4 mb-4">
-            <div class="fact-bubble fact-bubble-1">
-              <p>Did you know that trees are like nature's air filters? They absorb carbon dioxide (a greenhouse gas)
-                and release oxygen that we breathe!</p>
-            </div>
-          </div>
-
-          <div class="col-md-4 mb-4">
-            <div class="fact-bubble fact-bubble-2">
-              <p>Polar bears are amazing swimmers, but they need ice to rest and hunt. As the Arctic ice melts due to
-                climate change, polar bears have to swim longer distances!</p>
-            </div>
-          </div>
-
-          <div class="col-md-4 mb-4">
-            <div class="fact-bubble fact-bubble-3">
-              <p>The energy from the sun that reaches Earth in just one hour could power the entire world for a whole
-                year! That's why solar power is so important.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- What You Can Do Section -->
-      <div class="action-section mt-5 mb-5">
-        <h2 class="section-title text-center mb-4">Be a Planet Protector!</h2>
-
-        <div class="row">
-          <div class="col-lg-8 offset-lg-2">
-            <div class="action-card">
-              <h3 class="text-center">Here are 5 super easy ways YOU can help:</h3>
-
-              <ol class="action-list">
-                <li>Turn off lights when you leave a room to save energy</li>
-                <li>Use reusable water bottles instead of plastic ones</li>
-                <li>Walk, bike, or take the bus when possible</li>
-                <li>Plant flowers or trees that help butterflies and bees</li>
-                <li>Tell your friends and family what you've learned about climate change</li>
-              </ol>
-
-              <div class="text-center mt-4">
-                <a href="/eco-action" class="pledge-button">I Pledge to Help Our Planet!</a>
+                <div class="text-center mt-4">
+                  <a href="/eco-action" class="pledge-button">I Pledge to Help Our Planet!</a>
+                </div>
               </div>
             </div>
           </div>
@@ -604,9 +605,10 @@ onMounted(() => {
 
 .video-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
   margin-top: 20px;
+  width: 100%;
 }
 
 .video-item {
@@ -614,6 +616,21 @@ onMounted(() => {
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.video-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+}
+
+.video-container iframe {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: 8px;
 }
 
 .loading-spinner {

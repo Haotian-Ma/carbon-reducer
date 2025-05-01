@@ -43,17 +43,23 @@
               <p class="chart-description">
                 This chart tracks global average temperature anomaly (deviation from baseline average) from 1850 to
                 present. The confidence interval narrows over time, reflecting improved accuracy in measurements as
-                technology
-                advances.
+                technology advances.
+              </p>
+              <p class="simple-explanation">
+                <strong>Simply put:</strong> This shows how Earth is getting warmer compared to normal temperatures. The
+                gray area gets narrower in recent years because our measuring tools got better.
               </p>
             </div>
             <div v-if="activeTempTab === 'emissions'">
               <p class="chart-description">
                 This visualization shows the relationship between rising greenhouse gas emissions and global
-                temperature.
-                CO₂ from burning fossil fuels is the main contributor, but Methane (CH₄) and other gases also trap heat
-                in
-                our atmosphere.
+                temperature. CO₂ from burning fossil fuels is the main contributor, but Methane (CH₄) and other gases
+                also trap heat
+                in our atmosphere.
+              </p>
+              <p class="simple-explanation">
+                <strong>Simply put:</strong> As we burn more fossil fuels, we release more greenhouse gases, and the
+                planet gets warmer - this graph shows this direct connection.
               </p>
             </div>
           </div>
@@ -76,6 +82,10 @@
             <!-- Plotly chart will be rendered here -->
           </div>
           <div v-if="loading3" class="loading-indicator"></div>
+          <div class="simple-explanation">
+            <strong>Simply put:</strong> This pie chart shows which activities in Australia create the most carbon
+            pollution, helping us identify where changes would have the biggest impact.
+          </div>
         </div>
       </div>
 
@@ -108,14 +118,21 @@
             <div v-if="activeForestTab === 'percentage'">
               <p class="chart-description">
                 Forests act as major carbon sinks, absorbing billions of tons of CO₂ annually. This chart shows how
-                forest
-                cover has changed globally, with some regions experiencing significant deforestation.
+                forest cover has changed globally, with some regions experiencing significant deforestation.
+              </p>
+              <p class="simple-explanation">
+                <strong>Simply put:</strong> This shows which countries are losing or gaining forests - forests help
+                fight climate change by absorbing carbon dioxide from the air.
               </p>
             </div>
             <div v-if="activeForestTab === 'distribution'">
               <p class="chart-description">
                 This distribution shows that most countries fall within moderate ranges of forest change, with fewer at
                 the extremes. The peak suggests that moderate changes in forest cover are most common globally.
+              </p>
+              <p class="simple-explanation">
+                <strong>Simply put:</strong> Most countries have small changes in forest cover (middle of graph), while
+                fewer countries have experienced dramatic forest loss or gain (edges of graph).
               </p>
             </div>
           </div>
@@ -139,6 +156,10 @@
             <!-- Plotly chart will be rendered here -->
           </div>
           <div v-if="loading6" class="loading-indicator"></div>
+          <div class="simple-explanation">
+            <strong>Simply put:</strong> This chart counts extremely hot days in Australian cities each year - more hot
+            days means more health risks, higher energy costs, and greater strain on infrastructure.
+          </div>
         </div>
       </div>
 
@@ -354,17 +375,13 @@ watch(activeForestTab, (newVal) => {
   padding: 60px 20px;
   background-color: var(--primary-light);
   background-image: url('../assets/images/climate-insight-back.jpg');
-
   background-size: cover;
-
   background-position: center;
-
   background-repeat: no-repeat;
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
   position: relative;
 }
-
 
 .insight-header::before {
   content: '';
@@ -374,17 +391,14 @@ watch(activeForestTab, (newVal) => {
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.4);
-
   border-radius: var(--border-radius);
 }
-
 
 .insight-header h1,
 .insight-header .subtitle {
   position: relative;
   z-index: 1;
   color: white;
-
 }
 
 .insight-header h1 {
@@ -422,8 +436,6 @@ watch(activeForestTab, (newVal) => {
   border-bottom: 2px solid var(--primary-light);
   padding-bottom: 15px;
 }
-
-
 
 .chart-section {
   margin-bottom: 40px;
@@ -598,6 +610,19 @@ watch(activeForestTab, (newVal) => {
   border-left: 3px solid var(--primary-color);
 }
 
+.simple-explanation {
+  background-color: #f0f7fa;
+  border-left: 3px solid #2196F3;
+  padding: 10px 15px;
+  margin-top: 10px;
+  font-size: 15px;
+  line-height: 1.4;
+  border-radius: 0 4px 4px 0;
+}
+
+.simple-explanation strong {
+  color: #0277bd;
+}
 
 .action-brief {
   background-color: var(--primary-light);

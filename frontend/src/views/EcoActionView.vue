@@ -24,29 +24,64 @@
                 <h3>1. Transportation Habits</h3>
                 <div class="assessment-subgroup">
                     <label>Daily Commuting:<span class="required-field">*</span></label>
-                    <div class="checkbox-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" v-model="transportation.commuting.walking"> Walking/Bicycle
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" v-model="transportation.commuting.publicTransport"> Public
-                            Transportation
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" v-model="transportation.commuting.fuelCar"> Fuel Car
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" v-model="transportation.commuting.electricCar"> Electric Car
-                        </label>
+                    <p class="selection-hint">Select all that apply</p>
+                    <div class="transport-cards">
+                        <div class="transport-card" :class="{ 'selected': transportation.commuting.walking }"
+                            @click="transportation.commuting.walking = !transportation.commuting.walking">
+                            <div class="card-icon">
+                                <img src="../assets/icons/walking-bicycle.svg" alt="Walking/Bicycle" />
+                            </div>
+                            <div class="card-title">Walking/Bicycle</div>
+                            <div class="card-description">Eco-friendly option</div>
+                            <div class="card-check-indicator" v-if="transportation.commuting.walking">✓</div>
+                        </div>
+
+                        <div class="transport-card" :class="{ 'selected': transportation.commuting.publicTransport }"
+                            @click="transportation.commuting.publicTransport = !transportation.commuting.publicTransport">
+                            <div class="card-icon">
+                                <img src="../assets/icons/public-transport.svg" alt="Public Transport" />
+                            </div>
+                            <div class="card-title">Public Transport</div>
+                            <div class="card-description">Buses, trains, trams</div>
+                            <div class="card-check-indicator" v-if="transportation.commuting.publicTransport">✓</div>
+                        </div>
+
+                        <div class="transport-card" :class="{ 'selected': transportation.commuting.fuelCar }"
+                            @click="transportation.commuting.fuelCar = !transportation.commuting.fuelCar">
+                            <div class="card-icon">
+                                <img src="../assets/icons/fuel-car.svg" alt="Fuel Car" />
+                            </div>
+                            <div class="card-title">Fuel Car</div>
+                            <div class="card-description">Sedans & station wagons</div>
+                            <div class="card-check-indicator" v-if="transportation.commuting.fuelCar">✓</div>
+                        </div>
+
+                        <div class="transport-card" :class="{ 'selected': transportation.commuting.electricCar }"
+                            @click="transportation.commuting.electricCar = !transportation.commuting.electricCar">
+                            <div class="card-icon">
+                                <img src="../assets/icons/electric-car.svg" alt="Electric Car" />
+                            </div>
+                            <div class="card-title">Electric Car</div>
+                            <div class="card-description">Battery-powered vehicles</div>
+                            <div class="card-check-indicator" v-if="transportation.commuting.electricCar">✓</div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="assessment-subgroup">
                     <label>Long-Distance Travel:</label>
-                    <div class="checkbox-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" v-model="transportation.longDistance.airplane"> Airplane
-                        </label>
+                    <p class="selection-hint">Select all that apply</p>
+                    <div class="transport-cards">
+                        <div class="transport-card" :class="{ 'selected': transportation.longDistance.airplane }"
+                            @click="transportation.longDistance.airplane = !transportation.longDistance.airplane">
+                            <div class="card-icon">
+                                <img src="../assets/icons/airplane.svg" alt="Airplane" />
+                            </div>
+                            <div class="card-title">Airplane</div>
+                            <div class="card-description">Air travel</div>
+                            <div class="card-check-indicator" v-if="transportation.longDistance.airplane">✓</div>
+                        </div>
+
                         <div class="nested-option" v-if="transportation.longDistance.airplane">
                             <select v-model="transportation.longDistance.airplaneFrequency" class="sub-select">
                                 <option value="low">Less than 2 times/year</option>
@@ -54,25 +89,52 @@
                                 <option value="high">More than 5 times/year</option>
                             </select>
                         </div>
-                        <label class="checkbox-label">
-                            <input type="checkbox" v-model="transportation.longDistance.train"> Train
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" v-model="transportation.longDistance.selfDriving"> Self-Driving
-                        </label>
+
+                        <div class="transport-card" :class="{ 'selected': transportation.longDistance.train }"
+                            @click="transportation.longDistance.train = !transportation.longDistance.train">
+                            <div class="card-icon">
+                                <img src="../assets/icons/train.svg" alt="Train" />
+                            </div>
+                            <div class="card-title">Train</div>
+                            <div class="card-description">Rail travel</div>
+                            <div class="card-check-indicator" v-if="transportation.longDistance.train">✓</div>
+                        </div>
+
+                        <div class="transport-card" :class="{ 'selected': transportation.longDistance.selfDriving }"
+                            @click="transportation.longDistance.selfDriving = !transportation.longDistance.selfDriving">
+                            <div class="card-icon">
+                                <img src="../assets/icons/self-driving.svg" alt="Self-Driving" />
+                            </div>
+                            <div class="card-title">Self-Driving</div>
+                            <div class="card-description">Long road trips</div>
+                            <div class="card-check-indicator" v-if="transportation.longDistance.selfDriving">✓</div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="assessment-subgroup">
                     <label>Additional Options:</label>
-                    <div class="checkbox-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" v-model="transportation.additional.carpool"> I often
-                            carpool</label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" v-model="transportation.additional.remoteWork"> I often work
-                            remotely
-                        </label>
+                    <p class="selection-hint">Select all that apply</p>
+                    <div class="transport-cards">
+                        <div class="transport-card" :class="{ 'selected': transportation.additional.carpool }"
+                            @click="transportation.additional.carpool = !transportation.additional.carpool">
+                            <div class="card-icon">
+                                <img src="../assets/icons/carpool.svg" alt="Carpool" />
+                            </div>
+                            <div class="card-title">Carpool</div>
+                            <div class="card-description">I often carpool</div>
+                            <div class="card-check-indicator" v-if="transportation.additional.carpool">✓</div>
+                        </div>
+
+                        <div class="transport-card" :class="{ 'selected': transportation.additional.remoteWork }"
+                            @click="transportation.additional.remoteWork = !transportation.additional.remoteWork">
+                            <div class="card-icon">
+                                <img src="../assets/icons/remote-work.svg" alt="Remote Work" />
+                            </div>
+                            <div class="card-title">Remote Work</div>
+                            <div class="card-description">I often work remotely</div>
+                            <div class="card-check-indicator" v-if="transportation.additional.remoteWork">✓</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -80,18 +142,30 @@
             <!-- step2 -->
             <div v-else-if="currentStep === 2" class="assessment-group">
                 <h3>2. Household Energy</h3>
-                <div class="assessment-subgroup">
-                    <label>Number of Family Members:<span class="required-field">*</span></label>
-                    <input type="number" v-model="household.familyMembers" min="1" class="number-input" required>
+
+                <div class="form-row">
+                    <div class="form-label">
+                        <label>Number of Family Members:<span class="required-field">*</span></label>
+                    </div>
+                    <div class="form-input">
+                        <input type="number" v-model="household.familyMembers" min="1" class="number-input" required>
+                    </div>
                 </div>
 
-                <div class="assessment-subgroup">
-                    <label>Monthly Electricity Consumption (kWh): <span class="required-field">*</span></label>
-                    <input type="number" v-model="household.electricityConsumption" min="0" class="number-input"
-                        required>
+                <div class="form-row">
+                    <div class="form-label">
+                        <label>Monthly Electricity Consumption (kWh):<span class="required-field">*</span></label>
+                    </div>
+                    <div class="form-input">
+                        <input type="number" v-model="household.electricityConsumption" min="0" class="number-input"
+                            required>
+                    </div>
+                </div>
 
-                    <div v-if="household.familyMembers" class="reference-value">
-                        <p>
+                <div class="form-row reference-row" v-if="household.familyMembers">
+                    <div class="form-label"></div>
+                    <div class="form-input">
+                        <p class="reference-value">
                             Reference: {{ getReferenceElectricityUsage() }} kWh/month
                             <span v-if="household.city">(Average for {{ getCityName() }} {{ displayFamilySize() }}
                                 household)</span>
@@ -100,73 +174,154 @@
                     </div>
                 </div>
 
-                <div class="assessment-subgroup">
-                    <label>City (Optional):</label>
-                    <select v-model="household.city" class="preference-select">
-                        <option value="">-- Select City --</option>
-                        <option value="sydney">Sydney</option>
-                        <option value="brisbane">Brisbane</option>
-                        <option value="adelaide">Adelaide</option>
-                        <option value="melbourne">Melbourne</option>
-                        <option value="canberra">Canberra</option>
-                        <option value="hobart">Hobart</option>
-                    </select>
+                <div class="form-row">
+                    <div class="form-label">
+                        <label>City (Optional):</label>
+                    </div>
+                    <div class="form-input">
+                        <select v-model="household.city" class="preference-select">
+                            <option value="">-- Select City --</option>
+                            <option value="sydney">Sydney</option>
+                            <option value="brisbane">Brisbane</option>
+                            <option value="adelaide">Adelaide</option>
+                            <option value="melbourne">Melbourne</option>
+                            <option value="canberra">Canberra</option>
+                            <option value="hobart">Hobart</option>
+                        </select>
+                    </div>
                 </div>
 
-                <div class="assessment-subgroup">
-                    <label>Energy-Saving Habits:</label>
-                    <div class="checkbox-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" v-model="household.habits.turnOff"> Often turn off
-                            lights/electrical
-                            appliances
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" v-model="household.habits.energySaving"> Use energy-saving
-                            equipment
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" v-model="household.habits.noSpecial"> No special habits
-                        </label>
+                <div class="form-row">
+                    <div class="form-label">
+                        <label>Energy-Saving Habits:</label>
+                    </div>
+                    <div class="form-input habits-options">
+                        <div class="habit-card" :class="{ 'selected': household.habits.turnOff }"
+                            @click="household.habits.turnOff = !household.habits.turnOff">
+                            <div class="habit-content">
+                                <div class="card-check-indicator" v-if="household.habits.turnOff">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M20 6L9 17l-5-5"></path>
+                                    </svg>
+                                </div>
+                                <span>Often turn off lights/electrical appliances</span>
+                            </div>
+                        </div>
+
+                        <div class="habit-card" :class="{ 'selected': household.habits.energySaving }"
+                            @click="household.habits.energySaving = !household.habits.energySaving">
+                            <div class="habit-content">
+                                <div class="card-check-indicator" v-if="household.habits.energySaving">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M20 6L9 17l-5-5"></path>
+                                    </svg>
+                                </div>
+                                <span>Use energy-saving equipment</span>
+                            </div>
+                        </div>
+
+                        <div class="habit-card" :class="{ 'selected': household.habits.noSpecial }"
+                            @click="household.habits.noSpecial = !household.habits.noSpecial">
+                            <div class="habit-content">
+                                <div class="card-check-indicator" v-if="household.habits.noSpecial">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M20 6L9 17l-5-5"></path>
+                                    </svg>
+                                </div>
+                                <span>No special habits</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
             <!-- step 3 -->
             <div v-else-if="currentStep === 3" class="assessment-group">
-                <h3>3. Environmental Preferences</h3>
-                <p>Topics you care about (select one or more):</p>
+                <h3>3. Environmental Preferences & Housing Type</h3>
 
-                <div class="checkbox-group">
-                    <label class="checkbox-label">
-                        <input type="checkbox" v-model="preferences.waterResources"> Water Resources
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" v-model="preferences.energyUsage"> Energy Usage
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" v-model="preferences.wasteManagement"> Waste Management
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" v-model="preferences.biodiversity"> Biodiversity
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" v-model="preferences.airQuality"> Air Quality
-                    </label>
+                <div class="form-row">
+                    <div class="form-label">
+                        <label>Topics you care about (optional):</label>
+                    </div>
+                    <div class="form-input">
+                        <div class="topics-cards">
+                            <div class="topic-card" :class="{ 'selected': preferences.waterResources }"
+                                @click="preferences.waterResources = !preferences.waterResources">
+                                <div class="topic-content">
+                                    <div class="card-check-indicator" v-if="preferences.waterResources">✓</div>
+                                    <div class="topic-icon">
+                                        <img src="../assets/icons/water-resources.svg" alt="Water Resources" />
+                                    </div>
+                                    <span>Water Resources</span>
+                                </div>
+                            </div>
+
+                            <div class="topic-card" :class="{ 'selected': preferences.energyUsage }"
+                                @click="preferences.energyUsage = !preferences.energyUsage">
+                                <div class="topic-content">
+                                    <div class="card-check-indicator" v-if="preferences.energyUsage">✓</div>
+                                    <div class="topic-icon">
+                                        <img src="../assets/icons/energy-usage.svg" alt="Energy Usage" />
+                                    </div>
+                                    <span>Energy Usage</span>
+                                </div>
+                            </div>
+
+                            <div class="topic-card" :class="{ 'selected': preferences.wasteManagement }"
+                                @click="preferences.wasteManagement = !preferences.wasteManagement">
+                                <div class="topic-content">
+                                    <div class="card-check-indicator" v-if="preferences.wasteManagement">✓</div>
+                                    <div class="topic-icon">
+                                        <img src="../assets/icons/waste-management.svg" alt="Waste Management" />
+                                    </div>
+                                    <span>Waste Management</span>
+                                </div>
+                            </div>
+
+                            <div class="topic-card" :class="{ 'selected': preferences.biodiversity }"
+                                @click="preferences.biodiversity = !preferences.biodiversity">
+                                <div class="topic-content">
+                                    <div class="card-check-indicator" v-if="preferences.biodiversity">✓</div>
+                                    <div class="topic-icon">
+                                        <img src="../assets/icons/biodiversity.svg" alt="Biodiversity" />
+                                    </div>
+                                    <span>Biodiversity</span>
+                                </div>
+                            </div>
+
+                            <div class="topic-card" :class="{ 'selected': preferences.airQuality }"
+                                @click="preferences.airQuality = !preferences.airQuality">
+                                <div class="topic-content">
+                                    <div class="card-check-indicator" v-if="preferences.airQuality">✓</div>
+                                    <div class="topic-icon">
+                                        <img src="../assets/icons/air-quality.svg" alt="Air Quality" />
+                                    </div>
+                                    <span>Air Quality</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-label">
+                        <label>Housing Type (optional):</label>
+                    </div>
+                    <div class="form-input">
+                        <select v-model="housingType" class="preference-select">
+                            <option value="">-- Select Housing Type --</option>
+                            <option value="apartment">Apartment</option>
+                            <option value="house">House</option>
+                            <option value="townhouse">Townhouse</option>
+                        </select>
+                    </div>
                 </div>
             </div>
-
-            <!-- step 4 -->
-            <div v-else-if="currentStep === 4" class="assessment-group">
-                <h3>4. Housing Type</h3>
-                <select v-model="housingType" class="preference-select">
-                    <option value="">-- Select Housing Type --</option>
-                    <option value="apartment">Apartment</option>
-                    <option value="house">House</option>
-                    <option value="townhouse">Townhouse</option>
-                </select>
-            </div>
-
             <div class="step-navigation">
                 <button v-if="currentStep > 1" @click="goToPrevStep" class="nav-button prev-button">
                     Previous
@@ -175,6 +330,8 @@
                     {{ currentStep < steps.length ? 'Next' : 'Calculate My Carbon Footprint' }} </button>
             </div>
         </section>
+
+
 
         <!-- Loading Indicator -->
         <div class="loading-indicator" v-if="loading">
@@ -282,8 +439,7 @@ import electricityData from '../assets/jsons/electricity-data.json'
 const backgroundImages = {
     1: new URL('../assets/images/eco-action-step1.jpg', import.meta.url).href,
     2: new URL('../assets/images/eco-action-step2.jpg', import.meta.url).href,
-    3: new URL('../assets/images/eco-action-step3.jpg', import.meta.url).href,
-    4: new URL('../assets/images/eco-action-step4.jpg', import.meta.url).href
+    3: new URL('../assets/images/eco-action-step3.jpg', import.meta.url).href
 };
 const currentBackground = computed(() => backgroundImages[currentStep.value]);
 
@@ -312,8 +468,7 @@ const currentStep = ref(1); // Current step in the assessment process
 const steps = [
     { id: 1, title: "Transportation Habits", completed: false },
     { id: 2, title: "Household Energy", completed: false },
-    { id: 3, title: "Environmental Preferences", completed: false },
-    { id: 4, title: "Housing Type", completed: false }
+    { id: 3, title: "Preferences & Housing", completed: false }
 ];
 const goToNextStep = () => {
 
@@ -354,6 +509,7 @@ const validateCurrentStep = () => {
                 return false;
             }
             break;
+
 
     }
     return true;
@@ -930,12 +1086,14 @@ const markTaskComplete = (suggestion) => {
 </script>
 
 <style scoped>
+/* Main Layout */
 .eco-action {
     max-width: 1000px;
     margin: 0 auto;
     padding: 20px;
 }
 
+/* Hero Section */
 .hero-section {
     width: 100%;
     background-size: cover;
@@ -960,380 +1118,11 @@ const markTaskComplete = (suggestion) => {
     letter-spacing: 1px;
 }
 
-section {
-    margin-bottom: 30px;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
-}
-
-.preference-select,
-.sub-select {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-    min-width: 200px;
-}
-
-.primary-button {
-    background: linear-gradient(135deg, var(--primary-gradient-start), var(--primary-gradient-end));
+.white-text {
     color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
 }
 
-.primary-button:hover {
-    background-color: var(--primary-gradient-end);
-}
-
-.primary-button:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-}
-
-.complete-button {
-    padding: 6px 12px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    background-color: white;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.2s ease;
-}
-
-.complete-button:hover {
-    background-color: #f5f5f5;
-}
-
-.complete-button.completed {
-    background-color: var(--primary-color);
-    color: white;
-    border-color: var(--primary-color);
-}
-
-.loading-indicator {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 20px 0;
-}
-
-.spinner {
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid var(--primary-color);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    animation: spin 1s linear infinite;
-    margin-bottom: 10px;
-}
-
-.suggestions-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-}
-
-.suggestion-card {
-    padding: 15px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: var(--shadow);
-    border-top: 5px solid var(--primary-color);
-    transition: var(--transition);
-}
-
-.suggestion-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-hover);
-}
-
-.suggestion-card h3 {
-    color: var(--primary-color);
-    margin-top: 0;
-}
-
-.difficulty-level,
-.impact-level {
-    display: inline-block;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-size: 14px;
-    margin-top: 10px;
-    margin-right: 10px;
-}
-
-.level-1 {
-    background-color: #e8f5e9;
-    color: #2e7d32;
-}
-
-.level-2 {
-    background-color: #fff9c4;
-    color: #f57f17;
-}
-
-.level-3 {
-    background-color: #ffebee;
-    color: #c62828;
-}
-
-.impact-1 {
-    background-color: #e3f2fd;
-    color: #1565c0;
-}
-
-.impact-2 {
-    background-color: #e8eaf6;
-    color: #3949ab;
-}
-
-.impact-3 {
-    background-color: #ede7f6;
-    color: #5e35b1;
-}
-
-.feedback-section {
-    text-align: center;
-    margin-top: 30px;
-}
-
-.feedback-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 10px;
-}
-
-.feedback-button {
-    padding: 8px 20px;
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
-}
-
-.feedback-button.positive {
-    background-color: #e8f5e9;
-    color: #2e7d32;
-}
-
-.feedback-button.negative {
-    background-color: #ffebee;
-    color: #c62828;
-}
-
-.feedback-thanks {
-    margin-top: 10px;
-    color: var(--primary-color);
-}
-
-.assessment-group {
-    margin-bottom: 20px;
-    padding: 15px;
-    background-color: #fff;
-    border-radius: 4px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.assessment-group h3 {
-    margin-top: 0;
-    color: var(--primary-color);
-    border-bottom: 1px solid #eee;
-    padding-bottom: 8px;
-}
-
-.assessment-subgroup {
-    margin-bottom: 15px;
-}
-
-.checkbox-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 5px;
-}
-
-.checkbox-label {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    cursor: pointer;
-}
-
-.nested-option {
-    margin-left: 25px;
-    margin-top: 5px;
-}
-
-.action-button-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-}
-
-.number-input {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    width: 100px;
-}
-
-.carbon-rating {
-    text-align: center;
-    padding: 20px;
-    margin: 0 auto 20px;
-    max-width: 500px;
-    background-color: #f5f5f5;
-    border-radius: 8px;
-    box-shadow: var(--shadow);
-}
-
-.rating-label {
-    font-size: 18px;
-    margin-bottom: 10px;
-}
-
-.rating-value {
-    font-size: 36px;
-    font-weight: bold;
-    margin-bottom: 15px;
-    padding: 10px 20px;
-    display: inline-block;
-    border-radius: 4px;
-}
-
-.carbon-level-low {
-    background-color: #e8f5e9;
-    color: #2e7d32;
-}
-
-.carbon-level-medium {
-    background-color: #fff8e1;
-    color: #ff8f00;
-}
-
-.carbon-level-high {
-    background-color: #ffebee;
-    color: #c62828;
-}
-
-.rating-description {
-    font-size: 16px;
-    line-height: 1.4;
-}
-
-.footer {
-    margin-top: 40px;
-    padding-top: 20px;
-    border-top: 1px solid #eee;
-    color: var(--text-light);
-    font-size: 14px;
-    text-align: center;
-}
-
-.reference-value {
-    margin-top: 5px;
-    font-size: 0.9em;
-    color: #666;
-    font-style: italic;
-}
-
-.emoji {
-    font-size: 1.2em;
-    margin-left: 5px;
-}
-
-.suggestion-reason {
-    font-style: italic;
-    font-size: 0.9em;
-    color: #666;
-    margin-top: 5px;
-    margin-bottom: 10px;
-}
-
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.modal-content {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    max-width: 500px;
-    width: 90%;
-    text-align: center;
-}
-
-.close-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 24px;
-    cursor: pointer;
-    color: #999;
-}
-
-.completion-modal {
-    position: relative;
-    padding: 30px 20px;
-}
-
-.celebration-animation {
-    margin-bottom: 20px;
-}
-
-.celebration-icon {
-    font-size: 50px;
-    animation: bounce 0.8s ease infinite alternate;
-}
-
-.energy-value {
-    font-weight: bold;
-    color: #ff9800;
-    font-size: 1.2em;
-}
-
-.task-completed {
-    margin-top: 10px;
-    color: #666;
-    font-style: italic;
-}
-
-@keyframes bounce {
-    from {
-        transform: translateY(0);
-    }
-
-    to {
-        transform: translateY(-10px);
-    }
-}
-
-.modal-enter-active,
-.modal-leave-active {
-    transition: opacity 0.3s;
-}
-
-.modal-enter-from,
-.modal-leave-to {
-    opacity: 0;
-}
-
+/* Step Indicator */
 .step-indicator {
     display: flex;
     justify-content: space-between;
@@ -1404,6 +1193,292 @@ section {
     font-weight: 500;
 }
 
+/* Section Styles */
+section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+.assessment-group {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.assessment-group h3 {
+    margin-top: 0;
+    color: var(--primary-color);
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+}
+
+.assessment-subgroup {
+    margin-bottom: 15px;
+}
+
+/* Form Layout */
+.form-row {
+    display: flex;
+    margin-bottom: 20px;
+    align-items: center;
+    width: 100%;
+}
+
+/* Adjust the ratio between label and input */
+.form-label {
+    flex: 0 0 25%;
+    /* Reduced from 40% to 25% */
+    text-align: right;
+    padding-right: 20px;
+    font-size: 16px;
+}
+
+.form-input {
+    flex: 0 0 60%;
+}
+
+/* Form Elements */
+.number-input,
+.preference-select {
+    width: 100%;
+    max-width: 300px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+.sub-select {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+}
+
+.reference-row {
+    margin-top: -10px;
+    margin-bottom: 25px;
+}
+
+.reference-value {
+    color: #666;
+    font-style: italic;
+    font-size: 14px;
+    margin: 0;
+}
+
+.required-field {
+    color: red;
+}
+
+.selection-hint {
+    color: #666;
+    font-size: 14px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+/* Transport Cards */
+.transport-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.transport-card {
+    position: relative;
+    background-color: #f2f7f7;
+    border-radius: 8px;
+    padding: 20px 15px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #ddd;
+    height: 160px;
+}
+
+.transport-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.transport-card.selected {
+    border-color: #4CAF50;
+    background-color: rgba(76, 175, 80, 0.1);
+}
+
+.card-icon {
+    margin-bottom: 12px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-icon img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+.card-title {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 6px;
+    text-align: center;
+}
+
+.card-description {
+    font-size: 12px;
+    color: #666;
+    text-align: center;
+}
+
+/* Card color variations */
+.transport-card:nth-child(5n+1) {
+    background-color: rgba(255, 245, 218, 0.7);
+}
+
+.transport-card:nth-child(5n+2) {
+    background-color: rgba(218, 232, 239, 0.7);
+}
+
+.transport-card:nth-child(5n+3) {
+    background-color: rgba(239, 218, 234, 0.7);
+}
+
+.transport-card:nth-child(5n+4) {
+    background-color: rgba(218, 239, 224, 0.7);
+}
+
+.transport-card:nth-child(5n+5) {
+    background-color: rgba(235, 235, 235, 0.7);
+}
+
+/* Checkmark indicator */
+.card-check-indicator {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: white;
+    background-color: #4CAF50;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Nested option for airplane frequency */
+.nested-option {
+    margin-top: 10px;
+    margin-bottom: 15px;
+    width: 100%;
+    max-width: 250px;
+}
+
+/* Habits and topics cards */
+.habits-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 100%;
+    /* Changed from 500px to 100% */
+}
+
+.habit-card {
+    position: relative;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 12px 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.habit-card:hover {
+    background-color: #f0f0f0;
+    transform: translateY(-2px);
+}
+
+.habit-card.selected {
+    border-color: #4CAF50;
+    background-color: rgba(76, 175, 80, 0.1);
+}
+
+.habit-content {
+    display: flex;
+    align-items: center;
+    padding-right: 30px;
+}
+
+.topics-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    width: 100%;
+    max-width: 100%;
+    /* Changed from 600px to 100% */
+    justify-content: flex-start;
+    /* Added to align cards to the left */
+}
+
+.topic-card {
+    flex: 0 0 calc(20% - 15px);
+    /* Adjusted width and gap */
+    min-width: 120px;
+    max-width: 180px;
+    /* Added max-width */
+    position: relative;
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.topic-card:hover {
+    background-color: #f0f0f0;
+    transform: translateY(-2px);
+}
+
+.topic-card.selected {
+    border-color: #4CAF50;
+    background-color: rgba(76, 175, 80, 0.1);
+}
+
+.topic-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.topic-icon {
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.topic-icon img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+/* Navigation buttons */
 .step-navigation {
     display: flex;
     justify-content: space-between;
@@ -1439,10 +1514,309 @@ section {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-.white-text {
-    color: white;
+/* Results section */
+.carbon-rating {
+    text-align: center;
+    padding: 20px;
+    margin: 0 auto 20px;
+    max-width: 500px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
 }
 
+.rating-label {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.rating-value {
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    padding: 10px 20px;
+    display: inline-block;
+    border-radius: 4px;
+}
+
+.carbon-level-low {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.carbon-level-medium {
+    background-color: #fff8e1;
+    color: #ff8f00;
+}
+
+.carbon-level-high {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.rating-description {
+    font-size: 16px;
+    line-height: 1.4;
+}
+
+/* Action buttons */
+.action-button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.primary-button {
+    background: linear-gradient(135deg, var(--primary-gradient-start), var(--primary-gradient-end));
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.primary-button:hover {
+    background-color: var(--primary-gradient-end);
+}
+
+.primary-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+/* Suggestions section */
+.suggestions-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.suggestion-card {
+    padding: 15px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    border-top: 5px solid var(--primary-color);
+    transition: var(--transition);
+}
+
+.suggestion-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+}
+
+.suggestion-card h3 {
+    color: var(--primary-color);
+    margin-top: 0;
+}
+
+.difficulty-level,
+.impact-level {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+/* Different difficulty levels */
+.level-1 {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.level-2 {
+    background-color: #fff9c4;
+    color: #f57f17;
+}
+
+.level-3 {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+/* Different impact levels */
+.impact-1 {
+    background-color: #e3f2fd;
+    color: #1565c0;
+}
+
+.impact-2 {
+    background-color: #e8eaf6;
+    color: #3949ab;
+}
+
+.impact-3 {
+    background-color: #ede7f6;
+    color: #5e35b1;
+}
+
+.complete-button {
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: white;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.complete-button:hover {
+    background-color: #f5f5f5;
+}
+
+.complete-button.completed {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+/* Loading indicator */
+.loading-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid var(--primary-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 10px;
+}
+
+/* Feedback section */
+.feedback-section {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.feedback-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 10px;
+}
+
+.feedback-button {
+    padding: 8px 20px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+}
+
+.feedback-button.positive {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.feedback-button.negative {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.feedback-thanks {
+    margin-top: 10px;
+    color: var(--primary-color);
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #999;
+}
+
+.completion-modal {
+    position: relative;
+    padding: 30px 20px;
+}
+
+.celebration-animation {
+    margin-bottom: 20px;
+}
+
+.celebration-icon {
+    font-size: 50px;
+    animation: bounce 0.8s ease infinite alternate;
+}
+
+.energy-value {
+    font-weight: bold;
+    color: #ff9800;
+    font-size: 1.2em;
+}
+
+.task-completed {
+    margin-top: 10px;
+    color: #666;
+    font-style: italic;
+}
+
+/* Footer */
+.footer {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    color: var(--text-light);
+    font-size: 14px;
+    text-align: center;
+}
+
+/* Animations */
+@keyframes bounce {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive styles */
 @media (max-width: 768px) {
     .step-indicator {
         flex-wrap: wrap;
@@ -1465,16 +1839,61 @@ section {
     .nav-button {
         width: 100%;
     }
-}
 
-@media (max-width: 768px) {
-    .checkbox-group {
+    .form-row {
         flex-direction: column;
         align-items: flex-start;
     }
 
+    .form-label {
+        flex: 0 0 100%;
+        text-align: left;
+        margin-bottom: 8px;
+        padding-right: 0;
+    }
+
+    .form-input {
+        flex: 0 0 100%;
+        width: 100%;
+    }
+
+    .transport-cards {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    }
+
+    .transport-card {
+        height: 150px;
+        padding: 15px 10px;
+    }
+
+    .topics-cards {
+        justify-content: center;
+    }
+
+    .topic-card {
+        flex: 0 0 calc(33.33% - 10px);
+    }
+
     .suggestions-container {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .transport-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .card-title {
+        font-size: 13px;
+    }
+
+    .card-description {
+        font-size: 11px;
+    }
+
+    .topic-card {
+        flex: 0 0 calc(50% - 10px);
     }
 }
 </style>
