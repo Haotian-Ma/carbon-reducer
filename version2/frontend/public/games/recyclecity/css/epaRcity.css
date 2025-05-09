@@ -1,0 +1,1018 @@
+@charset "utf-8";
+
+body  {
+	font: 1.3em Verdana, sans-serif;
+	font-size: 14px;
+	margin: 1em 0 0 0; 
+	text-align: center;  /*this centers the container in IE 5* browsers. The text is then set to the left aligned default in the #container selector */
+	color: #000000;
+	line-height: 1.5;
+	background-color: #356697;
+}
+a:link { 
+	text-decoration:none;
+	color: #4289AA;
+	}
+a:visited { 
+	text-decoration:none;
+	color: #4289AA;
+	}
+a:hover { 
+	text-decoration:underline;
+	color: #00aeff;
+		}
+a:active { 
+	text-decoration:none;
+	color: #4289AA;
+	}
+	
+a.white:link { 
+	text-decoration:none;
+	color: #FFFFFF;
+	}
+a.white:visited { 
+	text-decoration:none;
+	color: #FFFFFF;
+		}
+a.white:hover { 
+	text-decoration:underline;
+	color: #FFFFFF;
+		}
+a.white:active { 
+	text-decoration:none;
+	color: #FFFFFF;
+	}
+
+img, #main img, td img {border:none;}
+.img-r {float:right;  margin:0 0 1em 1em; border:none;}
+.img-l {float:left; margin: 0 1em 1em 0; border:none;}
+
+.goldline {width:75%; height:3px; text-align:center; color:gold; background:gold; border-style:solid; border-width:thin; margin:3em auto;clear:both;}
+
+.clear {clear:both;}
+.clear-r {clear:right;}
+.clear-l {clear:left;}
+
+.righttext {text-align:right; }
+.centertext {text-align:center; }
+.right {float:right;}
+.left {float:left;}
+
+.epaRcity #main {
+	margin: 0 auto;
+	width: 980px;
+	}
+	
+
+.epaRcity #main3 {
+	margin: 0 auto;
+	width: 980px;
+	}
+
+.epaRcity #LeftColumn {
+	width:700px;
+	height:auto;
+    float:left;
+	clear:none;
+}
+
+.epaRcity #RightColumn {
+	width:280px;
+	height:auto;
+	float:right;
+	clear:none;
+}
+
+
+.epaRcity #index { 
+	width: 970px; 
+	margin: auto; /* the auto margins (in conjunction with a width) center the page */
+	
+} 
+
+.epaRcity #indexmap { 
+	width: 630px;  /* this width will create a container that will fit in an 800px browser window if text is left at browser default font sizes */
+	height: 600px;
+    text-align: left; /* this overrides the text-align: center on the body element. */
+    float:left;
+} 
+
+.epaRcity #container3 { 
+	width: 620px;
+	height: 640px;/* this width will create a container that will fit in an 800px browser window if text is left at browser default font sizes */
+	background: #FFFFFF;
+	margin: auto; /* the auto margins (in conjunction with a width) center the page */
+	padding: 10px;
+	border: 2px solid #000000;
+	text-align: left; /* this overrides the text-align: center on the body element. */
+	behavior: url(border-radius.htc);
+    border-radius: 20px;
+	-moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -khtml-border-radius: 20px;
+    border-radius: 20px;
+	float:left;
+} 
+
+.epaRcity #container4 { 
+	width: 700px; 
+	float:left;
+	background: #356697;
+	padding: 0;
+} 
+
+.epaRcity #container5 { 
+	width: 970px;  /* this width will create a container that will fit in an 800px browser window if text is left at browser default font sizes */
+	background: #356697;
+	margin: auto; /* the auto margins (in conjunction with a width) center the page */
+	text-align: left; /* this overrides the text-align: center on the body element. */
+} 
+
+.epaRcity #container6 { 
+	width: 265px;  /* this width will create a container that will fit in an 800px browser window if text is left at browser default font sizes */
+	height: 460px;
+	background: #FFFFFF;
+	border: 2px solid #000000;
+    text-align: left; /* this overrides the text-align: center on the body element. */
+    float:right;
+	padding-left: 3px;
+	
+	behavior: url(border-radius.htc);
+    border-radius: 20px;
+	
+	 -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -khtml-border-radius: 20px;
+    border-radius: 20px;
+}
+ 
+.epaRcity #container7 { 
+	width: 260px;  /* this width will create a container that will fit in an 800px browser window if text is left at browser default font sizes */
+	height: 465px;
+	background: #FFFFFF;
+	border: 2px solid #000000;
+    text-align: left; /* this overrides the text-align: center on the body element. */
+    float:right;
+	position:relative;
+	padding-left: 10px;
+	padding-top: 10px;
+	padding-right: 5px;
+	behavior: url(border-radius.htc);
+      border-radius: 20px;
+	
+	 -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -khtml-border-radius: 20px;
+    border-radius: 20px;
+} 
+
+	
+
+.epaRcity #container8 { 
+	width: 16.25em;   
+	height: auto !important;
+	background: #FFFFFF;
+	border: .125em solid #000000;
+    text-align: left; /* this overrides the text-align: center on the body element. */
+    float:right;
+	position:relative;
+	padding-left: 1.25em;
+	padding-top: 1em;
+	padding-right: 1em;
+	padding-bottom: 1em;
+	behavior: url(border-radius.htc);
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -khtml-border-radius: 20px;
+     border-radius: 20px;
+} 
+
+
+/* 
+*****************************************************************************
+	ROUNDED CORNERS
+	Code for rounded corners applied to various containers, based on container width.
+	wjm 9/22/2011
+*****************************************************************************	
+*/
+
+
+.epaRcity .box260 { 
+  text-align: left;
+  float:right;
+  width: 260px;
+  padding: 0 0 20px 0;
+}
+
+.epaRcity .box310 { 
+  text-align: left;
+  float:right;
+  width: 310px;
+  padding: 5px;
+}
+
+.epaRcity .box465-r { 
+ text-align: left;
+  float:right;
+  width: 465px;
+  padding: 10px;
+}
+
+.epaRcity .box465-l { 
+  text-align: left;
+  float:left;
+  width: 465px;
+  padding: 10px;
+}
+
+.epaRcity .box620 { 
+  text-align: left;
+  float: left;
+  width: 640px;
+  height:650px;
+  padding: 5px;
+}
+
+.epaRcity .box950 { 
+  text-align: left;
+  float: left;
+  width: 950px;
+  height:auto;
+  padding: 5px;
+}
+
+.epaRcity .box980 { 
+  text-align: left;
+  float: left;
+  width: 980px;
+  height:auto;
+  padding: 5px;
+}
+
+.epaRcity .boxtop { 
+  background: #FFF url(../images/t-r.gif) no-repeat top right; 
+}
+.epaRcity .boxtop div { 
+  font-size: 0;
+  height: 20px; 
+  background: url(../images/t-l.gif) no-repeat top left; 
+}
+.epaRcity .boxbottom { 
+  background: #FFF url(../images/b-r.gif) no-repeat bottom right; 
+}
+.epaRcity .boxbottom div { 
+  font-size: 0;
+  height: 20px;
+  background: url(../images/b-l.gif) no-repeat bottom left; 
+}
+.epaRcity .boxcontent {
+  background-color:#FFF;
+  padding: 1px 20px 1px 20px;
+ 
+}
+ .epaRcity .boxcontent310 {
+  background-color:#FFF;
+  padding: 1px 10px 1px 10px;
+}
+
+ .epaRcity .boxcontent465 {
+  background-color:#FFF;
+  min-height:400px;
+  padding: 1px 20px 1px 20px;
+}
+ .epaRcity .boxcontent620 {
+  background-color:#FFF;
+  padding: 1px 10px 1px 10px;
+}
+
+ .epaRcity .boxcontent950 {
+  background-color:#FFF;
+  padding: 1px 20px 1px 20px;
+}
+
+ .epaRcity .boxcontent980 {
+  background-color:#FFF;
+  padding: 1px 20px 1px 20px;
+}
+
+
+/*  End of ROUNDED CORNERS 
+******************************************************  */
+
+
+.epaRcity #MapLocationSidebar { 
+	width: 260px;  /*  This renders a square box, no rounded corners -- This width will create a container that will fit in an 800px browser window if text is left at browser default font sizes */
+	height: auto !important;
+	float:right;
+	background: #FFFFFF;
+	border: 2px solid #000000;
+    text-align: left; /* this overrides the text-align: center on the body element. */
+	padding-left: 10px;
+	padding-top: 10px;
+	padding-right: 5px;
+	padding-bottom:5px;
+/* Removing the following behavior attribute creates all squared boxes  */
+	behavior: url(border-radius.htc);
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -khtml-border-radius: 20px;
+    border-radius: 20px;
+} 
+
+
+.epaRcity #SidebarContainer {
+
+	width: 280px;
+	float:right;
+
+}
+.epaRcity #indexsidebar { 
+	width: 300px;  /* this width will create a container that will fit in an 800px browser window if text is left at browser default font sizes */
+	height: 640px;
+	background: #FFFFFF;
+	margin: auto; /* the auto margins (in conjunction with a width) center the page */
+	padding: 10px;
+	border: 2px solid #000000;
+	text-align: left; /* this overrides the text-align: center on the body element. */
+	behavior: url(border-radius.htc);
+    border-radius: 20px;
+	-moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -khtml-border-radius: 20px;
+    border-radius: 20px;
+	float:right;
+} 
+
+
+.epaRcity #accordian	{
+	width:inherit;
+	height:auto;
+	
+}
+
+.epaRcity #first { 
+	width: 490px; 
+	height: 379;
+	margin:auto;
+	padding-left: 5px;
+	padding-bottom: 5px;
+	padding-top: 5px;
+	float:right;
+} 
+
+/* The following 5 containers are for the MainMap Page to organize the Hover over images */
+
+.epaRcity #MainMapHeader { 
+	width: 700px;  
+	padding: 0;
+} 
+
+.epaRcity #MainMapNW { 
+	width: 350x;  
+	float: left;
+	padding: 0;
+} 
+
+.epaRcity #MainMapSW { 
+	width: 350x;  
+	float: left;
+	padding: 0;
+}
+
+.epaRcity #MainMapNE { 
+	width: 350x;  
+	float: right;
+	padding: 0;
+
+} 
+
+.epaRcity #MainMapSE { 
+	width: 350x;  
+	float: right;
+	padding: 0;
+
+} 
+
+
+
+.epaRcity #imagecenter {
+	text-align:center;
+	
+}
+
+.epaRcity #ToggleDivDisplay {
+	width: 225px;
+	float:left;
+	background: #FFFFFF;
+	border: 2px solid #000000; 
+    text-align: left; /* this overrides the text-align: center on the body element. */
+	padding-left: 10px;
+	padding-top: 10px;
+	padding-right: 5px;
+	padding-bottom:5px;
+/*	behavior: url(border-radius.htc);  /* code that makes rounded corners in some browsers	
+	 -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -khtml-border-radius: 20px;
+    border-radius: 20px;*/	
+	clear:both;
+}
+
+
+.epaRcity #spacer { 
+	width: 275px;  /* this width will create a container that will fit in an 800px browser window if text is left at browser default font sizes */
+	height: 78px;
+    text-align: left; /* this overrides the text-align: center on the body element. */
+	float:right;
+
+} 
+
+.epaRcity #activityblockleft { 
+	width: 465px; /* changed from 465px on 9-19-11  wjm  */
+	margin:auto;
+    background: #FFFFFF;
+	border: 2px solid #000000;
+	padding: .5em .675em 1em .675em;
+ /*   padding: 10px; changed 9-19-11    wjm  */
+	behavior: url(border-radius.htc);
+    border-radius: 20px;
+	-moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -khtml-border-radius: 20px;
+    border-radius: 20px;
+	float:left;
+
+	
+} 
+
+.epaRcity #activityblockright { 
+	width: 465px; 
+	margin:auto;
+    background: #FFFFFF;
+	border: 2px solid #000000;
+    padding: .5em .675em 1em .675em;
+	behavior: url(border-radius.htc);
+    border-radius: 20px;
+	-moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -khtml-border-radius: 20px;
+    border-radius: 20px;
+	float:right;
+
+	
+} 
+
+.epaRcity #OtherResources { 
+	width: 970px;
+    min-height: 150px;
+    margin:2em 0em 0em 0em;
+    background: #FFFFFF;
+	border: 2px solid #000000;
+    padding: 1em 0em 1em .620em;
+	behavior: url(border-radius.htc);
+    border-radius: 20px;
+	-moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -khtml-border-radius: 20px;
+    border-radius: 20px;
+     
+} 
+
+.epaRcity #containerfooter { 
+	width: 696px;
+	min-height: 100%;
+	float:left;
+	background: #FFFFFF;
+	border: 2px solid #000000;
+	padding-top: 10px;
+	padding-left: 5px;
+	padding-bottom: 10px;
+	behavior: url(border-radius.htc);
+    border-radius: 20px;
+	-moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -khtml-border-radius: 20px;
+    border-radius: 20px; 
+} 
+
+.epaRcity #containerfooter2 hr.footbar {line-height:.4em; background-color:#003399; width:70%;}
+
+.epaRcity #containerfooter2 { 
+	width: 970px;
+	margin:2em auto;
+	/*line-height: 80px;   originally 'height' */
+	padding-top: 10px;
+	padding-bottom: 10px;
+	bottom:0;
+	clear:both !important;  /* added for testing -patti */
+}
+
+.epaRcity #containerfooterCenter { 
+	width: 700px;
+	margin:auto;
+	height: 125px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	bottom:0;
+	
+}
+
+.epaRcity #containerfooter3 { 
+	width: 700px;
+    margin:auto;
+    height: 125px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	bottom:0;
+	
+}
+
+.epaRcity #containerfooterGame { 
+	width: 800px;
+    margin:auto;
+	background: #FFFFFF;
+	border: 2px solid #000000;
+	padding-top: 10px;
+	padding-left: 5px;
+	padding-bottom: 10px;
+    border-radius: 20px;
+	-moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -khtml-border-radius: 20px;
+  
+}
+
+.epaRcity #containerfooterGameLeft { 
+	width: 685px;
+	float:left;
+	background: #FFFFFF;
+	border: 2px solid #000000;
+	padding-top: 10px;
+	padding-left: 5px;
+	padding-bottom: 10px;
+    border-radius: 20px;
+	-moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -khtml-border-radius: 20px;
+  
+}
+
+.epaRcity #EPAsocialIcons {
+	margin:1em auto;
+	text-align:center;
+}
+
+
+.epaRcity #social {
+	width: 600px;
+	margin:auto;
+}
+
+.epaRcity #back {
+	width: 265px;
+	text-align:left;
+	margin:auto;
+	position: absolute;
+	bottom: 0;
+}
+
+
+.epaRcity #activity { 
+	width: 950px; 
+	background: #FFFFFF;
+	border: 2px solid #000000;
+	padding: 4em 2em 2em 2em;
+	margin:auto;
+	behavior: url(border-radius.htc);
+    border-radius: 20px;
+	-moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -khtml-border-radius: 20px;    
+} 
+
+.epaRcity #logo { 
+	width: 253px;  /* this width will create a container that will fit in an 800px browser window if text is left at browser default font sizes */
+	height: 65px;
+    text-align: left; /* this overrides the text-align: center on the body element. */
+    float:left;
+	
+} 
+
+.epaRcity #indexlogo { 
+	width: 970px;  /* this width will create a container that will fit in an 800px browser window if text is left at browser default font sizes */
+	height: 130px;
+	float:left;
+} 
+
+.epaRcity #charlogo { 
+	width: 400px;  /* this width will create a container that will fit in an 800px browser window if text is left at browser default font sizes */
+	height: 72px;
+    text-align: left; /* this overrides the text-align: center on the body element. */
+    float:left;
+	
+}
+
+.epaRcity #navspacer { 
+	width: 515px;  /* this width will create a container that will fit in an 800px browser window if text is left at browser default font sizes */
+	height: 20px;
+    float:right;
+}
+
+.epaRcity #nav { 
+	width: 490px;  /* this width will create a container that will fit in an 800px browser window if text is left at browser default font sizes */
+	height: 30px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 10px;
+    text-align: left; /* this overrides the text-align: center on the body element. */
+    float:right;
+	background: #FFFFFF;
+	border: 2px solid #000000;
+	behavior: url(border-radius.htc);
+    border-radius: 20px;
+	-moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -khtml-border-radius: 20px;
+    border-radius: 20px;
+	} 
+
+.epaRcity #nav img {margin-right:.4em;}
+
+.epaRcity .privacy {text-align:center; font-size:.8em; color:#FFF; margin:0;padding:0; line-height:1em;}
+
+.epaRcity .privacy2  {text-align:center; color:white; margin: 0; padding:0;  line-height:1em;}
+
+.epaRcity #ClicktoPlay { 
+	width: 590px;  /* this width will create a container that will fit in an 800px browser window if text is left at browser default font sizes */
+	height: 285px;
+	padding: 10px;
+    float:right;
+	
+} 
+
+
+.epaRcity #indextext { 
+	width: 550px;  /* this width will create a container that will fit in an 800px browser window if text is left at browser default font sizes */
+	height: 305px;
+    text-align: left; /* this overrides the text-align: center on the body element. */
+    float:right;
+	
+} 
+
+.epaRcity #nav2 { 
+	width: 109px;  /* this width will create a container that will fit in an 800px browser window if text is left at browser default font sizes */
+	height: 60px;
+    text-align: left; /* this overrides the text-align: center on the body element. */
+    float:right;
+	
+} 
+
+.epaRcity #center {
+	margin:auto;
+}
+
+
+.epaRcity #moredropdown {
+	text-align:left;
+}
+
+/* Tips for sidebar1:
+1. Be aware that if you set a font-size value on this div, the overall width of the div will be adjusted accordingly.
+2. Since we are working in ems, it's best not to use padding on the sidebar itself. It will be added to the width for standards compliant browsers creating an unknown actual width. 
+3. Space between the side of the div and the elements within it can be created by placing a left and right margin on those elements as seen in the ".epaRcity #sidebar1 p" rule.
+*/
+.thrColEls #sidebar1 {
+	float: left; 
+	width: 12em; /* since this element is floated, a width must be given */
+	background: #EBEBEB; /* the background color will be displayed for the length of the content in the column, but no further */
+	padding: 15px 0; /* top and bottom padding create visual space within this div */
+}
+.thrColEls #sidebar2 {
+	float: right; 
+	width: 11em; /* since this element is floated, a width must be given */
+	background: #EBEBEB; /* the background color will be displayed for the length of the content in the column, but no further */
+	padding: 15px 0; /* top and bottom padding create visual space within this div */
+}
+.thrColEls #sidebar1 h3, .thrColEls #sidebar1 p, .thrColEls #sidebar2 p, .thrColEls #sidebar2 h3 {
+	margin-left: 10px; /* the left and right margin should be given to every element that will be placed in the side columns */
+	margin-right: 10px;
+}
+
+/* Tips for mainContent:
+1. If you give this #mainContent div a font-size value different than the #sidebar1 div, the margins of the #mainContent div will be based on its font-size and the width of the #sidebar1 div will be based on its font-size. You may wish to adjust the values of these divs.
+2. The space between the mainContent and sidebar1 is created with the left margin on the mainContent div.  No matter how much content the sidebar1 div contains, the column space will remain. You can remove this left margin if you want the #mainContent div's text to fill the #sidebar1 space when the content in #sidebar1 ends.
+3. To avoid float drop, you may need to test to determine the approximate maximum image/element size since this layout is based on the user's font sizing combined with the values you set. However, if the user has their browser font size set lower than normal, less space will be available in the #mainContent div than you may see on testing.
+4. In the Internet Explorer Conditional Comment below, the zoom property is used to give the mainContent "hasLayout." This avoids several IE-specific bugs that may occur.
+*/
+.epaRcity #mainContent {
+  margin: 0 11em 0 12em; /* the right margin can be given in ems or pixels. It creates the space down the right side of the page. */
+} 
+
+
+.oneColElsCtr #mainContent {
+	padding: 0 20px; /* remember that padding is the space inside the div box and margin is the space outside the div box */
+}
+
+/* .whtspace replaces all the empty <p> tags that forced white space between sections */
+.whtspace {margin-top:28em;}
+
+.hover span {
+    display: none;
+}
+.hover:hover span {
+    position: absolute;
+    display: inline;
+    height: auto;
+    width: auto;
+    color: #000000;
+}
+.hover:hover span span {
+    position: relative;
+    margin: auto;
+    height: auto;
+    width: auto;
+    border: none;
+    padding: 0;
+}
+.hover:hover {
+    background-color: transparent;
+}
+
+.rounded-corners {
+     -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -khtml-border-radius: 20px;
+    border-radius: 20px;
+}
+
+.rounded-cornersIE {
+    behavior: url(border-radius.htc);
+    border-radius: 20px;
+}
+  
+  
+  
+  
+  
+/* The following are all the hover over image codes, there are 2 for every instance */  
+  
+.myButtonLinkHome {
+	display: block;
+	width: 57px;
+	height: 29px;
+	background: url('../images/home1.png') bottom;
+	text-indent: -99999px;
+	float: left;
+}
+.myButtonLinkHome:hover {
+	background-position: 0 0;
+	background-color: transparent;
+	border-style: none;
+}
+ 
+ .myButtonLinkMainMap {
+	display: block;
+	width: 95px;
+	height: 29px;
+	background: url('../images/MainMap1.png') bottom;
+	text-indent: -99999px;
+	float: left;
+}
+.myButtonLinkMainMap:hover {
+	background-position: 0 0;
+	background-color: transparent;
+	border-style: none;
+}
+
+ .myButtonLinkDump {
+	display: block;
+	width: 154px;
+	height: 29px;
+	background: url('../images/Dump1.png') bottom;
+	text-indent: -99999px;
+	float: left;
+}
+.myButtonLinkDump:hover {
+	background-position: 0 0;
+	background-color: transparent;
+	border-style: none;
+}
+
+ .myButtonLinkActivity {
+	display: block;
+	width: 106px;
+	height: 29px;
+	background: url('../images/Act1.png') bottom;
+	text-indent: -99999px;
+	float: left;
+}
+.myButtonLinkActivity:hover {
+	background-position: 0 0;
+	background-color: transparent;
+	border-style: none;
+}
+
+ .myButtonLinkHelp {
+	display: block;
+	width: 54px;
+	height: 29px;
+	background: url('../images/help1.png') bottom;
+	text-indent: -99999px;
+	float: left;
+}
+
+.myButtonLinkHelp:hover {
+	background-position: 0 0;
+	background-color: transparent;
+	border-style: none;
+}
+
+.myButtonLinkPlay {
+	display: block;
+	width: 590px;
+	height: 285px;
+	background: url('../images/click_to_play.png') bottom;
+	text-indent: -99999px;
+	float:right;
+	
+}
+
+.myButtonLinkPlay:hover {
+	background-position: 0 0;
+	background-color: transparent;
+	border-style: none;
+}
+
+.myButtonLinkIndexMap {
+	display: block;
+	width: 620px;
+	height: 473px;
+	background: url('../images/map.png') bottom;
+	text-indent: -99999px;
+		
+}
+
+.myButtonLinkIndexMap:hover {
+	background-position: 0 0;
+	background-color: transparent;
+	border-style: none;
+}
+
+.myButtonLinkDumpIndex {
+	display: block;
+	width: 290px;
+	height: 200px;
+	background: url('../images/play-the-game.png') bottom;
+	text-indent: -99999px;		
+}
+
+.myButtonLinkDumpIndex:hover {
+	background-position: 0 0;
+	background-color: transparent;
+	border-style: none;
+}
+
+/* didn't work so removed it temporarily
+.myButtonLinkWhatsNew {
+	display: block;
+	width: 190px;
+	height: 60px;
+	background: url('../images/whatsnew.png') bottom;
+	text-indent: -99999px;	
+}*/
+
+.myButtonLinkWhatsNew:hover {
+	background-position: 0 0;
+	background-color: transparent;
+	border-style: none;
+	width: 500px;
+	height: 100px;
+}
+
+.myButtonLinkActivities {
+	display: block;
+	width: 290px;
+	height: 200px;
+	background: url('../images/activities2.png') bottom;
+	text-indent: -99999px;	
+}
+
+.myButtonLinkActivities:hover {
+	background-position: 0 0;
+	background-color: transparent;
+	border-style: none;
+}
+
+.myButtonLinkNW {
+	display: block;
+	width: 350px;
+	height: 272px;
+	background: url('../images/MM-NW.png') bottom;
+	text-indent: -99999px;
+	float: left;	
+}
+
+.myButtonLinkNW:hover {
+	background-position: 0 0;
+	background-color: transparent;
+	border-style: none;
+}
+
+.myButtonLinkNE {
+	display: block;
+	width: 350px;
+	height: 272px;
+	background: url('../images/MM-NE.png') bottom;
+	text-indent: -99999px;
+	float: right;	
+}
+
+.myButtonLinkNE:hover {
+	background-position: 0 0;
+	background-color: transparent;
+	border-style: none;
+}
+
+.myButtonLinkSE {
+	display: block;
+	width: 350px;
+	height: 271px;
+	background: url('../images/MM-SE.png') bottom;
+	text-indent: -99999px;
+	float: right;	
+}
+
+.myButtonLinkSE:hover {
+	background-position: 0 0;
+	background-color: transparent;
+	border-style: none;
+}
+
+.myButtonLinkSW {
+	display: block;
+	width: 350px;
+	height: 271px;
+	background: url('../images/MM-SW.png') bottom;
+	text-indent: -99999px;
+	float: left;	
+}
+
+.myButtonLinkSW:hover {
+	background-position: 0 0;
+	background-color: transparent;
+	border-style: none;
+}
+
+
+.myButtonContact {
+	display: block;
+	width: 270px;
+	height: 46px;
+	background: url('../images/contact_us.png') bottom;
+	text-indent: -99999px;
+	margin:auto;
+	align: bottom;
+
+}
+
+.myButtonContact:hover {
+	background-position: 0 0;
+	background-color: transparent;
+	border-style: none;
+}
+
+.myButtonLearn {
+	display: block;
+	width: 265px;
+	height: 40px;
+	background: url('../images/learn_more.png') bottom;
+	text-indent: -99999px;
+	margin:auto;
+	align: bottom;
+
+}
+
+.myButtonLearn:hover {
+	background-position: 0 0;
+	background-color: transparent;
+	border-style: none;
+}
+
+.myButtonSendUs {
+	display: block;
+	width: 290px;
+	height: 60px;
+	background: url('../images/send_us.gif') bottom;
+	text-indent: -99999px;
+	margin:auto;
+	align: bottom;
+}
+
+.myButtonSendUs:hover {
+	background-position: 0 0;
+	background-color: transparent;
+	border-style: none;
+}
+
+
+#datemod {font-size:80%; color:#eee; margin:0;padding:0;line-height:1em;}
