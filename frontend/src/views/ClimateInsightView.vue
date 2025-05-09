@@ -4,68 +4,6 @@
       <h1>Climate Insight</h1>
       <p class="subtitle">Data-driven analysis of climate trends and carbon emissions</p>
     </header>
-
-    <!-- Section 1: Global Temperature and Emissions -->
-    <section class="section-group">
-      <h2 class="section-group-title">Global Temperature and Emissions Trends</h2>
-      <p class="section-description">
-        Scientists worldwide have tracked Earth's temperature for decades. The data clearly shows our planet's average
-        temperature rising at an unprecedented rate, particularly since the mid-20th century, strongly correlated with
-        increasing greenhouse gas emissions.
-      </p>
-
-      <div class="chart-section temperature-analysis">
-        <div class="container">
-          <h3>Temperature Analysis</h3>
-          <div class="tab-controls">
-            <button :class="['tab-button', { active: activeTempTab === 'confidence' }]"
-              @click="activeTempTab = 'confidence'">
-              Temperature with Confidence Interval
-            </button>
-            <button :class="['tab-button', { active: activeTempTab === 'emissions' }]"
-              @click="activeTempTab = 'emissions'">
-              Temperature and Emissions Over Time
-            </button>
-          </div>
-
-          <div class="chart-tab-content">
-            <div v-show="activeTempTab === 'confidence'" class="chart-container" ref="chartContainer1">
-              <!-- Confidence Interval chart will be rendered here -->
-            </div>
-            <div v-show="activeTempTab === 'emissions'" class="chart-container" ref="chartContainer2">
-              <!-- Temperature and Emissions chart will be rendered here -->
-            </div>
-            <div v-if="loading1 || loading2" class="loading-indicator"></div>
-          </div>
-
-          <div class="chart-description-panel">
-            <div v-if="activeTempTab === 'confidence'">
-              <p class="chart-description">
-                This chart tracks global average temperature anomaly (deviation from baseline average) from 1850 to
-                present. The confidence interval narrows over time, reflecting improved accuracy in measurements as
-                technology advances.
-              </p>
-              <p class="simple-explanation">
-                <strong>Simply put:</strong> This shows how Earth is getting warmer compared to normal temperatures. The
-                gray area gets narrower in recent years because our measuring tools got better.
-              </p>
-            </div>
-            <div v-if="activeTempTab === 'emissions'">
-              <p class="chart-description">
-                This visualization shows the relationship between rising greenhouse gas emissions and global
-                temperature. CO₂ from burning fossil fuels is the main contributor, but Methane (CH₄) and other gases
-                also trap heat
-                in our atmosphere.
-              </p>
-              <p class="simple-explanation">
-                <strong>Simply put:</strong> As we burn more fossil fuels, we release more greenhouse gases, and the
-                planet gets warmer - this graph shows this direct connection.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
     <!-- Section 2: Emissions Breakdown and Impact -->
     <section class="section-group">
       <h2 class="section-group-title">Carbon Emissions and Environmental Impact</h2>
@@ -139,6 +77,69 @@
         </div>
       </div>
     </section>
+
+    <!-- Section 2: Global Temperature and Emissions -->
+    <section class="section-group">
+      <h2 class="section-group-title">Global Temperature and Emissions Trends</h2>
+      <p class="section-description">
+        Scientists worldwide have tracked Earth's temperature for decades. The data clearly shows our planet's average
+        temperature rising at an unprecedented rate, particularly since the mid-20th century, strongly correlated with
+        increasing greenhouse gas emissions.
+      </p>
+
+      <div class="chart-section temperature-analysis">
+        <div class="container">
+          <h3>Temperature Analysis</h3>
+          <div class="tab-controls">
+            <button :class="['tab-button', { active: activeTempTab === 'confidence' }]"
+              @click="activeTempTab = 'confidence'">
+              Temperature with Confidence Interval
+            </button>
+            <button :class="['tab-button', { active: activeTempTab === 'emissions' }]"
+              @click="activeTempTab = 'emissions'">
+              Temperature and Emissions Over Time
+            </button>
+          </div>
+
+          <div class="chart-tab-content">
+            <div v-show="activeTempTab === 'confidence'" class="chart-container" ref="chartContainer1">
+              <!-- Confidence Interval chart will be rendered here -->
+            </div>
+            <div v-show="activeTempTab === 'emissions'" class="chart-container" ref="chartContainer2">
+              <!-- Temperature and Emissions chart will be rendered here -->
+            </div>
+            <div v-if="loading1 || loading2" class="loading-indicator"></div>
+          </div>
+
+          <div class="chart-description-panel">
+            <div v-if="activeTempTab === 'confidence'">
+              <p class="chart-description">
+                This chart tracks global average temperature anomaly (deviation from baseline average) from 1850 to
+                present. The confidence interval narrows over time, reflecting improved accuracy in measurements as
+                technology advances.
+              </p>
+              <p class="simple-explanation">
+                <strong>Simply put:</strong> This shows how Earth is getting warmer compared to normal temperatures. The
+                gray area gets narrower in recent years because our measuring tools got better.
+              </p>
+            </div>
+            <div v-if="activeTempTab === 'emissions'">
+              <p class="chart-description">
+                This visualization shows the relationship between rising greenhouse gas emissions and global
+                temperature. CO₂ from burning fossil fuels is the main contributor, but Methane (CH₄) and other gases
+                also trap heat
+                in our atmosphere.
+              </p>
+              <p class="simple-explanation">
+                <strong>Simply put:</strong> As we burn more fossil fuels, we release more greenhouse gases, and the
+                planet gets warmer - this graph shows this direct connection.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
 
     <!-- Section 3: Urban Heat Impact -->
     <section class="section-group">
