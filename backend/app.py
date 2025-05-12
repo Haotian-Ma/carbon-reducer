@@ -102,7 +102,7 @@ world_temp_data = loading_data_from_db("world_temp_data")
 
 app = Flask(__name__, template_folder="templates")
 
-@app.route("/api/predict", methods=["POST"])
+@app.route('/api/predict', methods=['POST',"GET","OPTIONS"])
 def predict():
     # 1. Validate the uploaded file
     if "file" not in request.files:
@@ -114,7 +114,7 @@ def predict():
     # 2. Read image from request
     data = f.read()
     img = Image.open(BytesIO(data)).convert("RGB")
-    img_np = np.array(img)  # 转成 H×W×3 的 NumPy
+    img_np = np.array(img)
 
     # 3. Perform YOLO inference for detection and classification
     results = det_model.predict(
