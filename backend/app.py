@@ -13,19 +13,41 @@ import geopandas as gpd
 import folium
 import geopandas as gpd, folium
 import psycopg2
+from ultralytics import YOLO
+import torch
+from io import BytesIO
+from PIL import Image
+from utils import preprocess_image
+
+# File upload validation
+ALLOWED_EXT = {"png", "jpg", "jpeg"}
+def allowed_file(fn):
+    return "." in fn and fn.rsplit(".",1)[1].lower() in ALLOWED_EXT
+
+# 1) Load the YOLOv8 model
+#    'best.pt' is the trained detection+classification checkpoint
+det_model = YOLO("best.pt")  # ultralytics will parse the 'model' layer from the checkpoint
+
+# Confidence threshold and input size for YOLOv8
+DETECT_CONF = 0.5
+IMG_SIZE    = 640
+
+# Path to GeoJSON data
 DATA_PATH = os.path.join(os.path.dirname(__file__), 'data', 'geo_sub_data.geojson')
 
-# from googleapiclient.discovery import build
 # Load environment variables from .env file
 load_dotenv()
+
 # Retrieve database credentials from environment variables
 DB_HOST = os.environ.get("DB_HOST")
 DB_PORT = os.environ.get("DB_PORT")
 DB_USER = os.environ.get("DB_USER")
 DB_PASSWORD = os.environ.get("DB_PASSWORD")
 DB_NAME = os.environ.get("DB_NAME")
+
 # Construct the database URI for SQLAlchemy using psycopg2 driver
 DATABASE_URI = f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+
 # Create a SQLAlchemy engine with connection pooling
 engine = create_engine(
     DATABASE_URI,
@@ -79,6 +101,49 @@ world_temp_data = loading_data_from_db("world_temp_data")
 
 
 app = Flask(__name__, template_folder="templates")
+
+@app.route("/predict", methods=["POST"])
+def predict():
+    # 1. Validate the uploaded file
+    if "file" not in request.files:
+        return jsonify(error="No file"), 400
+    f = request.files["file"]
+    if f.filename == "" or not allowed_file(f.filename):
+        return jsonify(error="Invalid file"), 400
+
+    # 2. Read image from request
+    data = f.read()
+    img = Image.open(BytesIO(data)).convert("RGB")
+    img_np = np.array(img)  # 转成 H×W×3 的 NumPy
+
+    # 3. Perform YOLO inference for detection and classification
+    results = det_model.predict(
+        source=img_np,
+        imgsz=IMG_SIZE,
+        conf=DETECT_CONF,
+        max_det=10,
+        verbose=False
+    )
+
+    # 4. Check if exactly one object is detected
+    boxes = results[0].boxes
+    n = len(boxes)
+    if n != 1:
+        return jsonify(error=f"Detected {n} objects; please upload exactly one."), 400
+
+    # 5. Extract detection output
+    box = boxes[0]
+    cls_id = int(box.cls)          # Class index
+    cls_name = det_model.names[cls_id]  # Class name
+    conf = float(box.conf)         # Confidence score
+    x1,y1,x2,y2 = box.xyxy[0].tolist()
+
+
+    return jsonify({
+        "class":      cls_name,
+        "confidence": round(conf, 4),
+        "bbox":       [x1, y1, x2, y2]
+    })
 
 # Define a simple home route to verify the service is running.
 @app.route('/')

@@ -7,6 +7,7 @@ import ClimateInsightView from '../views/ClimateInsightView.vue'
 import LearningView from '../views/KidsLearningView.vue'
 import RecycleCityGameView from '../views/RecycleCityGameView.vue'
 import VegetationMap from '../views/VegetationMap.vue'
+import GarbageView from '../views/GarbageClassifier.vue'
 const routes = [
   {
     path: '/',
@@ -17,6 +18,11 @@ const routes = [
     path: '/about',
     name: 'About',
     component: AboutView
+  },
+  {
+    path: '/GarbageClassifier',
+    name: 'GarbageView',
+    component: GarbageView
   },
   {
     path: '/eco-action',
