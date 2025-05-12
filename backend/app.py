@@ -102,7 +102,7 @@ world_temp_data = loading_data_from_db("world_temp_data")
 
 app = Flask(__name__, template_folder="templates")
 
-@app.route("/predict", methods=["POST"])
+@app.route("/api/predict", methods=["POST"])
 def predict():
     # 1. Validate the uploaded file
     if "file" not in request.files:

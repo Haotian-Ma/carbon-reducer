@@ -37,7 +37,8 @@
   <script setup>
   import { ref } from 'vue'
   import axios from 'axios'
-  
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   const file       = ref(null)
   const previewUrl = ref('')
   const result     = ref(null)
@@ -62,7 +63,7 @@
   
     try {
       const response = await axios.post(
-        'http://localhost:5000/predict',
+         `${API_BASE_URL}/api/predict`,
         formData,
         { headers: { 'Content-Type': 'multipart/form-data' } }
       )
