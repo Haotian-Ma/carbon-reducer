@@ -87,35 +87,6 @@
                     </div>
 
 
-                    <!-- Completion modal for final stage -->
-                    <div v-if="currentStageIndex === growthStages.length - 1 && !hasShownCompletion"
-                        class="completion-modal">
-                        <div class="modal-backdrop show"></div>
-                        <div class="modal d-block">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-success text-white">
-                                        <h5 class="modal-title">
-                                            <i class="fas fa-trophy me-2"></i>Congratulations!
-                                        </h5>
-                                    </div>
-                                    <div class="modal-body text-center">
-                                        <p class="fs-5">Your tree has reached full maturity! 🌳</p>
-                                        <p>You've used {{ totalPoints }} points to grow this beautiful tree.</p>
-                                        <p class="fw-bold">Would you like to plant a new tree?</p>
-                                    </div>
-                                    <div class="modal-footer justify-content-center">
-                                        <button @click="resetTree" class="btn btn-success">
-                                            <i class="fas fa-redo me-2"></i>Plant New Tree
-                                        </button>
-                                        <button @click="continueAdmiring" class="btn btn-outline-secondary">
-                                            <i class="fas fa-eye me-2"></i>Continue Admiring
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                     <!-- Growth history -->
                     <div class="history mt-4" v-if="growthHistory.length > 0">
