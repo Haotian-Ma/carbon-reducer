@@ -278,20 +278,49 @@ const formatDate = (dateString) => {
 
 // Update from other sources
 const updateFromExternalSources = () => {
-    // This function checks for changes in points from other pages
+    // Check for points changes
     const currentPoints = parseInt(localStorage.getItem('userPoints')) || 200;
+
+    // Check for Virtual Tree care activities
+    const currentWaterCount = parseInt(localStorage.getItem('waterCount')) || 0;
+    const currentFertilizerCount = parseInt(localStorage.getItem('fertilizerCount')) || 0;
+    const currentSunlightCount = parseInt(localStorage.getItem('sunlightCount')) || 0;
+
+    // Get previous counts
+    const prevWaterCount = parseInt(localStorage.getItem('prevWaterCount')) || 0;
+    const prevFertilizerCount = parseInt(localStorage.getItem('prevFertilizerCount')) || 0;
+    const prevSunlightCount = parseInt(localStorage.getItem('prevSunlightCount')) || 0;
+
+    // Check for changes and add transactions
+    if (currentWaterCount > prevWaterCount) {
+        addTransaction('Virtual Tree: Water applied', 35, 'spend', 'fas fa-tint');
+        localStorage.setItem('prevWaterCount', currentWaterCount);
+    }
+
+    if (currentFertilizerCount > prevFertilizerCount) {
+        addTransaction('Virtual Tree: Fertilizer applied', 35, 'spend', 'fas fa-seedling');
+        localStorage.setItem('prevFertilizerCount', currentFertilizerCount);
+    }
+
+    if (currentSunlightCount > prevSunlightCount) {
+        addTransaction('Virtual Tree: Sunlight applied', 35, 'spend', 'fas fa-sun');
+        localStorage.setItem('prevSunlightCount', currentSunlightCount);
+    }
+
+    // Check for points changes (for Get Points and other actions)
     if (currentPoints !== userPoints.value) {
-        // Points changed externally
         const diff = currentPoints - userPoints.value;
         userPoints.value = currentPoints;
 
-        // Try to determine the source
-        if (diff < 0) {
-            // Points were spent
-            addTransaction('Points spent in game', Math.abs(diff), 'spend', 'fas fa-shopping-cart');
-        } else {
-            // Points were earned
-            addTransaction('Points earned in game', diff, 'earn', 'fas fa-coins');
+        if (diff === 100) {
+            // This is likely from Virtual Tree Get Points
+            addTransaction('Virtual Tree: Points received', 100, 'earn', 'fas fa-tree');
+        } else if (diff > 0) {
+            // Points earned
+            addTransaction('Points earned', diff, 'earn', 'fas fa-coins');
+        } else if (diff < 0) {
+            // Points spent (already handled above for tree care)
+            // This could be from other sources
         }
     }
 };
@@ -299,6 +328,13 @@ const updateFromExternalSources = () => {
 // Initialize
 onMounted(() => {
     loadPointsData();
+    const waterCount = parseInt(localStorage.getItem('waterCount')) || 0;
+    const fertilizerCount = parseInt(localStorage.getItem('fertilizerCount')) || 0;
+    const sunlightCount = parseInt(localStorage.getItem('sunlightCount')) || 0;
+
+    localStorage.setItem('prevWaterCount', waterCount);
+    localStorage.setItem('prevFertilizerCount', fertilizerCount);
+    localStorage.setItem('prevSunlightCount', sunlightCount);
 
     // Set up interval to check for external changes
     const interval = setInterval(() => {
