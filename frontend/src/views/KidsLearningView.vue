@@ -52,6 +52,10 @@
 
         <div class="row justify-content-center">
           <div class="col-12">
+            <div v-if="showRateLimitWarning" class="alert alert-warning">
+              <i class="fas fa-exclamation-triangle"></i> Too many requests. Please wait a moment before searching
+              again.
+            </div>
             <!-- loading status -->
             <div v-if="isLoading" class="loading-spinner">
               <div class="spinner"></div>
@@ -167,6 +171,67 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+const videoCache = ref({});
+const CACHE_DURATION = 24 * 60 * 60 * 1000;
+const RATE_LIMIT_DURATION = 5000;
+const presetVideos = {
+  'climate change for kids': [
+    {
+      id: { videoId: 'Sv7OHfpIRfU' },
+      snippet: {
+        title: "Climate Change for Kids - Learn about Global Warming",
+        description: "Learn about climate change and global warming in a fun and simple way. This educational video explains what climate change is, why it happens, and what we can do to help our planet."
+      }
+    },
+    {
+      id: { videoId: 'DkZ7BJQupVA' },
+      snippet: {
+        title: "What is Climate Change? | Educational Video for Kids",
+        description: "Climate change explained for children. Understand the greenhouse effect, global warming, and how we can protect our Earth together."
+      }
+    },
+    {
+      id: { videoId: 'NCatQ0ndc0Q' },
+      snippet: {
+        title: "Climate Change: How Can We Help? | Kids Science",
+        description: "Discover simple ways kids can help fight climate change. From recycling to saving energy, learn how small actions make a big difference."
+      }
+    }
+  ],
+  'renewable energy for children': [
+    {
+      id: { videoId: 'wMOpMka6PJI' },
+      snippet: {
+        title: "Renewable Energy for Kids | Solar, Wind & Water Power",
+        description: "Learn about renewable energy sources like solar panels, wind turbines, and hydroelectric power. See how clean energy helps our planet."
+      }
+    },
+    {
+      id: { videoId: '1kUE0BZtTRc' },
+      snippet: {
+        title: "Clean Energy Explained for Kids",
+        description: "What is renewable energy? This fun educational video explains solar, wind, and other clean energy sources that don't pollute our Earth."
+      }
+    }
+  ],
+  'recycling for kids': [
+    {
+      id: { videoId: 'OasbYWF4_S8' },
+      snippet: {
+        title: "Recycling for Kids | How to Reduce, Reuse, Recycle",
+        description: "Learn how recycling works and why it's important for our planet. Discover the three Rs: Reduce, Reuse, and Recycle!"
+      }
+    },
+    {
+      id: { videoId: '_6xlNyWPpB8' },
+      snippet: {
+        title: "Where Does Our Recycling Go? | Kids Learn About Recycling",
+        description: "Follow the journey of recycled materials and see how they become new products. Learn what can and can't be recycled."
+      }
+    }]
+};
+const showRateLimitWarning = ref(false);
+let lastRequestTime = 0;
 
 // YouTube API key 
 const YOUTUBE_API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
@@ -201,12 +266,71 @@ function searchCustomTopic() {
     query: searchQuery
   });
 }
+function getCachedVideos(query) {
+  const cacheKey = `youtube_cache_${query}`;
+  try {
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      const data = JSON.parse(cached);
+      if (Date.now() - data.timestamp < CACHE_DURATION) {
+        return data.videos;
+      }
+    }
+  } catch (error) {
+    console.error('Cache read error:', error);
+  }
+  return null;
+}
+
+function setCachedVideos(query, videos) {
+  const cacheKey = `youtube_cache_${query}`;
+  const data = {
+    videos: videos,
+    timestamp: Date.now()
+  };
+  try {
+    localStorage.setItem(cacheKey, JSON.stringify(data));
+  } catch (error) {
+    console.error('Cache write error:', error);
+  }
+}
+
+
+function canMakeRequest() {
+  const now = Date.now();
+  if (now - lastRequestTime < RATE_LIMIT_DURATION) {
+    showRateLimitWarning.value = true;
+    setTimeout(() => {
+      showRateLimitWarning.value = false;
+    }, 3000);
+    return false;
+  }
+  lastRequestTime = now;
+  return true;
+}
 
 // Function to fetch videos from YouTube API
 async function fetchVideos(topic) {
-  isLoading.value = true;
+
   selectedTopic.value = topic;
   selectedVideos.value = [];
+  if (presetVideos[topic.query]) {
+    selectedVideos.value = presetVideos[topic.query];
+    return;
+  }
+
+
+  const cachedVideos = getCachedVideos(topic.query);
+  if (cachedVideos) {
+    selectedVideos.value = cachedVideos;
+    return;
+  }
+
+
+  if (!canMakeRequest()) {
+    return;
+  }
+  isLoading.value = true;
 
   try {
     // Check if the topic query already includes environment-related keywords
@@ -220,6 +344,9 @@ async function fetchVideos(topic) {
 
     const data = await response.json();
     selectedVideos.value = data.items || [];
+    if (selectedVideos.value.length > 0) {
+      setCachedVideos(topic.query, selectedVideos.value);
+    }
   } catch (error) {
     console.error('Error fetching YouTube videos:', error);
     selectedVideos.value = [];
@@ -235,7 +362,9 @@ function selectTopic(topic) {
 
 // Fetch initial videos when component mounts
 onMounted(() => {
-  fetchVideos(selectedTopic.value);
+  if (presetVideos[selectedTopic.value.query]) {
+    selectedVideos.value = presetVideos[selectedTopic.value.query];
+  }
 });
 </script>
 
@@ -523,6 +652,27 @@ onMounted(() => {
   transform: scale(1.05);
   text-decoration: none;
   color: white;
+}
+
+.alert {
+  padding: 12px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.alert-warning {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeaa7;
+}
+
+.video-placeholder small {
+  display: block;
+  margin-top: 10px;
+  font-size: 0.9rem;
 }
 
 /* Responsive Adjustments */

@@ -146,7 +146,7 @@ onBeforeUnmount(() => {
                         <div class="feature-content">
                             <h3>Virtual Tree Planting</h3>
                             <p>Contribute to global reforestation and offset your carbon emissions online.</p>
-                            <router-link to="/virtual-tree" class="feature-button">
+                            <router-link to="/virtual-tree/tree-planting" class="feature-button">
                                 Plant Trees
                             </router-link>
                         </div>
