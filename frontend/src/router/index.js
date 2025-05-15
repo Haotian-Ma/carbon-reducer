@@ -8,6 +8,7 @@ import LearningView from '../views/KidsLearningView.vue'
 import RecycleCityGameView from '../views/RecycleCityGameView.vue'
 import VegetationMap from '../views/VegetationMap.vue'
 import GarbageView from '../views/GarbageClassifier.vue'
+import MyPointsView from '../views/MyPointsView.vue'
 const routes = [
   {
     path: '/',
@@ -31,7 +32,7 @@ const routes = [
   
   },
   {
-    path: '/virtual-tree',
+    path: '/virtual-tree/tree-planting',
     name: 'VirtualTree',
     component: VirtualTreeView
   },
@@ -55,6 +56,12 @@ const routes = [
     name: 'RecycleCityGameView',
     component: RecycleCityGameView
   },
+  {
+    path: '/virtual-tree/my-points',
+    name: 'MyPoints',
+    component: MyPointsView
+  },
+  
 
 ]
 

@@ -17,17 +17,31 @@
                     <li class="nav-item">
                         <router-link to="/eco-action" class="nav-link" active-class="active">Eco Action</router-link>
                     </li>
-                    <li class="nav-item">
-                        <router-link to="/virtual-tree" class="nav-link" active-class="active">Virtual
-                            Tree</router-link>
-                    </li>
-                    <!-- Resources Dropdown -->
                     <li class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" @click.prevent="toggleResourcesDropdown">
-                            Resources
-                            <span class="dropdown-icon" :class="{ 'open': isResourcesOpen }">▼</span>
+                        <a href="#" class="nav-link dropdown-toggle" @click.prevent="toggleDropdown('tree')">
+                            Virtual Tree
+                            <span class="dropdown-icon" :class="{ 'open': activeDropdown === 'tree' }">▼</span>
                         </a>
-                        <ul class="dropdown-menu" v-show="isResourcesOpen">
+                        <ul class="dropdown-menu" v-show="activeDropdown === 'tree'">
+                            <li class="dropdown-item">
+                                <router-link to="/virtual-tree/tree-planting" class="dropdown-link">
+                                    Virtual Tree
+                                </router-link>
+                            </li>
+                            <li class="dropdown-item">
+                                <router-link to="/virtual-tree/my-points" class="dropdown-link">
+                                    My Points
+                                </router-link>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- Resources dropdown -->
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" @click.prevent="toggleDropdown('resources')">
+                            Resources
+                            <span class="dropdown-icon" :class="{ 'open': activeDropdown === 'resources' }">▼</span>
+                        </a>
+                        <ul class="dropdown-menu" v-show="activeDropdown === 'resources'">
                             <li class="dropdown-item">
                                 <router-link to="/resources/climate-insight" class="dropdown-link">
                                     Climate Insight
@@ -49,7 +63,8 @@
                         <router-link to="/about" class="nav-link" active-class="active">About</router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/GarbageClassifier" class="nav-link" active-class="active">GarbageClassifier</router-link>
+                        <router-link to="/GarbageClassifier" class="nav-link"
+                            active-class="active">GarbageClassifier</router-link>
                     </li>
                 </ul>
             </div>
@@ -62,22 +77,38 @@ import { ref, onMounted, onUnmounted } from 'vue';
 
 const isSticky = ref(false);
 const headerHeight = ref(0);
-const isResourcesOpen = ref(false);
+const activeDropdown = ref(null);
+
 
 const handleScroll = () => {
     const scrollPosition = window.scrollY;
     isSticky.value = scrollPosition > 10;
 };
 
-const toggleResourcesDropdown = () => {
-    isResourcesOpen.value = !isResourcesOpen.value;
-};
+const toggleDropdown = (dropdownName) => {
 
+    if (activeDropdown.value === dropdownName) {
+        activeDropdown.value = null;
+    } else {
+
+        activeDropdown.value = dropdownName;
+    }
+};
 // Close dropdown when clicking outside
 const handleClickOutside = (event) => {
-    const dropdown = document.querySelector('.dropdown');
-    if (dropdown && !dropdown.contains(event.target) && isResourcesOpen.value) {
-        isResourcesOpen.value = false;
+
+    const dropdowns = document.querySelectorAll('.nav-item.dropdown');
+
+
+    let clickedInsideDropdown = false;
+    dropdowns.forEach(dropdown => {
+        if (dropdown.contains(event.target)) {
+            clickedInsideDropdown = true;
+        }
+    });
+
+    if (!clickedInsideDropdown && activeDropdown.value) {
+        activeDropdown.value = null;
     }
 };
 

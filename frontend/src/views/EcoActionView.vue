@@ -6,7 +6,7 @@
                 <h1>Eco Action</h1>
                 <p class="white-text">Personal Carbon Assessment & Environmental Action Suggestions</p>
             </header>
-            <div class="step-indicator">
+            <div class="step-indicator" v-if="!isAssessmentCompleted || currentStep > steps.length">
                 <div v-for="(step, index) in steps" :key="step.id" :class="{
                     'active': currentStep === step.id,
                     'completed': step.completed,
@@ -18,7 +18,13 @@
                 </div>
             </div>
         </div>
-        <section class="assessment-section">
+        <div v-if="isAssessmentCompleted && (transportScore !== null || savedAssessmentData)"
+            class="quick-access-banner">
+            <p>You have already completed the carbon footprint assessment.</p>
+            <button @click="viewPreviousResults" class="primary-button">View Your Results</button>
+            <button @click="startNewAssessment" class="secondary-button">Start New Assessment</button>
+        </div>
+        <section class="assessment-section" v-if="!isAssessmentCompleted || currentStep > steps.length">
             <h2>Carbon Footprint Assessment - Step {{ currentStep }} of {{ steps.length }}</h2>
             <div v-if="currentStep === 1" class="assessment-group">
                 <h3>1. Transportation Habits</h3>
@@ -432,7 +438,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive, computed, onMounted } from 'vue';
 import electricityData from '../assets/jsons/electricity-data.json'
 
 //background image
@@ -456,6 +462,8 @@ const loadingMessage = ref('Processing your information...');
 const showCompletionModal = ref(false);
 const earnedEnergy = ref(0);
 const completedTaskTitle = ref('');
+const isAssessmentCompleted = ref(false);
+const savedAssessmentData = ref(null);
 
 const transportScore = ref(null);
 const householdScore = ref(null);
@@ -513,6 +521,55 @@ const validateCurrentStep = () => {
 
     }
     return true;
+};
+// View previous assessment results
+const viewPreviousResults = () => {
+    // Skip to results section
+    currentStep.value = steps.length + 1;
+};
+
+// Start new assessment
+const startNewAssessment = () => {
+    // Clear previous data
+    localStorage.removeItem('ecoAssessmentCompleted');
+    localStorage.removeItem('ecoAssessmentData');
+    localStorage.removeItem('ecoSuggestions');
+    localStorage.removeItem('lastSuggestionsDate');
+
+    // Reset all data
+    isAssessmentCompleted.value = false;
+    currentStep.value = 1;
+    transportScore.value = null;
+    householdScore.value = null;
+    suggestions.value = [];
+    carbonLevel.value = '';
+
+    // Reset form data
+    Object.keys(transportation.commuting).forEach(key => {
+        transportation.commuting[key] = false;
+    });
+    Object.keys(transportation.longDistance).forEach(key => {
+        transportation.longDistance[key] = false;
+    });
+    transportation.longDistance.airplaneFrequency = 'low';
+    Object.keys(transportation.additional).forEach(key => {
+        transportation.additional[key] = false;
+    });
+
+    // Reset household data
+    household.familyMembers = 1;
+    household.electricityConsumption = 0;
+    household.city = '';
+    Object.keys(household.habits).forEach(key => {
+        household.habits[key] = false;
+    });
+
+    // Reset preferences
+    Object.keys(preferences).forEach(key => {
+        preferences[key] = false;
+    });
+
+    housingType.value = '';
 };
 
 // Carbon assessment results
@@ -750,6 +807,21 @@ const calculateCarbonFootprint = () => {
         level: carbonLevel.value
     });
 
+    const assessmentData = {
+        transportation,
+        household,
+        preferences,
+        housingType: housingType.value,
+        carbonLevel: carbonLevel.value,
+        transportScore: transportScore.value,
+        householdScore: householdScore.value,
+        assessmentDate: new Date().toISOString()
+    };
+
+    localStorage.setItem('ecoAssessmentData', JSON.stringify(assessmentData));
+    localStorage.setItem('ecoAssessmentCompleted', 'true');
+    isAssessmentCompleted.value = true;
+
     loading.value = false;
 };
 
@@ -757,6 +829,17 @@ const calculateCarbonFootprint = () => {
 // Get eco suggestions
 const getEcoSuggestions = async () => {
     if (!carbonLevel.value) {
+        return;
+    }
+
+    // Check if suggestions were already generated today
+    const lastGeneratedDate = localStorage.getItem('lastSuggestionsDate');
+    const today = new Date().toDateString();
+
+    if (lastGeneratedDate === today && localStorage.getItem('ecoSuggestions')) {
+        alert('You can only generate suggestions once per day. Please check back tomorrow!');
+        // Load existing suggestions
+        suggestions.value = JSON.parse(localStorage.getItem('ecoSuggestions'));
         return;
     }
 
@@ -810,6 +893,10 @@ const getEcoSuggestions = async () => {
         suggestions.value = getMockSuggestions(carbonLevel.value.toLowerCase());
     } finally {
         loading.value = false;
+    }
+    if (suggestions.value && suggestions.value.length > 0) {
+        localStorage.setItem('ecoSuggestions', JSON.stringify(suggestions.value));
+        localStorage.setItem('lastSuggestionsDate', new Date().toDateString());
     }
 };
 
@@ -1074,15 +1161,84 @@ const calculateEnergyPoints = (difficulty) => {
 
 // Mark task as complete
 const markTaskComplete = (suggestion) => {
-    suggestion.completed = !suggestion.completed;
-
-    // If the task is marked as completed, show the completion modal
+    // If task is already completed, don't allow clicking again
     if (suggestion.completed) {
-        completedTaskTitle.value = suggestion.title;
-        earnedEnergy.value = calculateEnergyPoints(suggestion.difficulty);
-        showCompletionModal.value = true;
+        return;
     }
+
+    suggestion.completed = true;
+
+    // Save completion status to localStorage
+    const completedTasks = JSON.parse(localStorage.getItem('completedEcoTasks')) || [];
+    if (!completedTasks.includes(suggestion.title)) {
+        completedTasks.push(suggestion.title);
+        localStorage.setItem('completedEcoTasks', JSON.stringify(completedTasks));
+    }
+
+    completedTaskTitle.value = suggestion.title;
+    earnedEnergy.value = calculateEnergyPoints(suggestion.difficulty);
+
+    // Update user points
+    const currentPoints = parseInt(localStorage.getItem('userPoints')) || 200;
+    const newPoints = currentPoints + earnedEnergy.value;
+    localStorage.setItem('userPoints', newPoints);
+
+    // Add transaction record
+    const transactions = JSON.parse(localStorage.getItem('pointsTransactions')) || [];
+    const transaction = {
+        description: `Eco Action Completed: ${suggestion.title}`,
+        amount: earnedEnergy.value,
+        type: 'earn',
+        icon: 'fas fa-leaf',
+        date: new Date().toISOString()
+    };
+    transactions.unshift(transaction);
+
+    // Keep only last 50 transactions
+    if (transactions.length > 50) {
+        transactions.splice(50);
+    }
+    localStorage.setItem('pointsTransactions', JSON.stringify(transactions));
+
+    // Update eco action statistics
+    const totalActions = parseInt(localStorage.getItem('totalEcoActions')) || 0;
+    const totalEarned = parseInt(localStorage.getItem('ecoPointsEarned')) || 0;
+    localStorage.setItem('totalEcoActions', totalActions + 1);
+    localStorage.setItem('ecoPointsEarned', totalEarned + earnedEnergy.value);
+
+    showCompletionModal.value = true;
 };
+
+onMounted(() => {
+    // Check if assessment was previously completed
+    const assessmentCompleted = localStorage.getItem('ecoAssessmentCompleted');
+    const savedData = localStorage.getItem('ecoAssessmentData');
+
+    if (assessmentCompleted === 'true' && savedData) {
+        isAssessmentCompleted.value = true;
+        savedAssessmentData.value = JSON.parse(savedData);
+
+        // Load previous assessment results
+        const data = JSON.parse(savedData);
+        carbonLevel.value = data.carbonLevel;
+        transportScore.value = data.transportScore;
+        householdScore.value = data.householdScore;
+
+        // Load saved suggestions if available
+        const savedSuggestions = localStorage.getItem('ecoSuggestions');
+        if (savedSuggestions) {
+            suggestions.value = JSON.parse(savedSuggestions);
+
+            // Restore completion status
+            const completedTasks = JSON.parse(localStorage.getItem('completedEcoTasks')) || [];
+            suggestions.value.forEach(suggestion => {
+                if (completedTasks.includes(suggestion.title)) {
+                    suggestion.completed = true;
+                }
+            });
+        }
+    }
+});
 </script>
 
 <style scoped>
@@ -1586,10 +1742,13 @@ section {
 }
 
 /* Suggestions section */
+
 .suggestions-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
+    gap: 30px;
+    grid-auto-rows: minmax(min-content, 1fr);
+    padding-bottom: 20px;
 }
 
 .suggestion-card {
@@ -1599,7 +1758,22 @@ section {
     box-shadow: var(--shadow);
     border-top: 5px solid var(--primary-color);
     transition: var(--transition);
+
+
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
 }
+
+
+.suggestion-card .complete-button {
+    margin-top: auto;
+
+    align-self: center;
+
+}
+
 
 .suggestion-card:hover {
     transform: translateY(-5px);
@@ -1783,6 +1957,21 @@ section {
     margin-top: 10px;
     color: #666;
     font-style: italic;
+}
+
+.quick-access-banner {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.quick-access-banner p {
+    margin-bottom: 15px;
+    font-size: 18px;
+    color: #333;
 }
 
 /* Footer */
