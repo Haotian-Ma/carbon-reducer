@@ -18,22 +18,42 @@ import torch
 from io import BytesIO
 from PIL import Image
 from utils import preprocess_image
-
+import torch
+from torchvision import models, transforms
+import torch.nn as nn
 # File upload validation
-ALLOWED_EXT = {"png", "jpg", "jpeg"}
-def allowed_file(fn):
-    return "." in fn and fn.rsplit(".",1)[1].lower() in ALLOWED_EXT
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+CLASS_NAMES = ['Cardboard', 'Food Organics', 'Glass', 'Metal', 'Miscellaneous Trash', 'Paper', 'Plastic', 'Textile Trash', 'Vegetation']
+IMG_HEIGHT = 224
+IMG_WIDTH = 224
+MODEL_NAME = "EfficientNetB7"
+MODEL_PATH = "best.pt"
 
-# 1) Load the YOLOv8 model
-#    'best.pt' is the trained detection+classification checkpoint
-det_model = YOLO("best.pt")  # ultralytics will parse the 'model' layer from the checkpoint
+# --- Load Model ---
+def create_model():
+    weights = models.EfficientNet_B7_Weights.DEFAULT
+    model = models.efficientnet_b7(weights=None)
+    num_ftrs = model.classifier[1].in_features
+    model.classifier = nn.Sequential(
+        nn.Dropout(0.3),
+        nn.Linear(num_ftrs, len(CLASS_NAMES))
+    )
+    model.load_state_dict(torch.load(MODEL_PATH, map_location=DEVICE))
+    model.to(DEVICE)
+    model.eval()
+    return model
 
-# Confidence threshold and input size for YOLOv8
-DETECT_CONF = 0.5
-IMG_SIZE    = 640
+model = create_model()
 
-# Path to GeoJSON data
-DATA_PATH = os.path.join(os.path.dirname(__file__), 'data', 'geo_sub_data.geojson')
+# --- Image Preprocessing ---
+transform = transforms.Compose([
+    transforms.Resize(256),
+    transforms.CenterCrop(IMG_HEIGHT),
+    transforms.ToTensor(),
+    transforms.Normalize([0.485, 0.456, 0.406],
+                         [0.229, 0.224, 0.225])
+])
+
 
 # Load environment variables from .env file
 load_dotenv()
@@ -102,48 +122,33 @@ world_temp_data = loading_data_from_db("world_temp_data")
 
 app = Flask(__name__, template_folder="templates")
 
-@app.route('/api/predict', methods=['POST',"GET","OPTIONS"])
+@app.route('/api/predict', methods=['POST'])
 def predict():
-    # 1. Validate the uploaded file
-    if "file" not in request.files:
-        return jsonify(error="No file"), 400
-    f = request.files["file"]
-    if f.filename == "" or not allowed_file(f.filename):
-        return jsonify(error="Invalid file"), 400
+    if 'file' not in request.files:
+        return jsonify({"error": "No image uploaded"}), 400
 
-    # 2. Read image from request
-    data = f.read()
-    img = Image.open(BytesIO(data)).convert("RGB")
-    img_np = np.array(img)
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"error": "Empty filename"}), 400
 
-    # 3. Perform YOLO inference for detection and classification
-    results = det_model.predict(
-        source=img_np,
-        imgsz=IMG_SIZE,
-        conf=DETECT_CONF,
-        max_det=10,
-        verbose=False
-    )
+    try:
+        image = Image.open(file).convert('RGB')
+        image = transform(image).unsqueeze(0).to(DEVICE)
 
-    # 4. Check if exactly one object is detected
-    boxes = results[0].boxes
-    n = len(boxes)
-    if n != 1:
-        return jsonify(error=f"Detected {n} objects; please upload exactly one."), 400
+        with torch.no_grad():
+            outputs = model(image)
+            probs = torch.softmax(outputs, dim=1)
+            conf, pred = torch.max(probs, 1)
+            predicted_class = CLASS_NAMES[pred.item()]
+            confidence = conf.item()
 
-    # 5. Extract detection output
-    box = boxes[0]
-    cls_id = int(box.cls)          # Class index
-    cls_name = det_model.names[cls_id]  # Class name
-    conf = float(box.conf)         # Confidence score
-    x1,y1,x2,y2 = box.xyxy[0].tolist()
+        return jsonify({
+            'class': predicted_class,
+            'confidence': round(confidence, 4)
+        })
 
-
-    return jsonify({
-        "class":      cls_name,
-        "confidence": round(conf, 4),
-        "bbox":       [x1, y1, x2, y2]
-    })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 # Define a simple home route to verify the service is running.
 @app.route('/')
