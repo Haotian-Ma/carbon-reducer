@@ -43,7 +43,7 @@ def create_model():
     model.eval()
     return model
 
-model = create_model()
+
 
 # --- Image Preprocessing ---
 transform = transforms.Compose([
@@ -124,6 +124,7 @@ app = Flask(__name__, template_folder="templates")
 
 @app.route('/api/predict', methods=['POST'])
 def predict():
+    model = create_model()
     if 'file' not in request.files:
         return jsonify({"error": "No image uploaded"}), 400
 
