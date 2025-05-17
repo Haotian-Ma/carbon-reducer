@@ -118,13 +118,13 @@ heat_data = loading_data_from_db("heat_data")
 global_climate = loading_data_from_db("global_climate_data")
 forest_trend = loading_data_from_db("forest_trend")
 world_temp_data = loading_data_from_db("world_temp_data")
-
+model = create_model()
 
 app = Flask(__name__, template_folder="templates")
 
 @app.route('/api/predict', methods=['POST'])
 def predict():
-    model = create_model()
+
     if 'file' not in request.files:
         return jsonify({"error": "No image uploaded"}), 400
 
