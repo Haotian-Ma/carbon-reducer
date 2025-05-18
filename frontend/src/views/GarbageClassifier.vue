@@ -10,7 +10,7 @@
       :disabled="!file || loading"
       @click="upload"
     >
-      {{ loading ? 'Predicting…' : 'Start Prediction' }}
+      {{ loading ? 'Predicting…' : 'Start Prediction ' }}
     </button>
 
     <div v-if="error" class="error">
