@@ -59,7 +59,7 @@
                             <button @click="careTree('water')" class="btn btn-water care-button"
                                 :disabled="userPoints < carePointsCost" :class="{ 'shake-animation': waterBtnShake }">
                                 <i class="fas fa-tint me-2"></i>Water
-                                <span class="badge bg-white text-primary ms-1">-{{ carePointsCost }}</span>
+                                <span class="badge bg-white text-primary ms-1">-{{ waterPointsCost }}</span>
                                 <div class="btn-hover-effect water-effect"></div>
                             </button>
 
@@ -67,7 +67,7 @@
                                 :disabled="userPoints < carePointsCost"
                                 :class="{ 'shake-animation': fertilizerBtnShake }">
                                 <i class="fas fa-seedling me-2"></i>Fertilize
-                                <span class="badge bg-white text-brown ms-1">-{{ carePointsCost }}</span>
+                                <span class="badge bg-white text-primay ms-1">-{{ fertilizerPointsCost }}</span>
                                 <div class="btn-hover-effect fertilizer-effect"></div>
                             </button>
 
@@ -75,7 +75,7 @@
                                 :disabled="userPoints < carePointsCost"
                                 :class="{ 'shake-animation': sunlightBtnShake }">
                                 <i class="fas fa-sun me-2"></i>Sunlight
-                                <span class="badge bg-white text-warning ms-1">-{{ carePointsCost }}</span>
+                                <span class="badge bg-white text-warning ms-1">-{{ sunlightPointsCost }}</span>
                                 <div class="btn-hover-effect sunlight-effect"></div>
                             </button>
 
@@ -265,8 +265,9 @@ const goToPrevGuideStage = () => {
 const userPoints = ref(parseInt(localStorage.getItem('userPoints')) || 200);
 
 // Care cost
-const carePointsCost = 35; // Cost for each care action (water, fertilize, sunlight)
-
+const waterPointsCost = 30;
+const fertilizerPointsCost = 40;
+const sunlightPointsCost = 35;
 // Care counters
 const careCount = ref({
     water: parseInt(localStorage.getItem('waterCount')) || 0,
