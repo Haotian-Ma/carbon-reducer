@@ -67,7 +67,7 @@ def run_inference(model_path, image_source):
 if __name__ == '__main__':
     # --- CONFIGURATION ---
     # 1. Set the path to your trained model
-    MODEL_PATH = 'my_waste_classifier_results_large/best-large.pt' 
+    MODEL_PATH = 'models/best-large.pt' 
 
     # 2. Set the path to the image(s) or video you want to predict on
     IMAGE_OR_VIDEO_SOURCE = 'test6.jpg' # <<< CHANGE THIS
