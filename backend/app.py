@@ -21,38 +21,17 @@ from utils import preprocess_image
 import torch
 from torchvision import models, transforms
 import torch.nn as nn
-# File upload validation
-DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-CLASS_NAMES = ['Cardboard', 'Food Organics', 'Glass', 'Metal', 'Miscellaneous Trash', 'Paper', 'Plastic', 'Textile Trash', 'Vegetation']
-IMG_HEIGHT = 224
-IMG_WIDTH = 224
-MODEL_NAME = "EfficientNetB7"
-MODEL_PATH = "best.pt"
+# ── Configuration ──
+MODEL_PATH = os.getenv("MODEL_PATH", "best.pt") # Path to the YOLOv8 model
+CONFIDENCE_THRESHOLD = float(os.getenv("CONFIDENCE_THRESHOLD", 0.25)) # Confidence threshold for predictions
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
-# --- Load Model ---
-def create_model():
-    weights = models.EfficientNet_B7_Weights.DEFAULT
-    model = models.efficientnet_b7(weights=None)
-    num_ftrs = model.classifier[1].in_features
-    model.classifier = nn.Sequential(
-        nn.Dropout(0.3),
-        nn.Linear(num_ftrs, len(CLASS_NAMES))
-    )
-    model.load_state_dict(torch.load(MODEL_PATH, map_location=DEVICE))
-    model.to(DEVICE)
-    model.eval()
-    return model
+# ── Model Loading ──
+print(f"Loading YOLO model from {MODEL_PATH} on {DEVICE}…")
+model = YOLO(MODEL_PATH)
+model.to(DEVICE)
+print("Model loaded.")
 
-
-
-# --- Image Preprocessing ---
-transform = transforms.Compose([
-    transforms.Resize(256),
-    transforms.CenterCrop(IMG_HEIGHT),
-    transforms.ToTensor(),
-    transforms.Normalize([0.485, 0.456, 0.406],
-                         [0.229, 0.224, 0.225])
-])
 
 
 # Load environment variables from .env file
@@ -118,38 +97,50 @@ heat_data = loading_data_from_db("heat_data")
 global_climate = loading_data_from_db("global_climate_data")
 forest_trend = loading_data_from_db("forest_trend")
 world_temp_data = loading_data_from_db("world_temp_data")
-model = create_model()
 
 app = Flask(__name__, template_folder="templates")
 
-@app.route('/api/predict', methods=['POST'])
+@app.route("/api/predict", methods=["POST"])
 def predict():
-
-    if 'file' not in request.files:
-        return jsonify({"error": "No image uploaded"}), 400
-
-    file = request.files['file']
-    if file.filename == '':
-        return jsonify({"error": "Empty filename"}), 400
+    # 1) check upload
+    if "file" not in request.files:
+        return jsonify(error="No file part"), 400
+    f = request.files["file"]
+    if f.filename == "":
+        return jsonify(error="Empty filename"), 400
 
     try:
-        image = Image.open(file).convert('RGB')
-        image = transform(image).unsqueeze(0).to(DEVICE)
+        # 2) read into PIL then to NumPy (RGB)
+        img = Image.open(f.stream).convert("RGB")
+        img_np = np.array(img)
 
-        with torch.no_grad():
-            outputs = model(image)
-            probs = torch.softmax(outputs, dim=1)
-            conf, pred = torch.max(probs, 1)
-            predicted_class = CLASS_NAMES[pred.item()]
-            confidence = conf.item()
+        # 3) run inference (classification mode)
+        results = model.predict(
+            source=img_np,
+            conf=CONFIDENCE_THRESHOLD,
+            device=DEVICE,
+            stream=False,
+            save=False,
+            verbose=False
+        )
+        if len(results) == 0:
+            return jsonify(error="No result returned"), 500
 
+        r = results[0]
+        if r.probs is None:
+            return jsonify(error="Model did not return classification probabilities"), 500
+        # 4) get top1 class name and confidence
+        top1_index = int(r.probs.top1)
+        top1_conf   = float(r.probs.top1conf)
+        class_name  = r.names[top1_index]
+        # 5) return as JSON
         return jsonify({
-            'class': predicted_class,
-            'confidence': round(confidence, 4)
+            "class":      class_name,
+            "confidence": round(top1_conf, 4)
         })
 
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify(error=str(e)), 500
 
 # Define a simple home route to verify the service is running.
 @app.route('/')
