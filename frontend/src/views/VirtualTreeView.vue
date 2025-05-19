@@ -36,9 +36,7 @@
                         <div v-if="showWaterDrop" class="floating-icon water-drop">
                             <i class="fas fa-tint"></i>
                         </div>
-                        <div v-if="showFertilizer" class="floating-icon fertilizer">
-                            <i class="fas fa-leaf"></i>
-                        </div>
+                        <div v-if="showFertilizerEffect" class="fertilizer-effect-active"></div>
                         <div v-if="showSun" class="floating-icon sun-icon">
                             <i class="fas fa-sun"></i>
                         </div>
@@ -72,7 +70,7 @@
                             </button>
 
                             <button @click="careTree('sunlight')" class="btn btn-sunlight care-button"
-                                :disabled="userPoints < fertilizerPointsCost"
+                                :disabled="userPoints < sunlightPointsCost"
                                 :class="{ 'shake-animation': sunlightBtnShake }">
                                 <i class="fas fa-sun me-2"></i>Sunlight
                                 <span class="badge bg-white text-warning ms-1">-{{ sunlightPointsCost }}</span>
@@ -302,6 +300,7 @@ const toastMessage = ref('');
 const toastTitle = ref('');
 const toastType = ref('');
 const toastIcon = ref('');
+const showFertilizerEffect = ref(false);
 
 
 // Tree message bubble
@@ -538,9 +537,9 @@ const careTree = (type) => {
         }, 1000);
     } else if (type === 'fertilizer') {
         // Show fertilizer animation
-        showFertilizer.value = true;
+        showFertilizerEffect.value = true;
         setTimeout(() => {
-            showFertilizer.value = false;
+            showFertilizerEffect.value = false;
         }, 2000);
 
         // Shake fertilizer button
@@ -889,7 +888,8 @@ watch(currentStageIndex, (newIndex) => {
 
 <style scoped>
 .animation-container {
-    height: 450px;
+    height: 350px;
+    min-height: 350px;
     margin: 20px auto;
     display: flex;
     justify-content: center;
@@ -1242,13 +1242,25 @@ button:disabled {
     font-size: 0.95rem;
 }
 
+.floating-icon,
+.weather-container,
+.level-up-animation,
+.speech-bubble {
+    position: absolute;
+    pointer-events: none;
+
+    z-index: 5;
+    will-change: transform, opacity;
+
+}
+
 /* Weather effects */
 .weather-container {
     position: absolute;
-    top: 0;
+    top: 120px;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 70%;
     pointer-events: none;
     z-index: 3;
 }
@@ -1270,6 +1282,17 @@ button:disabled {
     background: radial-gradient(circle at top right, rgba(255, 236, 0, 0.8) 0%, rgba(255, 236, 0, 0) 70%);
     animation: sunshine 3s ease infinite;
     opacity: 0.7;
+}
+
+.fertilizer-effect-active {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(121, 85, 72, 0.2);
+    z-index: 4;
+    pointer-events: none;
 }
 
 /* Floating icons */
