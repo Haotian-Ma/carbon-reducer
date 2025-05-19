@@ -57,14 +57,14 @@
                     <div class="care-actions my-4" v-if="currentStageIndex < growthStages.length - 1">
                         <div class="d-flex flex-wrap justify-content-center gap-3">
                             <button @click="careTree('water')" class="btn btn-water care-button"
-                                :disabled="userPoints < carePointsCost" :class="{ 'shake-animation': waterBtnShake }">
+                                :disabled="userPoints < waterPointsCost" :class="{ 'shake-animation': waterBtnShake }">
                                 <i class="fas fa-tint me-2"></i>Water
                                 <span class="badge bg-white text-primary ms-1">-{{ waterPointsCost }}</span>
                                 <div class="btn-hover-effect water-effect"></div>
                             </button>
 
                             <button @click="careTree('fertilizer')" class="btn btn-fertilizer care-button"
-                                :disabled="userPoints < carePointsCost"
+                                :disabled="userPoints < fertilizerPointsCost"
                                 :class="{ 'shake-animation': fertilizerBtnShake }">
                                 <i class="fas fa-seedling me-2"></i>Fertilize
                                 <span class="badge bg-white text-primay ms-1">-{{ fertilizerPointsCost }}</span>
@@ -72,7 +72,7 @@
                             </button>
 
                             <button @click="careTree('sunlight')" class="btn btn-sunlight care-button"
-                                :disabled="userPoints < carePointsCost"
+                                :disabled="userPoints < fertilizerPointsCost"
                                 :class="{ 'shake-animation': sunlightBtnShake }">
                                 <i class="fas fa-sun me-2"></i>Sunlight
                                 <span class="badge bg-white text-warning ms-1">-{{ sunlightPointsCost }}</span>
@@ -365,7 +365,9 @@ const playCurrentStageAnimation = () => {
 
 // Computed properties
 const totalPoints = computed(() => {
-    return (careCount.value.water + careCount.value.fertilizer + careCount.value.sunlight) * carePointsCost;
+    return (careCount.value.water * waterPointsCost +
+        careCount.value.fertilizer * fertilizerPointsCost +
+        careCount.value.sunlight * sunlightPointsCost);
 });
 
 const currentStage = computed(() => {
@@ -453,10 +455,18 @@ const displayTreeMessage = (type) => {
 
 // Care function
 const careTree = (type) => {
-    if (userPoints.value < carePointsCost) return;
+    let pointsCost = 0;
+    if (type === 'water') {
+        pointsCost = waterPointsCost;
+    } else if (type === 'fertilizer') {
+        pointsCost = fertilizerPointsCost;
+    } else if (type === 'sunlight') {
+        pointsCost = sunlightPointsCost;
+    }
+    if (userPoints.value < pointsCost) return;
 
     // Deduct points
-    userPoints.value -= carePointsCost;
+    userPoints.value -= pointsCost;
     localStorage.setItem('userPoints', userPoints.value);
 
     // Animate points change
@@ -480,7 +490,7 @@ const careTree = (type) => {
     }, 1000);
 
     // Add action to history
-    const actionText = `${type.charAt(0).toUpperCase() + type.slice(1)} applied (${carePointsCost} points used)`;
+    const actionText = `${type.charAt(0).toUpperCase() + type.slice(1)} applied (${pointsCost} points used)`;
     growthHistory.value.unshift(actionText);
 
     // Animate new history item
