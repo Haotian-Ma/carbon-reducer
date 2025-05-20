@@ -112,6 +112,11 @@ const checkPassword = () => {
 <style scoped>
 header {
   line-height: 1.5;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
 }
 
 .logo {

@@ -339,11 +339,7 @@
 
 
 
-        <!-- Loading Indicator -->
-        <div class="loading-indicator" v-if="loading">
-            <div class="spinner"></div>
-            <p>{{ loadingMessage }}</p>
-        </div>
+
 
         <!-- Carbon Footprint Results Section -->
         <section class="results-section" v-if="transportScore !== null && householdScore !== null">
@@ -376,7 +372,13 @@
                     Get Personalized Eco Suggestions
                 </button>
             </div>
+            <!-- Loading Indicator -->
+            <div class="loading-indicator" v-if="loading">
+                <div class="spinner"></div>
+                <p>{{ loadingMessage }}</p>
+            </div>
         </section>
+
 
         <!-- Eco Suggestions Section -->
         <section class="results-section" v-if="suggestions && suggestions.length > 0">
@@ -1830,11 +1832,24 @@ section {
 .complete-button {
     padding: 6px 12px;
     border-radius: 4px;
-    border: 1px solid #ccc;
+    border: 1px solid #666;
     background-color: white;
     cursor: pointer;
     font-size: 14px;
+    color: #333 !important;
     transition: all 0.2s ease;
+}
+
+@media (prefers-color-scheme: dark) {
+    .complete-button {
+        background-color: #444;
+        color: white !important;
+        border-color: #666;
+    }
+
+    .complete-button:hover {
+        background-color: #555;
+    }
 }
 
 .complete-button:hover {

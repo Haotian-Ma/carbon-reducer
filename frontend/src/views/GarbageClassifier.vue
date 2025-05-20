@@ -521,6 +521,7 @@ function getWasteInstructions(wasteType) {
 .instruction-content {
   color: #546e7a;
   font-size: 1rem;
+  text-align: left !important;
 }
 
 .instruction-content ul {
